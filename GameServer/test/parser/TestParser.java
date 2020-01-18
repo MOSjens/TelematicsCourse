@@ -1,14 +1,14 @@
 package parser;
 import messages.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class TestParser {
+public class TestParser {
 
 	@Test
-	void testParse() {
+	public void testParse() {
 		Parser newParser = new Parser();
 		byte[] data = new byte[] { (byte)0x1, (byte) 0x1, (byte)0x2,
 			    0x0, (byte)0x0, 0x0, 0x46, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
