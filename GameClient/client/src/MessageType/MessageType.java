@@ -1,4 +1,4 @@
-package Message;
+package MessageType;
 
 public interface MessageType {
 

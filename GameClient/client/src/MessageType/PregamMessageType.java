@@ -1,4 +1,4 @@
-package Message;
+package MessageType;
 
 public enum PregamMessageType implements MessageType{
 	SIGN_ON,SIGN_ON_RESPONSE,PLAYER_READY

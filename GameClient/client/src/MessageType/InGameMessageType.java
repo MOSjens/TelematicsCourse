@@ -1,4 +1,4 @@
-package Message;
+package MessageType;
 
 public enum InGameMessageType implements MessageType {
 	CATAGORY_SELECTION_ANNOUNCEMENT,CATAGORY_SELECTION,QUESTION,ANSWER,BUZZ,BUZZ_RESULT,

@@ -1,5 +1,10 @@
 package Message;
 
+import MessageType.GeneralMessageType;
+import MessageType.InGameMessageType;
+import MessageType.MessageType;
+import MessageType.PostGameMessageType;
+import MessageType.PregamMessageType;
 
 public class Message {
 	private int version;
@@ -8,6 +13,14 @@ public class Message {
 	private int payloadLength;
 	private String messageBody;
 
+	public Message(int version, int group, int type, int payLoadLength, String messsgeBody) {
+		setVersion(version);
+		setGroup(group);
+		setType(type, group);
+		setPayloadLength(payLoadLength);
+		setMessageBody(messsgeBody);
+	}
+	
 	public int getVersion() {
 		return version;
 	}
