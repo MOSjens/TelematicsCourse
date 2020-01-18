@@ -41,9 +41,10 @@ public class Configuration {
  
 			// get the property value and print it out
 			amountRounds = Integer.parseInt(prop.getProperty("amountRounds"));
-			amountRounds = Integer.parseInt(prop.getProperty("categoryTimeout"));
-			amountRounds = Integer.parseInt(prop.getProperty("questionTImeout"));
-			amountRounds = Integer.parseInt(prop.getProperty("answerTimeout"));
+			questionTimeout = Integer.parseInt(prop.getProperty("questionTimeout"));
+			categoryTimeout = Integer.parseInt(prop.getProperty("categoryTimeout"));
+			answerTimeout = Integer.parseInt(prop.getProperty("answerTimeout"));
+
  
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
