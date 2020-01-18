@@ -1,5 +1,9 @@
 package client;
 import java.net.*;
+
+import Message.SignOnRespondMessage;
+import Util.Phaser;
+
 import java.io.*;
 
 public class Client {
@@ -21,7 +25,10 @@ public class Client {
 	         DataInputStream in = new DataInputStream(inFromServer);
 	         
 	         System.out.println("Server says " + in.readUTF());
-	         out.writeUTF("new message will come!");
+	         String message = in.readUTF();
+	         System.out.println(message);
+	         System.out.println((SignOnRespondMessage)Phaser.phaserToMessage(message));
+	         
 	      } catch (IOException e) {
 	         e.printStackTrace();
 	      }

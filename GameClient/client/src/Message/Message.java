@@ -33,20 +33,35 @@ public class Message {
 		this.group = MessageGroup.values()[group];
 	}
 
-	public MessageType getType() {
-		return type;
+	public String  getType() {
+		switch(group.ordinal()) { 
+		case 0:
+			return ((PregamMessageType)type).name();
+			
+		case 1:
+			return ((InGameMessageType)type).name();
+		case 2:
+			return ((PostGameMessageType)type).name();
+		case 3:
+			return ((GeneralMessageType)type).name();
+		}
+		return null;
 	}
 
 	public void setType(int type,int group) {
 		switch(group) {
 		case 0:
 			this.type = PregamMessageType.values()[type];
+			break;
 		case 1:
 			this.type = InGameMessageType.values()[type];
+			break;
 		case 2:
 			this.type = PostGameMessageType.values()[type];
+			break;
 		case 3:
 			this.type = GeneralMessageType.values()[type];
+			break;
 		}
 	}
 

@@ -25,6 +25,7 @@ public class Server extends Thread {
             DataOutputStream out = new DataOutputStream(server.getOutputStream());
             out.writeUTF("Thank you for connecting to " + server.getLocalSocketAddress()
                + "\nGoodbye!");
+            out.writeUTF("10100091234alias");
             System.out.println(in.readUTF());
             
          } catch (SocketTimeoutException s) {
