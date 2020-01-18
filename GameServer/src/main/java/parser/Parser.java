@@ -4,7 +4,12 @@ import java.nio.*;
 
 import messages.*;
 
-
+/**
+ * Parser to read bytearray and get message details and the other way around
+ * 
+ * @author david
+ *
+ */
 public class Parser {
 	private byte[] header = new byte[7];
 	private byte version;

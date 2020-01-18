@@ -1,10 +1,17 @@
 package messages;
 
+/**
+ * Superclass for all Messages. Contains Header information
+ * 
+ * @author IG4
+ *
+ */
 public class Message {
 	private int version;
 	private int group;
 	private int type;
 	private int length;
+	private MessageType messageType;
 	
 	public Message(){
 		this.version = 0;
@@ -37,6 +44,14 @@ public class Message {
 	}
 	public void setLength(int length) {
 		this.length = length;
+	}
+
+	public MessageType getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(MessageType messageType) {
+		this.messageType = messageType;
 	}
 	
 }
