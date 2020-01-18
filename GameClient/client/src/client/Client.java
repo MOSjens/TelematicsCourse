@@ -1,6 +1,7 @@
 package client;
 import java.net.*;
 
+import Message.BRMessage;
 import Message.SignOnRespondMessage;
 import Util.Phaser;
 
@@ -27,7 +28,7 @@ public class Client {
 	         System.out.println("Server says " + in.readUTF());
 	         String message = in.readUTF();
 	         System.out.println(message);
-	         System.out.println((SignOnRespondMessage)Phaser.phaserToMessage(message));
+	         System.out.println(Phaser.phaserToMessage(message).toString());
 	         
 	      } catch (IOException e) {
 	         e.printStackTrace();

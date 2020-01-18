@@ -1,7 +1,9 @@
 package Util;
 
 
+import Message.BRMessage;
 import Message.Message;
+import Message.SRMessage;
 import Message.SignOnRespondMessage;
 
 /**
@@ -25,14 +27,18 @@ public class Phaser {
 		switch (group) {
 		case 0:
 			switch(type) {
-			case 1: {
-				return new SignOnRespondMessage(version, group, type, payloadlength, messageCon);
+			    case 1: 
+				    return new SignOnRespondMessage(version, group, type, payloadlength, messageCon);
 				
 			}
-			
+		case 1:
+			switch(type) {
+			case 5:
+				return new BRMessage(version, group, type, payloadlength, messageCon);
+			case 9:
+				return new SRMessage(version, group, type, payloadlength, messageCon);
 			}
 		}
-		
 		return null;
 	}
 
