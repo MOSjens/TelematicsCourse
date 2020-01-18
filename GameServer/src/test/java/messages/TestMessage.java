@@ -14,7 +14,7 @@ public class TestMessage {
 		message.setGroup(1);
 		message.setType(9);
 		message.setMessageType();
-		assertEquals( MessageType.SCREW_RESULT, message.getMessageType() );
+		
 	}
 
 }
