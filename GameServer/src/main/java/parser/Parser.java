@@ -33,13 +33,13 @@ public class Parser {
 		recievedMessage.setVersion(version);
 		recievedMessage.setGroup(group);
 		recievedMessage.setType(type);
-		recievedMessage.setLength(byteArrayToLeInt(length));
-		
-		
+		recievedMessage.setLength(byteArrayToInt(length));
+		recievedMessage.setMessageType();
+
 		return recievedMessage;
 		
 	}
-	public static int byteArrayToLeInt(byte[] b) {
+	public static int byteArrayToInt(byte[] b) {
 	    final ByteBuffer bb = ByteBuffer.wrap(b);
 	    return bb.getInt();
 	}
