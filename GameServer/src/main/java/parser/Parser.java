@@ -24,6 +24,7 @@ public class Parser {
 			length[i-3] = header[i];
 		}
 		
+		
 		recievedMessage.setVersion(version);
 		recievedMessage.setGroup(group);
 		recievedMessage.setType(type);

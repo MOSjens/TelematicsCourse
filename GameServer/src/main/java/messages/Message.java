@@ -19,6 +19,7 @@ public class Message {
 	public void setVersion(int version) {
 		this.version = version;
 	}
+	
 	public int getGroup() {
 		return group;
 	}
