@@ -19,10 +19,14 @@ public class TestParser {
 		\x72\x79\x20\x45\x61\x73\x79\x4d\x61\x74\x68\x73\x57\x68\x61
 		\x74\x27\x73\x20\x31\x20\x2b\x20\x31\x3f\x32\x66\x6f\x75\x72\x34\x32 */ 
 		Message newMessage = newParser.parse(data);
-		System.out.println("Version: "+ newMessage.getVersion()
+		/*System.out.println("Version: "+ newMessage.getVersion()
 							+" Group: "+ newMessage.getGroup()
 							+" Type: "+ newMessage.getType()
-							+" Length: "+ newMessage.getLength());
+							+" Length: "+ newMessage.getLength());*/
+		assertEquals( newMessage.getVersion(), 1 );
+		assertEquals( newMessage.getGroup(), 1 );
+		assertEquals( newMessage.getType(), 2 );
+		assertEquals( newMessage.getLength(), 70 );
 		//fail("Not yet implemented");
 	}
 
