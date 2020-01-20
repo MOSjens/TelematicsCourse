@@ -51,6 +51,7 @@ public class Parser {
 		
 		switch(recievedMessage.getMessageType()) {
 		case ANSWER:
+			recievedMessage = this.parseAnswer(recievedMessage, data);
 			break;
 		case ANSWER_RESULT:
 			break;
@@ -59,16 +60,19 @@ public class Parser {
 		case BUZZ_RESULT:
 			break;
 		case CATEGORY_SELECTION:
+			recievedMessage = this.parseCategorySelection(recievedMessage, data);
 			break;
 		case CATEGORY_SELECTOR_ANNOUNCEMENT:
 			break;
 		case GAME_END:
 			break;
 		case GENERAL_TEXT:
+			recievedMessage = this.parseGeneralText(recievedMessage, data);
 			break;
 		case PLAYER_LIST:
 			break;
 		case PLAYER_READY:
+			recievedMessage = this.parsePlayerReady(recievedMessage, data);
 			break;
 		case QUESTION:
 			break;
@@ -91,6 +95,34 @@ public class Parser {
 
 		return recievedMessage;
 		
+	}
+	private Message parseAnswer(Message message, byte[] data) {
+		Answer answer = new Answer();
+		answer.setVersion(message.getVersion());
+		answer.setLength(message.getLength());
+		answer.setAnswerId(byteArrayToInt(data));
+		return answer;
+
+	}
+	private CategorySelection parseCategorySelection(Message message, byte[] data) {
+		CategorySelection categorySelection = new CategorySelection();
+		categorySelection.setVersion(message.getVersion());
+		categorySelection.setLength(message.getLength());
+		categorySelection.setCategoryIndex(byteArrayToInt(data));
+		return categorySelection;
+	}
+	private GeneralText parseGeneralText(Message message, byte[] data) {
+		GeneralText generalText = new GeneralText();
+		generalText.setVersion(message.getVersion());
+		generalText.setLength(message.getLength());
+		generalText.setGeneralText(new String(data));
+		return generalText;
+	}
+	private PlayerReady parsePlayerReady(Message message, byte[] data) {
+		PlayerReady playerReady = new PlayerReady();
+		playerReady.setVersion(message.getVersion());
+		playerReady.setLength(message.getLength());
+		return playerReady;
 	}
 	private Screw parseScrew(Message message, byte[] data) {
 		Screw screw = new Screw();

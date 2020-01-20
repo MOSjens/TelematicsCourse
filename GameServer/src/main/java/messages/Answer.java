@@ -2,18 +2,18 @@ package messages;
 
 public class Answer extends Message{
 	
-	private int answerID;
+	private int answerId;
 
 	public Answer() {
 		super();
 		this.setMessageType(MessageType.ANSWER);
 	}
 
-	public int getAnswerID() {
-		return answerID;
+	public int getAnswerId() {
+		return answerId;
 	}
 
-	public void setAnswerID(int answerID) {
-		this.answerID = answerID;
+	public void setAnswerId(int answerId) {
+		this.answerId = answerId;
 	}
 }
