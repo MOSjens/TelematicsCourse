@@ -18,6 +18,7 @@ public class Message {
 		this.group = 0;
 		this.type = 0;
 		this.length = 0;
+		this.setMessageType();
 	}
 	
 	public int getVersion() {
