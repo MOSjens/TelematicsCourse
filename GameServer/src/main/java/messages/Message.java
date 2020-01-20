@@ -1,5 +1,6 @@
 package messages;
 
+
 /**
  * Superclass for all Messages. Contains Header information
  * 
@@ -25,6 +26,12 @@ public class Message {
 		return version;
 	}
 	public void setVersion(int version) {
+		if(version<1) {
+			version = 1;
+		}
+		if(version >128){
+			version= 128;
+		}
 		this.version = version;
 	}
 	
@@ -44,6 +51,12 @@ public class Message {
 		return type;
 	}
 	public void setType(int type) {
+		if(type < 0) {
+			type = 0;
+		}
+		if(type >128){
+			type= 128;
+		}
 		this.type = type;
 	}
 	public int getLength() {

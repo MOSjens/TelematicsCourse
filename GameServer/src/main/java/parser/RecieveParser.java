@@ -5,7 +5,7 @@ import java.nio.*;
 import messages.*;
 
 /**
- * Parser to read bytearray and get message details and the other way around
+ * Parser to read bytearray and get message details
  * 
  * @author david
  *
@@ -148,11 +148,5 @@ public class RecieveParser {
 	public static int byteArrayToInt(byte[] b) {
 	    final ByteBuffer bb = ByteBuffer.wrap(b);
 	    return bb.getInt();
-	}
-
-	public static byte[] intToByteArray(int i) {
-	    final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE);
-	    bb.putInt(i);
-	    return bb.array();
 	}
 }
