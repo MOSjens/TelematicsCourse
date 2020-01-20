@@ -85,7 +85,7 @@ public class Parser {
 		if(data.length < (message.getLength()+7)) {
 			//TODO
 			return null;
-		} else if(data.length > (message.getLength()+77)){
+		} else if(data.length > (message.getLength()+7)){
 			//TODO
 		}
 		else {

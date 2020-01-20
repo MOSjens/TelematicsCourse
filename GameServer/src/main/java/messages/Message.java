@@ -14,7 +14,7 @@ public class Message {
 	private MessageType messageType;
 	
 	public Message(){
-		this.version = 0;
+		this.version = 1;
 		this.group = 0;
 		this.type = 0;
 		this.length = 0;
@@ -59,6 +59,7 @@ public class Message {
 
 	public void setMessageType(MessageType messageType) {
 		this.messageType = messageType;
+		this.setGroupAndType();
 	}
 	public void setGroupAndType(){
 		switch(this.messageType) {

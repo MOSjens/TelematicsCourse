@@ -7,13 +7,13 @@ package messages;
  */
 public class SignOn extends Message {
 	
+	private String playerAlias;
+	
 	public SignOn() {
 		super();
 		this.setMessageType(MessageType.SIGN_ON);
-		this.setGroupAndType();
 	}
 	
-	private String playerAlias;
 
 	public String getPlayerAlias() {
 		return playerAlias;
