@@ -28,13 +28,26 @@ public class Parser {
 		for(int i = 3; i < 7; i++) {
 			length[i-3] = header[i];
 		}
-		
+		byte[] payload;
 		
 		recievedMessage.setVersion(version);
 		recievedMessage.setGroup(group);
 		recievedMessage.setType(type);
 		recievedMessage.setLength(byteArrayToInt(length));
 		recievedMessage.setMessageType();
+		
+		if(data.length < (recievedMessage.getLength()+7)) {
+			//TODO
+			return null;
+		} else if(data.length > (recievedMessage.getLength()+7)){
+			//TODO
+		}
+		else {
+			payload = new byte[recievedMessage.getLength()];
+			for(int i = 0; i < recievedMessage.getLength(); i++) {
+				payload[i] = data[i+7];
+			}
+		}
 		
 		switch(recievedMessage.getMessageType()) {
 		case ANSWER:
@@ -62,6 +75,7 @@ public class Parser {
 		case SCOREBOARD:
 			break;
 		case SCREW:
+			recievedMessage = this.parseScrew(recievedMessage, data);
 			break;
 		case SCREW_RESULT:
 			break;
@@ -78,23 +92,18 @@ public class Parser {
 		return recievedMessage;
 		
 	}
+	private Screw parseScrew(Message message, byte[] data) {
+		Screw screw = new Screw();
+		screw.setVersion(message.getVersion());
+		screw.setLength(message.getLength());
+		screw.setScrewedPlayerId(byteArrayToInt(data));
+		return screw;
+	}
 	private SignOn parseSignOn(Message message, byte[] data) {
 		SignOn signOn = new SignOn();
 		signOn.setVersion(message.getVersion());
 		signOn.setLength(message.getLength());
-		if(data.length < (message.getLength()+7)) {
-			//TODO
-			return null;
-		} else if(data.length > (message.getLength()+7)){
-			//TODO
-		}
-		else {
-			byte[] alias = new byte[message.getLength()];
-			for(int i = 0; i < message.getLength(); i++) {
-				alias[i] = data[i+7];
-			}
-			signOn.setPlayerAlias(new String(alias));
-		}
+		signOn.setPlayerAlias(new String(data));
 		return signOn;
 	}
 	public static int byteArrayToInt(byte[] b) {
