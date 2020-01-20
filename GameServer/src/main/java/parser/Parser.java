@@ -56,6 +56,7 @@ public class Parser {
 		case ANSWER_RESULT:
 			break;
 		case BUZZ:
+			recievedMessage = this.parseBuzz(recievedMessage, data);
 			break;
 		case BUZZ_RESULT:
 			break;
@@ -95,6 +96,12 @@ public class Parser {
 
 		return recievedMessage;
 		
+	}
+	private Message parseBuzz(Message message, byte[] data) {
+		Buzz buzz = new Buzz();
+		buzz.setVersion(message.getVersion());
+		buzz.setLength(message.getLength());
+		return buzz;
 	}
 	private Message parseAnswer(Message message, byte[] data) {
 		Answer answer = new Answer();

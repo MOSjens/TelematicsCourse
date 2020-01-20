@@ -65,52 +65,67 @@ public class Message {
 		switch(this.messageType) {
 		case ANSWER:
 			this.setGroup(1);
-			this.setType(type);
+			this.setType(3);
 			break;
 		case ANSWER_RESULT:
 			this.setGroup(1);
+			this.setType(7);
 			break;
 		case BUZZ:
 			this.setGroup(1);
+			this.setType(4);
 			break;
 		case BUZZ_RESULT:
 			this.setGroup(1);
+			this.setType(5);
 			break;
 		case CATEGORY_SELECTION:
 			this.setGroup(1);
+			this.setType(1);
 			break;
 		case CATEGORY_SELECTOR_ANNOUNCEMENT:
 			this.setGroup(1);
+			this.setType(0);
 			break;
 		case GAME_END:
 			this.setGroup(2);
+			this.setType(0);
 			break;
 		case GENERAL_TEXT:
 			this.setGroup(3);
+			this.setType(0);
 			break;
 		case PLAYER_LIST:
 			this.setGroup(3);
+			this.setType(1);
 			break;
 		case PLAYER_READY:
 			this.setGroup(0);
+			this.setType(2);
 			break;
 		case QUESTION:
 			this.setGroup(1);
+			this.setType(2);
 			break;
 		case SCOREBOARD:
 			this.setGroup(1);
+			this.setType(6);
 			break;
 		case SCREW:
 			this.setGroup(1);
+			this.setType(8);
 			break;
 		case SCREW_RESULT:
 			this.setGroup(1);
+			this.setType(9);
 			break;
 		case SIGN_ON:
 			this.setGroup(0);
+			this.setType(0);
 			break;
 		case SIGN_ON_RESPONSE:
 			this.setGroup(0);
+			this.setType(1);
 			break;
 		default:
 			break;
