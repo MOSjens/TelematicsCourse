@@ -10,7 +10,7 @@ import messages.*;
  * @author david
  *
  */
-public class Parser {
+public class RecieveParser {
 	private byte[] header = new byte[7];
 	private byte version;
 	private byte group;

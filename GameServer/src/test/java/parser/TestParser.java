@@ -9,7 +9,7 @@ public class TestParser {
 	
 	@Test
 	public void testParse() {
-		Parser newParser = new Parser();
+		RecieveParser newParser = new RecieveParser();
 		
 		byte[] data = new byte[] { (byte)0x1, (byte) 0x1, (byte)0x2,
 			    0x0, (byte)0x0, 0x0, 0x46, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
@@ -32,7 +32,7 @@ public class TestParser {
 
 	@Test
 	public void testParseSignOn() {
-		Parser newParser = new Parser();
+		RecieveParser newParser = new RecieveParser();
 		byte[]data = new byte[] {
 				0x01,0x00,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
 				(byte) 0x84,(byte) 0xf0,(byte) 0x9f,(byte) 0x90,(byte) 0xbf,(byte) 0xef,(byte) 0xb8,(byte) 0x8f
