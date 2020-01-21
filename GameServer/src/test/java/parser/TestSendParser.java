@@ -50,7 +50,29 @@ public class TestSendParser {
 		for(int i = 0; i < dataAnswerResult.length; i++) {
 			assertEquals(dataAnswerResult[i], dataTest[i]);
 		}
-
+		GameEnd gameEnd = new GameEnd();
+		byte[]dataGameEnd = new byte[] {0x01,0x02,0x00,0x00,0x00,0x00,0x00
+		};
+		dataTest = sendParser.messageToByteArray(gameEnd);
+		assertEquals( dataGameEnd.length, dataTest.length);
+		for(int i = 0; i < dataGameEnd.length; i++) {
+			assertEquals(dataGameEnd[i], dataTest[i]);
+		}
+		
+		ScrewResult screwResult = new ScrewResult();
+		screwResult.setScrewingPlayerId(10);
+		screwResult.setAnsweringPlayerId(5);
+		screwResult.setAnswerTimeout(15000);
+		byte[]dataScrewResult = new byte[] {0x01,0x01,0x09,0x00,0x00,0x00,0x10
+				,0x00,0x00,0x00,0x0a,0x00,0x00,0x00, 0x05
+				,0x00,0x00,0x00,0x00,0x00,0x00,0x3A, (byte)0x98
+		};
+		dataTest = sendParser.messageToByteArray(screwResult);
+		assertEquals( dataScrewResult.length, dataTest.length);
+		for(int i = 0; i < dataScrewResult.length; i++) {
+			assertEquals(dataScrewResult[i], dataTest[i]);
+		}
+		
 	}
 
 	@Test

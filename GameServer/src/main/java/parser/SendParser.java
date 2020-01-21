@@ -2,7 +2,6 @@ package parser;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 import messages.*;
 
@@ -61,6 +60,7 @@ public class SendParser {
 		case SCREW:
 			break;
 		case SCREW_RESULT:
+			payload = screwResultToByteArray(sendMessage);
 			break;
 		case SIGN_ON:
 			break;
@@ -94,6 +94,15 @@ public class SendParser {
 	
 	
 	
+	private byte[] screwResultToByteArray(Message sendMessage) {
+		ScrewResult screwResult = (ScrewResult) sendMessage;
+		final ByteBuffer bb = ByteBuffer.allocate(2*Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
+		bb.putInt(screwResult.getScrewingPlayerId());
+		bb.putInt(screwResult.getAnsweringPlayerId());
+		bb.putLong(screwResult.getAnswerTimeout());
+		return bb.array();
+	}
+
 	private byte[] signOnResponseToByteArray(Message sendMessage) {
 		SignOnResponse signOnResponse= (SignOnResponse) sendMessage;
 		byte[] playerAlias = null;
