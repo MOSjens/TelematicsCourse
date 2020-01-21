@@ -1,6 +1,8 @@
 package parser;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import messages.*;
 
@@ -33,6 +35,7 @@ public class SendParser {
 		case ANSWER:
 			break;
 		case ANSWER_RESULT:
+			payload =AnswerResultToByteArray(sendMessage);
 			break;
 		case BUZZ:
 			break;
@@ -62,6 +65,7 @@ public class SendParser {
 		case SIGN_ON:
 			break;
 		case SIGN_ON_RESPONSE:
+			payload = signOnResponseToByteArray(sendMessage);
 			break;
 		default:
 			break;
@@ -90,6 +94,30 @@ public class SendParser {
 	
 	
 	
+	private byte[] signOnResponseToByteArray(Message sendMessage) {
+		SignOnResponse signOnResponse= (SignOnResponse) sendMessage;
+		byte[] playerAlias = null;
+		try {
+			playerAlias = signOnResponse.getPlayerAlias().getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int size = (Integer.SIZE / Byte.SIZE)+ playerAlias.length;
+		final ByteBuffer bb = ByteBuffer.allocate(size);
+		bb.putInt(signOnResponse.getPlayerId());
+		bb.put(playerAlias);
+		return bb.array();
+	}
+
+	private byte[] AnswerResultToByteArray(Message sendMessage) {
+		AnswerResult answerResult= (AnswerResult) sendMessage;
+		final ByteBuffer bb = ByteBuffer.allocate(2*Integer.SIZE / Byte.SIZE);
+		bb.putInt(answerResult.getCorrectAnswerID());
+		bb.putInt(answerResult.getSelectedAnswerID());
+		return bb.array();
+	}
+
 	private byte[] generalTextToByteArray(Message sendMessage) {
 		GeneralText generalText = (GeneralText) sendMessage;
 		byte[] payload = generalText.getGeneralText().getBytes();
