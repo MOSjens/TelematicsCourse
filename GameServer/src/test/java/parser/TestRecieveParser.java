@@ -3,13 +3,20 @@ import messages.*;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
-public class TestParser {
+public class TestRecieveParser {
+	private RecieveParser recieveParser;
+	
+	@Before
+	public void setUp() throws Exception {
+		recieveParser = new RecieveParser();
+	}
 	
 	@Test
 	public void testParse() {
-		RecieveParser newParser = new RecieveParser();
+		
 		
 		byte[] data = new byte[] { (byte)0x1, (byte) 0x1, (byte)0x2,
 			    0x0, (byte)0x0, 0x0, 0x46, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
@@ -18,7 +25,7 @@ public class TestParser {
 		,0x0,0x0,0x0,0x0,0x0,0x0,0x27,0x10,0x0,0x0,0x0,0x3f,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x44,0x56,0x65
 		,0x72,0x79,0x20,0x45,0x61,0x73,0x79,0x4d,0x61,0x74,0x68,0x73,0x57,0x68,0x61
 		,0x74,0x27,0x73,0x20,0x31,0x20,0x2b,0x20,0x31,0x3f,0x32,0x66,0x6f,0x75,0x72,0x34,0x32 */ 
-		Message newMessage = newParser.parse(data);
+		Message newMessage = recieveParser.parse(data);
 		/*System.out.println("Version: "+ newMessage.getVersion()
 							+" Group: "+ newMessage.getGroup()
 							+" Type: "+ newMessage.getType()
@@ -32,12 +39,11 @@ public class TestParser {
 
 	@Test
 	public void testParseSignOn() {
-		RecieveParser newParser = new RecieveParser();
 		byte[]data = new byte[] {
 				0x01,0x00,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
 				(byte) 0x84,(byte) 0xf0,(byte) 0x9f,(byte) 0x90,(byte) 0xbf,(byte) 0xef,(byte) 0xb8,(byte) 0x8f
 		};
-		Message newMessage = newParser.parse(data);
+		Message newMessage = recieveParser.parse(data);
 		SignOn signOn = (SignOn) newMessage;
 		assertEquals( newMessage.getVersion(), 1 );
 		assertEquals( newMessage.getGroup(), 0);

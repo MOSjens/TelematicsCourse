@@ -27,7 +27,7 @@ public class SendParser {
 		
 		payloadLength = intToByteArray(length);
 		for(int i = 0; i < 4; i++) {
-			header[i] = payloadLength[i];
+			header[i+3] = payloadLength[i];
 		}
 		return header;
 		
