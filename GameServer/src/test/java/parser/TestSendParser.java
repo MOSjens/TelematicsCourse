@@ -74,6 +74,23 @@ public class TestSendParser {
 		}
 		
 	}
+	
+	@Test
+	public void testBuzzResulttoByteArray() {
+		byte[] dataTest;
+		BuzzResult buzzResult = new BuzzResult();
+		buzzResult.setAnsweringPlayerId(99);
+		buzzResult.setAnswerTimeout(15000);
+		byte[]databuzzResult = new byte[] {0x01,0x01,0x05,0x00,0x00,0x00,0x0c
+				,0x00,0x00,0x00,0x63
+				,0x00,0x00,0x00,0x00,0x00,0x00,0x3A, (byte)0x98
+		};
+		dataTest = sendParser.messageToByteArray(buzzResult);
+		assertEquals( databuzzResult.length, dataTest.length);
+		for(int i = 0; i < databuzzResult.length; i++) {
+			assertEquals(databuzzResult[i], dataTest[i]);
+		}
+	}
 
 	@Test
 	public void testIntToByteArray() {

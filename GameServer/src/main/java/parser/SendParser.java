@@ -39,6 +39,7 @@ public class SendParser {
 		case BUZZ:
 			break;
 		case BUZZ_RESULT:
+			payload = buzzResultToByteArray(sendMessage);
 			break;
 		case CATEGORY_SELECTION:
 			break;
@@ -94,6 +95,14 @@ public class SendParser {
 	
 	
 	
+	private byte[] buzzResultToByteArray(Message sendMessage) {
+		BuzzResult buzzResult = (BuzzResult) sendMessage;
+		final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
+		bb.putInt(buzzResult.getAnsweringPlayerId());
+		bb.putLong(buzzResult.getAnswerTimeout());
+		return bb.array();
+	}
+
 	private byte[] screwResultToByteArray(Message sendMessage) {
 		ScrewResult screwResult = (ScrewResult) sendMessage;
 		final ByteBuffer bb = ByteBuffer.allocate(2*Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
