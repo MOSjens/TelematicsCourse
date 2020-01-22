@@ -2,6 +2,7 @@ package parser;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.LinkedHashMap;
 
 import messages.*;
 
@@ -57,6 +58,7 @@ public class SendParser {
 		case QUESTION:
 			break;
 		case SCOREBOARD:
+			payload = scoreboardToByteArray(sendMessage);
 			break;
 		case SCREW:
 			break;
@@ -95,6 +97,15 @@ public class SendParser {
 	
 	
 	
+	private byte[] scoreboardToByteArray(Message sendMessage) {
+		Scoreboard scoreboard = (Scoreboard) sendMessage;
+		LinkedHashMap<Integer, Integer> scoreMap = scoreboard.getMapPlayerIdToScore();
+		int amountPlayers = scoreMap.size();
+		final ByteBuffer bb = ByteBuffer.allocate((2*amountPlayers+2)*Integer.SIZE / Byte.SIZE);
+		
+		return null;
+	}
+
 	private byte[] buzzResultToByteArray(Message sendMessage) {
 		BuzzResult buzzResult = (BuzzResult) sendMessage;
 		final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
