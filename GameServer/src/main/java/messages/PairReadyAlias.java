@@ -1,11 +1,11 @@
 package messages;
 
 public class PairReadyAlias { 
-	  public final int x; 
-	  public final String y; 
-	  public PairReadyAlias(int x, String y) { 
-	    this.x = x; 
-	    this.y = y; 
+	  public final ReadyState readyState; 
+	  public final String alias; 
+	  public PairReadyAlias(ReadyState x, String y) { 
+	    this.readyState = x; 
+	    this.alias = y; 
 	  } 
 
 }

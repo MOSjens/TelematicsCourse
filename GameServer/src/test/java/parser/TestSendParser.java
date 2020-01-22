@@ -114,6 +114,27 @@ public class TestSendParser {
 			assertEquals(datascoreBoard[i], dataTest[i]);
 		}
 	}
+	
+	@Test
+	public void testplayerListToByteArray() {
+		byte[] dataTest;
+		PlayerList playerList = new PlayerList();
+		LinkedHashMap<Integer,PairReadyAlias> playerMap = new LinkedHashMap<Integer,PairReadyAlias>();
+		playerMap.put(42, new PairReadyAlias(ReadyState.READY,"lel"));
+		playerMap.put(3, new PairReadyAlias(ReadyState.NOT_READY,"lul"));
+
+		playerList.setMapPlayerIdToAlias(playerMap);
+		byte[]dataplayerList = new byte[] {0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x18
+				, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x2a, 0x01, 
+				0x6c, 0x65, 0x6c, 0x00, 0x00, 0x00, 0x03, 0x00, 0x6c, 0x75, 0x6c
+		};
+		dataTest = sendParser.messageToByteArray(playerList);
+		assertEquals( dataplayerList.length, dataTest.length);
+		for(int i = 0; i < dataplayerList.length; i++) {
+			System.out.print(i);
+			assertEquals(dataplayerList[i], dataTest[i]);
+		}
+	}
 
 	@Test
 	public void testIntToByteArray() {

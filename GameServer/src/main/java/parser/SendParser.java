@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import messages.*;
 
@@ -53,6 +54,7 @@ public class SendParser {
 			payload = generalTextToByteArray(sendMessage);
 			break;
 		case PLAYER_LIST:
+			payload = playerListToByteArray(sendMessage);
 			break;
 		case PLAYER_READY:
 			break;
@@ -98,6 +100,41 @@ public class SendParser {
 	
 	
 	
+	private byte[] playerListToByteArray(Message sendMessage) {
+		PlayerList PlayerList = (PlayerList) sendMessage;
+		int[] playerOffsets;
+		int amountPlayers ;
+		int offsetCounter;
+		final ByteBuffer bb;
+		byte readyState;
+		byte[] alias;
+		LinkedHashMap<Integer, PairReadyAlias> playerMap = PlayerList.getMapPlayerIdToAlias();
+		amountPlayers = playerMap.size();
+		playerOffsets = new int[amountPlayers];
+		playerOffsets[0] = amountPlayers *(Integer.SIZE / Byte.SIZE);
+		offsetCounter = playerOffsets[0];
+		int i = 0;
+		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
+			playerOffsets[i] = offsetCounter;
+			offsetCounter += (entry.getValue().alias.getBytes().length +(Integer.SIZE / Byte.SIZE)+1);
+			i++;
+		}
+
+		bb = ByteBuffer.allocate(offsetCounter);
+		for(int j = 0; j < playerOffsets.length; j++) {
+			bb.putInt(playerOffsets[j]);
+		}
+		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
+		    bb.putInt(entry.getKey());
+		    readyState = (byte) entry.getValue().readyState.getValue();
+		    System.out.print(readyState);
+		    alias = entry.getValue().alias.getBytes();
+		    bb.put(readyState);
+		    bb.put(alias);
+		}
+		return bb.array();
+	}
+
 	private byte[] scoreboardToByteArray(Message sendMessage) {
 		Scoreboard scoreBoard = (Scoreboard) sendMessage;
 		LinkedHashMap<Integer, Integer> scoreMap = scoreBoard.getMapPlayerIdToScore();
