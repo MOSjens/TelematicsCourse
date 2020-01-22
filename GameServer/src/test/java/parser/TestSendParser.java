@@ -2,6 +2,8 @@ package parser;
 
 import static org.junit.Assert.*;
 
+import java.util.LinkedHashMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -89,6 +91,27 @@ public class TestSendParser {
 		assertEquals( databuzzResult.length, dataTest.length);
 		for(int i = 0; i < databuzzResult.length; i++) {
 			assertEquals(databuzzResult[i], dataTest[i]);
+		}
+	}
+	
+	@Test
+	public void testScoreBoardToByteArray() {
+		byte[] dataTest;
+		Scoreboard scoreBoard = new Scoreboard();
+		scoreBoard.setRoundLeft(10);
+		LinkedHashMap<Integer,Integer> scoreMap = new LinkedHashMap<Integer,Integer>();
+		scoreMap.put(42, 4096);
+		scoreMap.put(1, 3);
+		scoreMap.put(5, 9);
+		scoreBoard.setMapPlayerIdToScore(scoreMap);
+		byte[]datascoreBoard = new byte[] {0x1, 0x1, 0x6, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0xA, 
+				0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x2A, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x1, 
+				0x00, 0x00, 0x00, 0x3, 0x00, 0x00, 0x00, 0x5, 0x00, 0x00, 0x00, 0x9
+		};
+		dataTest = sendParser.messageToByteArray(scoreBoard);
+		assertEquals( datascoreBoard.length, dataTest.length);
+		for(int i = 0; i < datascoreBoard.length; i++) {
+			assertEquals(datascoreBoard[i], dataTest[i]);
 		}
 	}
 

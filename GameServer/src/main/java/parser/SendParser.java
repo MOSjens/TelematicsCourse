@@ -3,6 +3,7 @@ package parser;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import messages.*;
 
@@ -98,12 +99,17 @@ public class SendParser {
 	
 	
 	private byte[] scoreboardToByteArray(Message sendMessage) {
-		Scoreboard scoreboard = (Scoreboard) sendMessage;
-		LinkedHashMap<Integer, Integer> scoreMap = scoreboard.getMapPlayerIdToScore();
+		Scoreboard scoreBoard = (Scoreboard) sendMessage;
+		LinkedHashMap<Integer, Integer> scoreMap = scoreBoard.getMapPlayerIdToScore();
 		int amountPlayers = scoreMap.size();
 		final ByteBuffer bb = ByteBuffer.allocate((2*amountPlayers+2)*Integer.SIZE / Byte.SIZE);
-		
-		return null;
+		bb.putInt(scoreBoard.getRoundLeft());
+		bb.putInt(amountPlayers);
+		for (Map.Entry<Integer, Integer> entry : scoreMap.entrySet()) {
+		    bb.putInt(entry.getKey());
+		    bb.putInt(entry.getValue());
+		}
+		return bb.array();
 	}
 
 	private byte[] buzzResultToByteArray(Message sendMessage) {
