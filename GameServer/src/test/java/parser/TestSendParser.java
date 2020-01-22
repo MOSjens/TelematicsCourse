@@ -131,7 +131,6 @@ public class TestSendParser {
 		dataTest = sendParser.messageToByteArray(playerList);
 		assertEquals( dataplayerList.length, dataTest.length);
 		for(int i = 0; i < dataplayerList.length; i++) {
-			System.out.print(i);
 			assertEquals(dataplayerList[i], dataTest[i]);
 		}
 	}

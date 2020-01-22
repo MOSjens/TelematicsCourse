@@ -127,7 +127,6 @@ public class SendParser {
 		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
 		    bb.putInt(entry.getKey());
 		    readyState = (byte) entry.getValue().readyState.getValue();
-		    System.out.print(readyState);
 		    alias = entry.getValue().alias.getBytes();
 		    bb.put(readyState);
 		    bb.put(alias);
