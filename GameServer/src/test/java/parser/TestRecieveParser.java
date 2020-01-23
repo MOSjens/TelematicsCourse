@@ -48,10 +48,26 @@ public class TestRecieveParser {
 		
 		Message newMessage = recieveParser.parse(data);
 		SignOn signOn = (SignOn) newMessage;
-		assertEquals( newMessage.getVersion(), 1 );
-		assertEquals( newMessage.getGroup(), 0);
-		assertEquals( newMessage.getType(), 0);
-		assertEquals( newMessage.getLength(), 11 );
+		assertEquals( signOn.getVersion(), 1 );
+		assertEquals( signOn.getGroup(), 0);
+		assertEquals( signOn.getType(), 0);
+		assertEquals( signOn.getLength(), 11 );
 		assertEquals(signOn.getPlayerAlias(), "🦄🐿️");
+	}
+	
+	@Test
+	public void testParseAnswer() {
+		byte[]data = new byte[] {
+				0x01,0x01,0x03,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x00
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		Answer answer = (Answer) newMessage;
+		assertEquals( answer.getVersion(), 1 );
+		assertEquals( answer.getGroup(), 1);
+		assertEquals( answer.getType(), 3);
+		assertEquals( answer.getMessageType(), MessageType.ANSWER);
+		assertEquals( answer.getLength(), 4 );
+		assertEquals(answer.getAnswerId(), 0);
 	}
 }
