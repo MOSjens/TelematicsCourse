@@ -1,6 +1,7 @@
 package MessageType;
 
 import Message.MessageGroup;
+import Message.ParseException;
 
 public enum GeneralMessageType implements MessageType {
 	GENERAL_TEXT(0),PLAYER_LIST(1);
@@ -15,7 +16,10 @@ public enum GeneralMessageType implements MessageType {
 		return value;
 	}
 
-	public static GeneralMessageType fromByte(byte b) {
+	public static GeneralMessageType fromByte(byte b) throws ParseException {
+		if (b >= 2 || b < 0) {
+			throw new ParseException("type");
+		}
 		return values()[b];
 	}
 

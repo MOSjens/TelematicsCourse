@@ -1,6 +1,7 @@
 package MessageType;
 
 import Message.MessageGroup;
+import Message.ParseException;
 
 public enum InGameMessageType implements MessageType {
 	CATAGORY_SELECTION_ANNOUNCEMENT(0),CATAGORY_SELECTION(1),QUESTION(2),ANSWER(3),BUZZ(4),BUZZ_RESULT(5),
@@ -16,7 +17,10 @@ public enum InGameMessageType implements MessageType {
 		return value;
 	}
 
-	public static InGameMessageType fromByte(byte b) {
+	public static InGameMessageType fromByte(byte b) throws ParseException {
+		if (b >= 10 || b < 0) {
+			throw new ParseException("type");
+		}
 		return values()[b];
 	}
 

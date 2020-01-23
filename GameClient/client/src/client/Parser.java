@@ -26,11 +26,11 @@ public class Parser {
 	
 		
 		try {
-			public byte[] message;
+			byte[] message = new byte[0];
 			ByteBuffer buffer = ByteBuffer.wrap(message);
 			buffer.order(ByteOrder.BIG_ENDIAN);
 			BufferedReader reader =new BufferedReader(new InputStreamReader(server.getInputStream()));
-			for(message[]=reader.readLine();Line !=null; Line =reader.read(ByteBuffer , off, len));
+			//for(message=reader.readLine();Line !=null; Line =reader.read(ByteBuffer , off, len));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

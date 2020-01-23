@@ -1,14 +1,20 @@
 package Message;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
+import MessageType.PregamMessageType;
+
 public class SignOnRespondMessage extends Message {
 
 	private int playerID;
 	private String alias;
 	
-	public SignOnRespondMessage(int version, int group, int type, int payLoadLength, String messsgeBody) {
-		super(version, group, type, payLoadLength, messsgeBody);
-		setPlayerID(Integer.parseInt(messsgeBody.substring(0, 4)));
-		setAlias(messsgeBody.substring(4));
+	public SignOnRespondMessage(byte[] messsgeBody) {
+		super(PregamMessageType.SIGN_ON_RESPONSE, messsgeBody);
+		ByteBuffer buffer = ByteBuffer.wrap(messsgeBody);
+		setPlayerID(buffer.getInt());
+		setAlias(StandardCharsets.UTF_8.decode(buffer).toString());
 	}
 
 	public int getPlayerID() {

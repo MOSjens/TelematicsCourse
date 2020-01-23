@@ -1,6 +1,7 @@
 package MessageType;
 
 import Message.MessageGroup;
+import Message.ParseException;
 
 public enum PregamMessageType implements MessageType{
 	SIGN_ON(0),SIGN_ON_RESPONSE(1),PLAYER_READY(2);
@@ -15,7 +16,10 @@ public enum PregamMessageType implements MessageType{
 		return value;
 	}
 
-	public static PregamMessageType fromByte(byte b) {
+	public static PregamMessageType fromByte(byte b) throws ParseException {
+		if (b >= 3 || b < 0) {
+			throw new ParseException("type");
+		}
 		return values()[b];
 	}
 

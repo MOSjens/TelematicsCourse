@@ -19,11 +19,14 @@ public enum MessageGroup {
 		return value;
 	}
 	
-	public static MessageGroup fromByte(byte value) {
+	public static MessageGroup fromByte(byte value) throws ParseException {
+		if (value >= 4 || value < 0) {
+			throw new ParseException("group");
+		}
 		return values()[value];
 	}
 	
-	public MessageType getType(byte value) {
+	public MessageType getType(byte value) throws ParseException {
 		switch(this) {
 		case PRE_GAME:
 			return PregamMessageType.fromByte(value);
