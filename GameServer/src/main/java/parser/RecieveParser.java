@@ -1,6 +1,11 @@
 package parser;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 
 import messages.*;
 
@@ -11,13 +16,14 @@ import messages.*;
  *
  */
 public class RecieveParser {
+	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
 	private byte[] header = new byte[7];
 	private byte version;
 	private byte group;
 	private byte type;
 	private byte[]length = new byte[4];
 	
-	public Message parse(byte[] data) {
+	public Message parse(byte[] data){
 		Message recievedMessage = new Message();
 		for(int i = 0; i < 7; i++) {
 			header[i] = data[i];
@@ -35,9 +41,10 @@ public class RecieveParser {
 		recievedMessage.setType(type);
 		recievedMessage.setLength(byteArrayToInt(length));
 		recievedMessage.setMessageType();
-		
+		payload = new byte[0];
 		if(data.length < (recievedMessage.getLength()+7)) {
 			//TODO
+			System.out.print(data.length+","+recievedMessage.getLength());
 			return null;
 		} else if(data.length > (recievedMessage.getLength()+7)){
 			//TODO
@@ -51,41 +58,41 @@ public class RecieveParser {
 		
 		switch(recievedMessage.getMessageType()) {
 		case ANSWER:
-			recievedMessage = this.parseAnswer(recievedMessage, data);
+			recievedMessage = this.parseAnswer(recievedMessage, payload);
 			break;
 		case ANSWER_RESULT:
 			break;
 		case BUZZ:
-			recievedMessage = this.parseBuzz(recievedMessage, data);
+			recievedMessage = this.parseBuzz(recievedMessage, payload);
 			break;
 		case BUZZ_RESULT:
 			break;
 		case CATEGORY_SELECTION:
-			recievedMessage = this.parseCategorySelection(recievedMessage, data);
+			recievedMessage = this.parseCategorySelection(recievedMessage, payload);
 			break;
 		case CATEGORY_SELECTOR_ANNOUNCEMENT:
 			break;
 		case GAME_END:
 			break;
 		case GENERAL_TEXT:
-			recievedMessage = this.parseGeneralText(recievedMessage, data);
+			recievedMessage = this.parseGeneralText(recievedMessage, payload);
 			break;
 		case PLAYER_LIST:
 			break;
 		case PLAYER_READY:
-			recievedMessage = this.parsePlayerReady(recievedMessage, data);
+			recievedMessage = this.parsePlayerReady(recievedMessage, payload);
 			break;
 		case QUESTION:
 			break;
 		case SCOREBOARD:
 			break;
 		case SCREW:
-			recievedMessage = this.parseScrew(recievedMessage, data);
+			recievedMessage = this.parseScrew(recievedMessage, payload);
 			break;
 		case SCREW_RESULT:
 			break;
 		case SIGN_ON:
-			recievedMessage = this.parseSignOn(recievedMessage, data);
+			recievedMessage = this.parseSignOn(recievedMessage, payload);
 			break;
 		case SIGN_ON_RESPONSE:
 			break;
@@ -142,7 +149,8 @@ public class RecieveParser {
 		SignOn signOn = new SignOn();
 		signOn.setVersion(message.getVersion());
 		signOn.setLength(message.getLength());
-		signOn.setPlayerAlias(new String(data));
+		signOn.setPlayerAlias(new String(data,UTF8_CHARSET));
+
 		return signOn;
 	}
 	public static int byteArrayToInt(byte[] b) {
