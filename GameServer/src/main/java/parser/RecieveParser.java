@@ -1,11 +1,8 @@
 package parser;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 
 import messages.*;
 
@@ -129,7 +126,7 @@ public class RecieveParser {
 		GeneralText generalText = new GeneralText();
 		generalText.setVersion(message.getVersion());
 		generalText.setLength(message.getLength());
-		generalText.setGeneralText(new String(data));
+		generalText.setGeneralText(new String(data,UTF8_CHARSET));
 		return generalText;
 	}
 	private PlayerReady parsePlayerReady(Message message, byte[] data) {

@@ -1,7 +1,8 @@
 package parser;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +16,7 @@ import messages.*;
  *
  */
 public class SendParser {
+	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
 	private byte[] header;
 	private byte[] payload;
 	private byte[] byteArray;
@@ -116,7 +118,7 @@ public class SendParser {
 		int i = 0;
 		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
 			playerOffsets[i] = offsetCounter;
-			offsetCounter += (entry.getValue().alias.getBytes().length +(Integer.SIZE / Byte.SIZE)+1);
+			offsetCounter += (entry.getValue().alias.getBytes(UTF8_CHARSET).length +(Integer.SIZE / Byte.SIZE)+1);
 			i++;
 		}
 
@@ -127,7 +129,7 @@ public class SendParser {
 		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
 		    bb.putInt(entry.getKey());
 		    readyState = (byte) entry.getValue().readyState.getValue();
-		    alias = entry.getValue().alias.getBytes();
+		    alias = entry.getValue().alias.getBytes(UTF8_CHARSET);
 		    bb.put(readyState);
 		    bb.put(alias);
 		}
@@ -168,12 +170,7 @@ public class SendParser {
 	private byte[] signOnResponseToByteArray(Message sendMessage) {
 		SignOnResponse signOnResponse= (SignOnResponse) sendMessage;
 		byte[] playerAlias = null;
-		try {
-			playerAlias = signOnResponse.getPlayerAlias().getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		playerAlias = signOnResponse.getPlayerAlias().getBytes(UTF8_CHARSET);
 		int size = (Integer.SIZE / Byte.SIZE)+ playerAlias.length;
 		final ByteBuffer bb = ByteBuffer.allocate(size);
 		bb.putInt(signOnResponse.getPlayerId());
@@ -191,7 +188,7 @@ public class SendParser {
 
 	private byte[] generalTextToByteArray(Message sendMessage) {
 		GeneralText generalText = (GeneralText) sendMessage;
-		byte[] payload = generalText.getGeneralText().getBytes();
+		byte[] payload = generalText.getGeneralText().getBytes(UTF8_CHARSET);
 		return payload;
 	}
 
