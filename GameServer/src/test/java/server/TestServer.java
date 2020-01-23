@@ -35,7 +35,7 @@ public class TestServer {
                     0x30, 0x30, (byte)0x9d };
 
             exampleClient.sendMessage(data);
-            Thread.sleep(2000);
+            Thread.sleep(300);
             exampleClient.stopConnection();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -52,9 +52,9 @@ public class TestServer {
     	});
     	ScheduledFuture<?> future = executor.schedule(() -> {
     	    testConnectClient();
-    	}, 500, TimeUnit.MILLISECONDS);
+    	}, 300, TimeUnit.MILLISECONDS);
     	try {
-			executor.awaitTermination(2500,  TimeUnit.MILLISECONDS);
+			executor.awaitTermination(700,  TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
