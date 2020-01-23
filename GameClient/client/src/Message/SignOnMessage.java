@@ -13,7 +13,7 @@ public class SignOnMessage extends Message {
 		this.playerAlias = playerAlias;
 	}
 	
-	/*
+	/* möglicher lösung für die server-side encoding von signOn
 	public SignOnMessage(byte[] messageBody) {
 		super(PregamMessageType.SIGN_ON, messageBody);
 		ByteBuffer buffer = ByteBuffer.wrap(messageBody);
