@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 
+import messages.Message;
+import messages.SignOn;
+import parser.RecieveParser;
+
 /**
  * Client with a connection to the server
  * 
@@ -43,6 +47,11 @@ public class Client extends Thread{
             if (number > 0) {
             	System.out.println("Bytes Read: " + number);
             	byte[] data = Arrays.copyOf(temp, number); 
+            	RecieveParser recieveParser = new RecieveParser();
+            	Message message = recieveParser.parse(data);
+            	SignOn signOn = (SignOn) message;
+            	System.out.println("Recieved: "+message.getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
+            	
             	System.out.println(Arrays.toString(data));
             }
         }
