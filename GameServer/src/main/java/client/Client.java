@@ -38,9 +38,13 @@ public class Client extends Thread{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Bytes Read: " + number);
-            byte[] data = Arrays.copyOf(temp, number);
-            if (number > 0) System.out.println(Arrays.toString(data));
+            
+           
+            if (number > 0) {
+            	System.out.println("Bytes Read: " + number);
+            	byte[] data = Arrays.copyOf(temp, number); 
+            	System.out.println(Arrays.toString(data));
+            }
         }
         // TODO disconnect handling
         // TODO client logic

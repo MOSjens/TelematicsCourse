@@ -4,6 +4,11 @@ import client.ExampleClient;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * To test the server you have to run both tests simultaneously.
@@ -13,12 +18,12 @@ import java.io.IOException;
 
 public class TestServer {
 
-    @Test
+    
     public void startServer() {
         Server.main(null);
     }
 
-    @Test
+    
     public void testConnectClient(){
         ExampleClient exampleClient = new ExampleClient();
         try {
@@ -36,5 +41,28 @@ public class TestServer {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void testServer() {
+
+    	 
+    	ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+    	executor.submit(() -> {
+    		startServer();
+    	});
+    	ScheduledFuture<?> future = executor.schedule(() -> {
+    	    testConnectClient();
+    	}, 500, TimeUnit.MILLISECONDS);
+    	try {
+			executor.awaitTermination(2500,  TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+    	future.cancel(true);
+    	
+    }
+    
 
 }
