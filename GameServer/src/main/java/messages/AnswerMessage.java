@@ -1,10 +1,10 @@
 package messages;
 
-public class Answer extends Message{
+public class AnswerMessage extends Message{
 	
 	private int answerId;
 
-	public Answer() {
+	public AnswerMessage() {
 		super();
 		this.setMessageType(MessageType.ANSWER);
 	}

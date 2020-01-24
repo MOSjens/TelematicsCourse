@@ -1,8 +1,8 @@
 package messages;
 
-public class Buzz extends Message {
+public class BuzzMessage extends Message {
 
-	public Buzz() {
+	public BuzzMessage() {
 		super();
 		this.setMessageType(MessageType.BUZZ);
 	}

@@ -2,11 +2,15 @@ package parser;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import dbconnection.Category;
+import dbconnection.Difficulty;
+import dbconnection.Question;
 import messages.*;
 
 public class TestSendParser {
@@ -19,7 +23,7 @@ public class TestSendParser {
 
 	@Test
 	public void testParse() {
-		SignOnResponse signOnResponse = new SignOnResponse();
+		SignOnResponseMessage signOnResponse = new SignOnResponseMessage();
 		signOnResponse.setPlayerId(60);
 		signOnResponse.setPlayerAlias("🦄🐿️");
 		byte[]dataTest;
@@ -31,7 +35,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataSignOnResponse.length; i++) {
 			assertEquals(dataSignOnResponse[i], dataTest[i]);
 		}
-		GeneralText GeneralText = new GeneralText();
+		GeneralTextMessage GeneralText = new GeneralTextMessage();
 		GeneralText.setGeneralText("🦄🐿️");
 		byte[]dataGeneralText = new byte[] {
 				0x01,0x03,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
@@ -41,7 +45,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataGeneralText.length; i++) {
 			assertEquals(dataGeneralText[i], dataTest[i]);
 		}
-		AnswerResult answerResult = new AnswerResult();
+		AnswerResultMessage answerResult = new AnswerResultMessage();
 		answerResult.setCorrectAnswerID(10);
 		answerResult.setSelectedAnswerID(5);
 		byte[]dataAnswerResult = new byte[] {0x01,0x01,0x07,0x00,0x00,0x00,0x08
@@ -52,7 +56,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataAnswerResult.length; i++) {
 			assertEquals(dataAnswerResult[i], dataTest[i]);
 		}
-		GameEnd gameEnd = new GameEnd();
+		GameEndMessage gameEnd = new GameEndMessage();
 		byte[]dataGameEnd = new byte[] {0x01,0x02,0x00,0x00,0x00,0x00,0x00
 		};
 		dataTest = sendParser.messageToByteArray(gameEnd);
@@ -61,7 +65,7 @@ public class TestSendParser {
 			assertEquals(dataGameEnd[i], dataTest[i]);
 		}
 		
-		ScrewResult screwResult = new ScrewResult();
+		ScrewResultMessage screwResult = new ScrewResultMessage();
 		screwResult.setScrewingPlayerId(10);
 		screwResult.setAnsweringPlayerId(5);
 		screwResult.setAnswerTimeout(15000);
@@ -80,7 +84,7 @@ public class TestSendParser {
 	@Test
 	public void testBuzzResulttoByteArray() {
 		byte[] dataTest;
-		BuzzResult buzzResult = new BuzzResult();
+		BuzzResultMessage buzzResult = new BuzzResultMessage();
 		buzzResult.setAnsweringPlayerId(99);
 		buzzResult.setAnswerTimeout(15000);
 		byte[]databuzzResult = new byte[] {0x01,0x01,0x05,0x00,0x00,0x00,0x0c
@@ -97,7 +101,7 @@ public class TestSendParser {
 	@Test
 	public void testScoreBoardToByteArray() {
 		byte[] dataTest;
-		Scoreboard scoreBoard = new Scoreboard();
+		ScoreboardMessage scoreBoard = new ScoreboardMessage();
 		scoreBoard.setRoundLeft(10);
 		LinkedHashMap<Integer,Integer> scoreMap = new LinkedHashMap<Integer,Integer>();
 		scoreMap.put(42, 4096);
@@ -118,10 +122,10 @@ public class TestSendParser {
 	@Test
 	public void testplayerListToByteArray() {
 		byte[] dataTest;
-		PlayerList playerList = new PlayerList();
-		LinkedHashMap<Integer,PairReadyAlias> playerMap = new LinkedHashMap<Integer,PairReadyAlias>();
-		playerMap.put(42, new PairReadyAlias(ReadyState.READY,"lel"));
-		playerMap.put(3, new PairReadyAlias(ReadyState.NOT_READY,"lul"));
+		PlayerListMessage playerList = new PlayerListMessage();
+		LinkedHashMap<Integer,PairReadyAliasMessage> playerMap = new LinkedHashMap<Integer,PairReadyAliasMessage>();
+		playerMap.put(42, new PairReadyAliasMessage(ReadyState.READY,"lel"));
+		playerMap.put(3, new PairReadyAliasMessage(ReadyState.NOT_READY,"lul"));
 
 		playerList.setMapPlayerIdToAlias(playerMap);
 		byte[]dataplayerList = new byte[] {0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x18
@@ -132,6 +136,35 @@ public class TestSendParser {
 		assertEquals( dataplayerList.length, dataTest.length);
 		for(int i = 0; i < dataplayerList.length; i++) {
 			assertEquals(dataplayerList[i], dataTest[i]);
+		}
+	}
+	
+	@Test
+	public void testQuestionMessagetoByteArray() {
+		byte[] dataTest;
+		QuestionMessage QuestionMessage = new QuestionMessage();
+		QuestionMessage.setAnsweringTimeout(0);
+		Question question = new Question();
+		question.setCategory(Category.ANIMALS);
+		question.setDifficulty(Difficulty.EASY);
+		question.setQuestionText("Rabbits are carnivores");
+		ArrayList<String> options = new ArrayList<String>();
+		options.add(0, "True");
+		options.add(1,"False");
+		question.setAnswerOptions(options);
+		QuestionMessage.setQuestion(question);
+		byte[]dataQuestionMessage = new byte[] {0x1, 0x1, 0x2, 0x0, 0x0, 0x0, 0x4A, 0x0, 0x0, 0x0, 0x20,
+				0x0, 0x0, 0x0, 0x24, 0x0, 0x0, 0x0, 0x2B, 0x0, 
+				0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x00, 0x00, 0x0, 0x0, 0x0,
+				0x41, 0x0, 0x0, 0x0, 0x45, 0x45, 0x61, 0x73, 0x79, 0x41, 0x6E, 0x69, 0x6D, 
+				0x61, 0x6C, 0x73, 0x52, 0x61, 0x62, 0x62, 0x69, 0x74, 0x73, 0x20, 0x61, 0x72, 0x65,
+				0x20, 0x63, 0x61, 0x72, 0x6E, 0x69, 0x76, 0x6F, 0x72, 0x65, 0x73, 0x54, 0x72, 0x75, 
+				0x65, 0x46, 0x61, 0x6C, 0x73, 0x65
+		};
+		dataTest = sendParser.messageToByteArray(QuestionMessage);
+		assertEquals( dataQuestionMessage.length, dataTest.length);
+		for(int i = 0; i < dataQuestionMessage.length; i++) {
+			assertEquals(dataQuestionMessage[i], dataTest[i]);
 		}
 	}
 

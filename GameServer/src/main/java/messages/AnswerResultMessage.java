@@ -1,11 +1,11 @@
 package messages;
 
-public class AnswerResult extends Message {
+public class AnswerResultMessage extends Message {
 	
 	private int correctAnswerID;
 	private int selectedAnswerID;
 
-	public AnswerResult() {
+	public AnswerResultMessage() {
 		super();
 		this.setMessageType(MessageType.ANSWER_RESULT);
 	}

@@ -1,10 +1,10 @@
 package messages;
 
-public class Screw extends Message {
+public class ScrewMessage extends Message {
 	
 	private int screwedPlayerId;
 
-	public Screw() {
+	public ScrewMessage() {
 		super();
 		this.setMessageType(MessageType.SCREW);
 	}

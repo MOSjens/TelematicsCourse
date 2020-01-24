@@ -1,11 +1,11 @@
 package messages;
 
-public class SignOnResponse extends Message {
+public class SignOnResponseMessage extends Message {
 	
 	private int playerId;
 	private String playerAlias;
 
-	public SignOnResponse() {
+	public SignOnResponseMessage() {
 		super();
 		this.setMessageType(MessageType.SIGN_ON_RESPONSE);
 	}

@@ -3,10 +3,12 @@ package parser;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dbconnection.Question;
 import messages.*;
 
 /**
@@ -61,6 +63,7 @@ public class SendParser {
 		case PLAYER_READY:
 			break;
 		case QUESTION:
+			payload = questionToByteArray(sendMessage);
 			break;
 		case SCOREBOARD:
 			payload = scoreboardToByteArray(sendMessage);
@@ -102,21 +105,67 @@ public class SendParser {
 	
 	
 	
+	private byte[] questionToByteArray(Message sendMessage) {
+		QuestionMessage questionMessage = (QuestionMessage) sendMessage;
+		Question question = questionMessage.getQuestion();
+		ArrayList<String> answerOptions = question.getAnswerOptions();
+		int[] generalOffsets = new int [3];
+		int[] optionOffsets;
+		int amountOptions ;
+		int offsetCounter;
+		final ByteBuffer bb;
+		byte[] option;
+		
+		amountOptions = answerOptions.size();
+		optionOffsets= new int[amountOptions];
+		generalOffsets[0] = (amountOptions+4)*(Integer.SIZE / Byte.SIZE)+(Long.SIZE/ Byte.SIZE);
+		offsetCounter = optionOffsets[0];
+		offsetCounter+= question.getDifficulty().toString().getBytes(UTF8_CHARSET).length;
+		generalOffsets[1] = offsetCounter; 
+		offsetCounter+= question.getCategory().toString().getBytes(UTF8_CHARSET).length;
+		generalOffsets[2] = offsetCounter;
+		offsetCounter+= question.getQuestionText().getBytes(UTF8_CHARSET).length;
+		int i= 0;
+		for(String answerOption: answerOptions){
+			optionOffsets[i] = offsetCounter;
+			offsetCounter += answerOption.getBytes(UTF8_CHARSET).length;
+			i++;
+		}
+		
+		bb = ByteBuffer.allocate(offsetCounter);
+		for(int j = 0; j < generalOffsets.length; j++) {
+			bb.putInt(generalOffsets[j]);
+		}
+		
+		bb.putInt(amountOptions);
+		bb.putLong(questionMessage.getAnsweringTimeout());
+		
+		for(int j = 0; j < optionOffsets.length; j++) {
+			bb.putInt(optionOffsets[j]);
+		}
+		
+		for(String answerOption: answerOptions){
+			bb.put( answerOption.getBytes(UTF8_CHARSET));
+		}
+		
+		return bb.array();
+	}
+
 	private byte[] playerListToByteArray(Message sendMessage) {
-		PlayerList PlayerList = (PlayerList) sendMessage;
+		PlayerListMessage PlayerList = (PlayerListMessage) sendMessage;
 		int[] playerOffsets;
 		int amountPlayers ;
 		int offsetCounter;
 		final ByteBuffer bb;
 		byte readyState;
 		byte[] alias;
-		LinkedHashMap<Integer, PairReadyAlias> playerMap = PlayerList.getMapPlayerIdToAlias();
+		LinkedHashMap<Integer, PairReadyAliasMessage> playerMap = PlayerList.getMapPlayerIdToAlias();
 		amountPlayers = playerMap.size();
 		playerOffsets = new int[amountPlayers];
 		playerOffsets[0] = amountPlayers *(Integer.SIZE / Byte.SIZE);
 		offsetCounter = playerOffsets[0];
 		int i = 0;
-		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
+		for (Entry<Integer, PairReadyAliasMessage> entry : playerMap.entrySet()) {
 			playerOffsets[i] = offsetCounter;
 			offsetCounter += (entry.getValue().alias.getBytes(UTF8_CHARSET).length +(Integer.SIZE / Byte.SIZE)+1);
 			i++;
@@ -126,7 +175,7 @@ public class SendParser {
 		for(int j = 0; j < playerOffsets.length; j++) {
 			bb.putInt(playerOffsets[j]);
 		}
-		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
+		for (Entry<Integer, PairReadyAliasMessage> entry : playerMap.entrySet()) {
 		    bb.putInt(entry.getKey());
 		    readyState = (byte) entry.getValue().readyState.getValue();
 		    alias = entry.getValue().alias.getBytes(UTF8_CHARSET);
@@ -137,7 +186,7 @@ public class SendParser {
 	}
 
 	private byte[] scoreboardToByteArray(Message sendMessage) {
-		Scoreboard scoreBoard = (Scoreboard) sendMessage;
+		ScoreboardMessage scoreBoard = (ScoreboardMessage) sendMessage;
 		LinkedHashMap<Integer, Integer> scoreMap = scoreBoard.getMapPlayerIdToScore();
 		int amountPlayers = scoreMap.size();
 		final ByteBuffer bb = ByteBuffer.allocate((2*amountPlayers+2)*Integer.SIZE / Byte.SIZE);
@@ -151,7 +200,7 @@ public class SendParser {
 	}
 
 	private byte[] buzzResultToByteArray(Message sendMessage) {
-		BuzzResult buzzResult = (BuzzResult) sendMessage;
+		BuzzResultMessage buzzResult = (BuzzResultMessage) sendMessage;
 		final ByteBuffer bb = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
 		bb.putInt(buzzResult.getAnsweringPlayerId());
 		bb.putLong(buzzResult.getAnswerTimeout());
@@ -159,7 +208,7 @@ public class SendParser {
 	}
 
 	private byte[] screwResultToByteArray(Message sendMessage) {
-		ScrewResult screwResult = (ScrewResult) sendMessage;
+		ScrewResultMessage screwResult = (ScrewResultMessage) sendMessage;
 		final ByteBuffer bb = ByteBuffer.allocate(2*Integer.SIZE / Byte.SIZE + Long.SIZE/Byte.SIZE);
 		bb.putInt(screwResult.getScrewingPlayerId());
 		bb.putInt(screwResult.getAnsweringPlayerId());
@@ -168,7 +217,7 @@ public class SendParser {
 	}
 
 	private byte[] signOnResponseToByteArray(Message sendMessage) {
-		SignOnResponse signOnResponse= (SignOnResponse) sendMessage;
+		SignOnResponseMessage signOnResponse= (SignOnResponseMessage) sendMessage;
 		byte[] playerAlias = null;
 		playerAlias = signOnResponse.getPlayerAlias().getBytes(UTF8_CHARSET);
 		int size = (Integer.SIZE / Byte.SIZE)+ playerAlias.length;
@@ -179,7 +228,7 @@ public class SendParser {
 	}
 
 	private byte[] AnswerResultToByteArray(Message sendMessage) {
-		AnswerResult answerResult= (AnswerResult) sendMessage;
+		AnswerResultMessage answerResult= (AnswerResultMessage) sendMessage;
 		final ByteBuffer bb = ByteBuffer.allocate(2*Integer.SIZE / Byte.SIZE);
 		bb.putInt(answerResult.getCorrectAnswerID());
 		bb.putInt(answerResult.getSelectedAnswerID());
@@ -187,7 +236,7 @@ public class SendParser {
 	}
 
 	private byte[] generalTextToByteArray(Message sendMessage) {
-		GeneralText generalText = (GeneralText) sendMessage;
+		GeneralTextMessage generalText = (GeneralTextMessage) sendMessage;
 		byte[] payload = generalText.getGeneralText().getBytes(UTF8_CHARSET);
 		return payload;
 	}

@@ -1,10 +1,10 @@
 package messages;
 
-public class CategorySelection extends Message {
+public class CategorySelectionMessage extends Message {
 	
 	private int categoryIndex;
 
-	public CategorySelection() {
+	public CategorySelectionMessage() {
 		super();
 		this.setMessageType(MessageType.CATEGORY_SELECTION);
 	}

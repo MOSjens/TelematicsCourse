@@ -2,12 +2,12 @@ package messages;
 
 import java.util.*;
 
-public class Scoreboard extends Message {
+public class ScoreboardMessage extends Message {
 	
 	private int  roundLeft;
 	private LinkedHashMap<Integer, Integer> mapPlayerIdToScore = new LinkedHashMap<Integer, Integer>();
 
-	public Scoreboard() {
+	public ScoreboardMessage() {
 		super();
 		this.setMessageType(MessageType.SCOREBOARD);
 	}

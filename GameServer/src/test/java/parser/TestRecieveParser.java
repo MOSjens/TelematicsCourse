@@ -1,13 +1,18 @@
 package parser;
-import messages.*;
-
-import static org.junit.Assert.*;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import messages.AnswerMessage;
+import messages.BuzzMessage;
+import messages.CategorySelectionMessage;
+import messages.GeneralTextMessage;
+import messages.Message;
+import messages.MessageType;
+import messages.PlayerReadyMessage;
+import messages.ScrewMessage;
+import messages.SignOn;
 
 public class TestRecieveParser {
 	private RecieveParser recieveParser;
@@ -32,10 +37,10 @@ public class TestRecieveParser {
 							+" Group: "+ newMessage.getGroup()
 							+" Type: "+ newMessage.getType()
 							+" Length: "+ newMessage.getLength());*/
-		assertEquals( newMessage.getVersion(), 1 );
-		assertEquals( newMessage.getGroup(), 1 );
-		assertEquals( newMessage.getType(), 2 );
-		assertEquals( newMessage.getLength(), 70 );
+		assertEquals(1, newMessage.getVersion() );
+		assertEquals(1, newMessage.getGroup());
+		assertEquals(2, newMessage.getType());
+		assertEquals(70,  newMessage.getLength());
 		//fail("Not yet implemented");
 	}
 
@@ -62,12 +67,91 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		Answer answer = (Answer) newMessage;
+		AnswerMessage answer = (AnswerMessage) newMessage;
 		assertEquals( answer.getVersion(), 1 );
 		assertEquals( answer.getGroup(), 1);
 		assertEquals( answer.getType(), 3);
 		assertEquals( answer.getMessageType(), MessageType.ANSWER);
 		assertEquals( answer.getLength(), 4 );
 		assertEquals(answer.getAnswerId(), 0);
+	}
+	
+	@Test
+	public void testParseBuzz() {
+		byte[]data = new byte[] {
+			0x01, 0x01, 0x04, 0x00, 0x00, 0x00, 0x00
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		BuzzMessage buzz = (BuzzMessage) newMessage;
+		assertEquals( buzz.getVersion(), 1 );
+		assertEquals( buzz.getGroup(), 1);
+		assertEquals( buzz.getType(), 4);
+		assertEquals( buzz.getMessageType(), MessageType.BUZZ);
+		assertEquals( buzz.getLength(), 0 );
+	}
+	
+	@Test
+	public void testParseplayerReady() {
+		byte[]data = new byte[] {
+				0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		PlayerReadyMessage playerReady = (PlayerReadyMessage) newMessage;
+		assertEquals( playerReady.getVersion(), 1 );
+		assertEquals( playerReady.getGroup(), 0);
+		assertEquals( playerReady.getType(), 2);
+		assertEquals( playerReady.getMessageType(), MessageType.PLAYER_READY);
+		assertEquals( playerReady.getLength(), 0 );
+	}
+
+	@Test
+	public void testParsescrew() {
+		byte[]data = new byte[] {
+				0x01, 0x01, 0x08, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x02
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		ScrewMessage screw = (ScrewMessage) newMessage;
+		assertEquals( screw.getVersion(), 1 );
+		assertEquals( screw.getGroup(), 1);
+		assertEquals( screw.getType(), 8);
+		assertEquals( screw.getMessageType(), MessageType.SCREW);
+		assertEquals( screw.getLength(), 4 );
+		assertEquals(screw.getScrewedPlayerId(), 2);
+	}	
+	
+	@Test
+	public void testParsecategorySelection() {
+		byte[]data = new byte[] {
+				0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x02
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		CategorySelectionMessage categorySelection = (CategorySelectionMessage) newMessage;
+		assertEquals( categorySelection.getVersion(), 1 );
+		assertEquals( categorySelection.getGroup(), 1);
+		assertEquals( categorySelection.getType(), 1);
+		assertEquals( categorySelection.getMessageType(), MessageType.CATEGORY_SELECTION);
+		assertEquals( categorySelection.getLength(), 4 );
+		assertEquals(categorySelection.getCategoryIndex(), 2);
+	}
+	
+	@Test
+	public void testParsegeneralText() {
+		byte[]data = new byte[] {
+				0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x14, 0x57, 0x65, 0x20, 0x6c, 0x6f, 
+				0x76, 0x65, 0x20, 0x6e, 0x6f, 0x6f, 0x64, 0x6c, 0x65, 0x20, 0x73, 0x6f, 0x75, 0x70, 0x21
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		GeneralTextMessage generalText = (GeneralTextMessage) newMessage;
+		assertEquals(1, generalText.getVersion());
+		assertEquals(3, generalText.getGroup());
+		assertEquals(0, generalText.getType());
+		assertEquals(MessageType.GENERAL_TEXT, generalText.getMessageType());
+		assertEquals(20, generalText.getLength() );
+		assertEquals("We love noodle soup!", generalText.getGeneralText());
 	}
 }
