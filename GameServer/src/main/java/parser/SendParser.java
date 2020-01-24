@@ -61,6 +61,7 @@ public class SendParser {
 		case PLAYER_READY:
 			break;
 		case QUESTION:
+			payload = questionToByteArray(sendMessage);
 			break;
 		case SCOREBOARD:
 			payload = scoreboardToByteArray(sendMessage);
@@ -102,6 +103,19 @@ public class SendParser {
 	
 	
 	
+	private byte[] questionToByteArray(Message sendMessage) {
+		QuestionMessage questionMessage = (QuestionMessage) sendMessage;
+		int[] optionOffsets;
+		int amountOptions ;
+		int offsetCounter;
+		final ByteBuffer bb = null;
+		byte[] difficulty;
+		byte[] category;
+		byte[] question;
+		byte[] option;
+		return bb.array();
+	}
+
 	private byte[] playerListToByteArray(Message sendMessage) {
 		PlayerListMessage PlayerList = (PlayerListMessage) sendMessage;
 		int[] playerOffsets;

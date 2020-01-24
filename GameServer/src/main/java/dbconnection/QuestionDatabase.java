@@ -1,4 +1,4 @@
-package server;
+package dbconnection;
 
 /**
  * Connection to a question database
