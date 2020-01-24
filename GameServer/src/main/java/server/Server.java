@@ -1,9 +1,13 @@
 package server;
 
 import client.Client;
+import client.MessageEvent;
+import client.MessageListener;
+import messages.SignOn;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,8 +34,10 @@ public class Server {
 			//TODO Start Thread for every client until all clients are ready for 30 seconds.
 			try {
 				Client client = new Client( serverSocket.accept() );
+				client.addMessageListener(new HandleMessageLister());
 				client.start();
 				playerList.add(client);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -44,5 +50,13 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+}
+
+class HandleMessageLister implements MessageListener {
+	@Override
+	public void handleMessage(MessageEvent e) {
+		SignOn signOn = (SignOn) e.getMessage();
+		System.out.println("Recieved: "+e.getMessage().getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
 	}
 }

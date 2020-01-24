@@ -10,6 +10,8 @@ import messages.Message;
 import messages.SignOn;
 import parser.RecieveParser;
 
+import javax.swing.event.EventListenerList;
+
 /**
  * Client with a connection to the server
  * 
@@ -20,6 +22,9 @@ public class Client extends Thread{
     private Socket socket = null;
     private DataOutputStream out;
     private DataInputStream in;
+
+    private EventListenerList messageListenerList;
+    //private MessageListener messageListener;
 
     public Client(Socket socket) {
         super("Client");
@@ -33,26 +38,24 @@ public class Client extends Thread{
     }
 
     public void run() {
-        // Dummy client code:
+
         while (true) {
-            byte[] temp = new byte[1000];
+            // Only messages with a size of 1024 byte can be handled.
+            byte[] temp = new byte[1024];
+            byte[] data;
             int number = 0;
             try {
-                number = in.read( temp );
+                if ((number = in.read( temp )) != -1 ) {
+                    data = Arrays.copyOf(temp, number);
+                    System.out.println("Bytes Read: " + number);
+
+                    RecieveParser recieveParser = new RecieveParser();
+                    Message message = recieveParser.parse(data);
+                    notifyListeners( new MessageEvent(this, message ) );
+
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            
-           
-            if (number > 0) {
-            	System.out.println("Bytes Read: " + number);
-            	byte[] data = Arrays.copyOf(temp, number); 
-            	RecieveParser recieveParser = new RecieveParser();
-            	Message message = recieveParser.parse(data);
-            	SignOn signOn = (SignOn) message;
-            	System.out.println("Recieved: "+message.getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
-            	
-            	System.out.println(Arrays.toString(data));
             }
         }
         // TODO disconnect handling
@@ -60,5 +63,21 @@ public class Client extends Thread{
         // TODO how does the client inform the server? listener?
 
     }
+
+    public void addMessageListener ( MessageListener listener ) {
+        messageListenerList.add( MessageListener.class, listener );
+        //messageListener = listener;
+    }
+
+    public void removeMessageListener( MessageListener listener ) {
+        messageListenerList.remove( MessageListener.class, listener );
+    }
+
+    protected synchronized void notifyListeners( MessageEvent event ) {
+        for ( MessageListener listener : messageListenerList.getListeners(MessageListener.class) ) {
+            listener.handleMessage( event );
+        }
+    }
+
 
 }

@@ -22,6 +22,7 @@ public class ExampleClient {
 
     public void sendMessage(byte[] data) throws IOException {
         out.write(data);
+        //out.flush();
     }
 
     public byte[] awaitMassage() throws IOException {
