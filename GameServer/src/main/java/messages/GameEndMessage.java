@@ -1,8 +1,8 @@
 package messages;
 
-public class GameEnd extends Message {
+public class GameEndMessage extends Message {
 
-	public GameEnd() {
+	public GameEndMessage() {
 		super();
 		this.setMessageType(MessageType.GAME_END);
 	}

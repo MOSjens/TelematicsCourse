@@ -102,41 +102,41 @@ public class RecieveParser {
 		
 	}
 	private Message parseBuzz(Message message, byte[] data) {
-		Buzz buzz = new Buzz();
+		BuzzMessage buzz = new BuzzMessage();
 		buzz.setVersion(message.getVersion());
 		buzz.setLength(message.getLength());
 		return buzz;
 	}
 	private Message parseAnswer(Message message, byte[] data) {
-		Answer answer = new Answer();
+		AnswerMessage answer = new AnswerMessage();
 		answer.setVersion(message.getVersion());
 		answer.setLength(message.getLength());
 		answer.setAnswerId(byteArrayToInt(data));
 		return answer;
 
 	}
-	private CategorySelection parseCategorySelection(Message message, byte[] data) {
-		CategorySelection categorySelection = new CategorySelection();
+	private CategorySelectionMessage parseCategorySelection(Message message, byte[] data) {
+		CategorySelectionMessage categorySelection = new CategorySelectionMessage();
 		categorySelection.setVersion(message.getVersion());
 		categorySelection.setLength(message.getLength());
 		categorySelection.setCategoryIndex(byteArrayToInt(data));
 		return categorySelection;
 	}
-	private GeneralText parseGeneralText(Message message, byte[] data) {
-		GeneralText generalText = new GeneralText();
+	private GeneralTextMessage parseGeneralText(Message message, byte[] data) {
+		GeneralTextMessage generalText = new GeneralTextMessage();
 		generalText.setVersion(message.getVersion());
 		generalText.setLength(message.getLength());
 		generalText.setGeneralText(new String(data,UTF8_CHARSET));
 		return generalText;
 	}
-	private PlayerReady parsePlayerReady(Message message, byte[] data) {
-		PlayerReady playerReady = new PlayerReady();
+	private PlayerReadyMessage parsePlayerReady(Message message, byte[] data) {
+		PlayerReadyMessage playerReady = new PlayerReadyMessage();
 		playerReady.setVersion(message.getVersion());
 		playerReady.setLength(message.getLength());
 		return playerReady;
 	}
-	private Screw parseScrew(Message message, byte[] data) {
-		Screw screw = new Screw();
+	private ScrewMessage parseScrew(Message message, byte[] data) {
+		ScrewMessage screw = new ScrewMessage();
 		screw.setVersion(message.getVersion());
 		screw.setLength(message.getLength());
 		screw.setScrewedPlayerId(byteArrayToInt(data));

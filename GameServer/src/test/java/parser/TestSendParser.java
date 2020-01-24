@@ -19,7 +19,7 @@ public class TestSendParser {
 
 	@Test
 	public void testParse() {
-		SignOnResponse signOnResponse = new SignOnResponse();
+		SignOnResponseMessage signOnResponse = new SignOnResponseMessage();
 		signOnResponse.setPlayerId(60);
 		signOnResponse.setPlayerAlias("🦄🐿️");
 		byte[]dataTest;
@@ -31,7 +31,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataSignOnResponse.length; i++) {
 			assertEquals(dataSignOnResponse[i], dataTest[i]);
 		}
-		GeneralText GeneralText = new GeneralText();
+		GeneralTextMessage GeneralText = new GeneralTextMessage();
 		GeneralText.setGeneralText("🦄🐿️");
 		byte[]dataGeneralText = new byte[] {
 				0x01,0x03,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
@@ -41,7 +41,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataGeneralText.length; i++) {
 			assertEquals(dataGeneralText[i], dataTest[i]);
 		}
-		AnswerResult answerResult = new AnswerResult();
+		AnswerResultMessage answerResult = new AnswerResultMessage();
 		answerResult.setCorrectAnswerID(10);
 		answerResult.setSelectedAnswerID(5);
 		byte[]dataAnswerResult = new byte[] {0x01,0x01,0x07,0x00,0x00,0x00,0x08
@@ -52,7 +52,7 @@ public class TestSendParser {
 		for(int i = 0; i < dataAnswerResult.length; i++) {
 			assertEquals(dataAnswerResult[i], dataTest[i]);
 		}
-		GameEnd gameEnd = new GameEnd();
+		GameEndMessage gameEnd = new GameEndMessage();
 		byte[]dataGameEnd = new byte[] {0x01,0x02,0x00,0x00,0x00,0x00,0x00
 		};
 		dataTest = sendParser.messageToByteArray(gameEnd);
@@ -61,7 +61,7 @@ public class TestSendParser {
 			assertEquals(dataGameEnd[i], dataTest[i]);
 		}
 		
-		ScrewResult screwResult = new ScrewResult();
+		ScrewResultMessage screwResult = new ScrewResultMessage();
 		screwResult.setScrewingPlayerId(10);
 		screwResult.setAnsweringPlayerId(5);
 		screwResult.setAnswerTimeout(15000);
@@ -80,7 +80,7 @@ public class TestSendParser {
 	@Test
 	public void testBuzzResulttoByteArray() {
 		byte[] dataTest;
-		BuzzResult buzzResult = new BuzzResult();
+		BuzzResultMessage buzzResult = new BuzzResultMessage();
 		buzzResult.setAnsweringPlayerId(99);
 		buzzResult.setAnswerTimeout(15000);
 		byte[]databuzzResult = new byte[] {0x01,0x01,0x05,0x00,0x00,0x00,0x0c
@@ -97,7 +97,7 @@ public class TestSendParser {
 	@Test
 	public void testScoreBoardToByteArray() {
 		byte[] dataTest;
-		Scoreboard scoreBoard = new Scoreboard();
+		ScoreboardMessage scoreBoard = new ScoreboardMessage();
 		scoreBoard.setRoundLeft(10);
 		LinkedHashMap<Integer,Integer> scoreMap = new LinkedHashMap<Integer,Integer>();
 		scoreMap.put(42, 4096);
@@ -118,10 +118,10 @@ public class TestSendParser {
 	@Test
 	public void testplayerListToByteArray() {
 		byte[] dataTest;
-		PlayerList playerList = new PlayerList();
-		LinkedHashMap<Integer,PairReadyAlias> playerMap = new LinkedHashMap<Integer,PairReadyAlias>();
-		playerMap.put(42, new PairReadyAlias(ReadyState.READY,"lel"));
-		playerMap.put(3, new PairReadyAlias(ReadyState.NOT_READY,"lul"));
+		PlayerListMessage playerList = new PlayerListMessage();
+		LinkedHashMap<Integer,PairReadyAliasMessage> playerMap = new LinkedHashMap<Integer,PairReadyAliasMessage>();
+		playerMap.put(42, new PairReadyAliasMessage(ReadyState.READY,"lel"));
+		playerMap.put(3, new PairReadyAliasMessage(ReadyState.NOT_READY,"lul"));
 
 		playerList.setMapPlayerIdToAlias(playerMap);
 		byte[]dataplayerList = new byte[] {0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x18

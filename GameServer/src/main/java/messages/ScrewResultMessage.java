@@ -1,12 +1,12 @@
 package messages;
 
-public class ScrewResult extends Message{
+public class ScrewResultMessage extends Message{
 	
 	private int screwingPlayerId;
 	private int answeringPlayerId;
 	private long answerTimeout;
 
-	public ScrewResult() {
+	public ScrewResultMessage() {
 		super();
 		this.setMessageType(MessageType.SCREW_RESULT);
 	}

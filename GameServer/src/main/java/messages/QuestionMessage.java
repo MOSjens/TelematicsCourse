@@ -1,8 +1,8 @@
 package messages;
 
-public class Question extends Message{
+public class QuestionMessage extends Message{
 
-	public Question() {
+	public QuestionMessage() {
 		super();
 		this.setMessageType(MessageType.QUESTION);
 	}

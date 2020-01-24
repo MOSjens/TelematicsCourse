@@ -1,10 +1,10 @@
 package messages;
 
-public class GeneralText extends Message {
+public class GeneralTextMessage extends Message {
 	
 	private String generalText;
 
-	public GeneralText() {
+	public GeneralTextMessage() {
 		super();
 		this.setMessageType(MessageType.GENERAL_TEXT);
 	}

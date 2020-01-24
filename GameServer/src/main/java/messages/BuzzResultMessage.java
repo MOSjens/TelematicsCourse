@@ -1,11 +1,11 @@
 package messages;
 
-public class BuzzResult extends Message {
+public class BuzzResultMessage extends Message {
 	
 	private int answeringPlayerId;
 	private long answerTimeout;
 
-	public BuzzResult() {
+	public BuzzResultMessage() {
 		super();
 		this.setMessageType(MessageType.BUZZ_RESULT);
 	}

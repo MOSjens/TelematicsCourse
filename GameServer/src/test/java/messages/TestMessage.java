@@ -15,7 +15,7 @@ public class TestMessage {
 		message.setType(9);
 		message.setMessageType();
 		assertEquals( MessageType.SCREW_RESULT, message.getMessageType() );
-		Screw screw = new Screw();
+		ScrewMessage screw = new ScrewMessage();
 		assertEquals( MessageType.SCREW, screw.getMessageType() );
 		assertEquals( 8, screw.getType() );
 		assertEquals( 1, screw.getGroup() );

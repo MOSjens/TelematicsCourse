@@ -4,14 +4,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import messages.Answer;
-import messages.Buzz;
-import messages.CategorySelection;
-import messages.GeneralText;
+import messages.AnswerMessage;
+import messages.BuzzMessage;
+import messages.CategorySelectionMessage;
+import messages.GeneralTextMessage;
 import messages.Message;
 import messages.MessageType;
-import messages.PlayerReady;
-import messages.Screw;
+import messages.PlayerReadyMessage;
+import messages.ScrewMessage;
 import messages.SignOn;
 
 public class TestRecieveParser {
@@ -67,7 +67,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		Answer answer = (Answer) newMessage;
+		AnswerMessage answer = (AnswerMessage) newMessage;
 		assertEquals( answer.getVersion(), 1 );
 		assertEquals( answer.getGroup(), 1);
 		assertEquals( answer.getType(), 3);
@@ -83,7 +83,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		Buzz buzz = (Buzz) newMessage;
+		BuzzMessage buzz = (BuzzMessage) newMessage;
 		assertEquals( buzz.getVersion(), 1 );
 		assertEquals( buzz.getGroup(), 1);
 		assertEquals( buzz.getType(), 4);
@@ -98,7 +98,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		PlayerReady playerReady = (PlayerReady) newMessage;
+		PlayerReadyMessage playerReady = (PlayerReadyMessage) newMessage;
 		assertEquals( playerReady.getVersion(), 1 );
 		assertEquals( playerReady.getGroup(), 0);
 		assertEquals( playerReady.getType(), 2);
@@ -113,7 +113,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		Screw screw = (Screw) newMessage;
+		ScrewMessage screw = (ScrewMessage) newMessage;
 		assertEquals( screw.getVersion(), 1 );
 		assertEquals( screw.getGroup(), 1);
 		assertEquals( screw.getType(), 8);
@@ -129,7 +129,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		CategorySelection categorySelection = (CategorySelection) newMessage;
+		CategorySelectionMessage categorySelection = (CategorySelectionMessage) newMessage;
 		assertEquals( categorySelection.getVersion(), 1 );
 		assertEquals( categorySelection.getGroup(), 1);
 		assertEquals( categorySelection.getType(), 1);
@@ -146,7 +146,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		GeneralText generalText = (GeneralText) newMessage;
+		GeneralTextMessage generalText = (GeneralTextMessage) newMessage;
 		assertEquals(1, generalText.getVersion());
 		assertEquals(3, generalText.getGroup());
 		assertEquals(0, generalText.getType());

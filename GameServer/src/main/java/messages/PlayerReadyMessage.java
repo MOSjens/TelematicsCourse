@@ -1,8 +1,8 @@
 package messages;
 
-public class PlayerReady extends Message{
+public class PlayerReadyMessage extends Message{
 
-	public PlayerReady() {
+	public PlayerReadyMessage() {
 		super();
 		this.setMessageType(MessageType.PLAYER_READY);
 	}
