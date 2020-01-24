@@ -7,7 +7,8 @@ public class Question {
 	private Difficulty difficulty;
 	private Category category;
 	private int correctAnswerIndex;
-	private ArrayList answerOptions = new ArrayList();
+	private String questionText;
+	private ArrayList<String> answerOptions = new ArrayList<String>();
 
 	public Question() {
 		// TODO Auto-generated constructor stub
@@ -41,6 +42,26 @@ public class Question {
 
 	public void setCorrectAnswerIndex(int correctAnswerIndex) {
 		this.correctAnswerIndex = correctAnswerIndex;
+	}
+
+
+	public String getQuestionText() {
+		return questionText;
+	}
+
+
+	public void setQuestionText(String questionText) {
+		this.questionText = questionText;
+	}
+
+
+	public ArrayList<String> getAnswerOptions() {
+		return answerOptions;
+	}
+
+
+	public void setAnswerOptions(ArrayList<String> answerOptions) {
+		this.answerOptions = answerOptions;
 	}
 
 }

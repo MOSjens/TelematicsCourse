@@ -3,10 +3,12 @@ package parser;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dbconnection.Question;
 import messages.*;
 
 /**
@@ -105,14 +107,47 @@ public class SendParser {
 	
 	private byte[] questionToByteArray(Message sendMessage) {
 		QuestionMessage questionMessage = (QuestionMessage) sendMessage;
+		Question question = questionMessage.getQuestion();
+		ArrayList<String> answerOptions = question.getAnswerOptions();
+		int[] generalOffsets = new int [3];
 		int[] optionOffsets;
 		int amountOptions ;
 		int offsetCounter;
-		final ByteBuffer bb = null;
-		byte[] difficulty;
-		byte[] category;
-		byte[] question;
+		final ByteBuffer bb;
 		byte[] option;
+		
+		amountOptions = answerOptions.size();
+		optionOffsets= new int[amountOptions];
+		generalOffsets[0] = (amountOptions+4)*(Integer.SIZE / Byte.SIZE)+(Long.SIZE/ Byte.SIZE);
+		offsetCounter = optionOffsets[0];
+		offsetCounter+= question.getDifficulty().toString().getBytes(UTF8_CHARSET).length;
+		generalOffsets[1] = offsetCounter; 
+		offsetCounter+= question.getCategory().toString().getBytes(UTF8_CHARSET).length;
+		generalOffsets[2] = offsetCounter;
+		offsetCounter+= question.getQuestionText().getBytes(UTF8_CHARSET).length;
+		int i= 0;
+		for(String answerOption: answerOptions){
+			optionOffsets[i] = offsetCounter;
+			offsetCounter += answerOption.getBytes(UTF8_CHARSET).length;
+			i++;
+		}
+		
+		bb = ByteBuffer.allocate(offsetCounter);
+		for(int j = 0; j < generalOffsets.length; j++) {
+			bb.putInt(generalOffsets[j]);
+		}
+		
+		bb.putInt(amountOptions);
+		bb.putLong(questionMessage.getAnsweringTimeout());
+		
+		for(int j = 0; j < optionOffsets.length; j++) {
+			bb.putInt(optionOffsets[j]);
+		}
+		
+		for(String answerOption: answerOptions){
+			bb.put( answerOption.getBytes(UTF8_CHARSET));
+		}
+		
 		return bb.array();
 	}
 

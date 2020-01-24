@@ -2,11 +2,15 @@ package parser;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import dbconnection.Category;
+import dbconnection.Difficulty;
+import dbconnection.Question;
 import messages.*;
 
 public class TestSendParser {
@@ -132,6 +136,35 @@ public class TestSendParser {
 		assertEquals( dataplayerList.length, dataTest.length);
 		for(int i = 0; i < dataplayerList.length; i++) {
 			assertEquals(dataplayerList[i], dataTest[i]);
+		}
+	}
+	
+	@Test
+	public void testQuestionMessagetoByteArray() {
+		byte[] dataTest;
+		QuestionMessage QuestionMessage = new QuestionMessage();
+		QuestionMessage.setAnsweringTimeout(0);
+		Question question = new Question();
+		question.setCategory(Category.ANIMALS);
+		question.setDifficulty(Difficulty.EASY);
+		question.setQuestionText("Rabbits are carnivores");
+		ArrayList<String> options = new ArrayList<String>();
+		options.add(0, "True");
+		options.add(1,"False");
+		question.setAnswerOptions(options);
+		QuestionMessage.setQuestion(question);
+		byte[]dataQuestionMessage = new byte[] {0x1, 0x1, 0x2, 0x0, 0x0, 0x0, 0x4A, 0x0, 0x0, 0x0, 0x20,
+				0x0, 0x0, 0x0, 0x24, 0x0, 0x0, 0x0, 0x2B, 0x0, 
+				0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x00, 0x00, 0x0, 0x0, 0x0,
+				0x41, 0x0, 0x0, 0x0, 0x45, 0x45, 0x61, 0x73, 0x79, 0x41, 0x6E, 0x69, 0x6D, 
+				0x61, 0x6C, 0x73, 0x52, 0x61, 0x62, 0x62, 0x69, 0x74, 0x73, 0x20, 0x61, 0x72, 0x65,
+				0x20, 0x63, 0x61, 0x72, 0x6E, 0x69, 0x76, 0x6F, 0x72, 0x65, 0x73, 0x54, 0x72, 0x75, 
+				0x65, 0x46, 0x61, 0x6C, 0x73, 0x65
+		};
+		dataTest = sendParser.messageToByteArray(QuestionMessage);
+		assertEquals( dataQuestionMessage.length, dataTest.length);
+		for(int i = 0; i < dataQuestionMessage.length; i++) {
+			assertEquals(dataQuestionMessage[i], dataTest[i]);
 		}
 	}
 
