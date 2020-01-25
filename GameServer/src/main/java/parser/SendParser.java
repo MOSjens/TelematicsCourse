@@ -8,9 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dbconnection.Category;
+import dbconnection.Difficulty;
 import dbconnection.Question;
 import messages.AnswerResultMessage;
 import messages.BuzzResultMessage;
+import messages.CategorySelectorAnnouncementMessage;
 import messages.GeneralTextMessage;
 import messages.Message;
 import messages.PairReadyAliasMessage;
@@ -61,6 +64,7 @@ public class SendParser {
 		case CATEGORY_SELECTION:
 			break;
 		case CATEGORY_SELECTOR_ANNOUNCEMENT:
+			payload = categorySelectorAnnouncementToByteArray(sendMessage);
 			break;
 		case GAME_END:
 			break;
@@ -106,6 +110,48 @@ public class SendParser {
 	
 	
 	
+	private byte[] categorySelectorAnnouncementToByteArray(Message sendMessage) {
+		CategorySelectorAnnouncementMessage csaMessage = (CategorySelectorAnnouncementMessage) sendMessage;
+		LinkedHashMap<Category, Difficulty> categoryMap = csaMessage.getCategoryDifficultyMap(); 
+
+		int[] categoryOffsets;
+		int amountCategories ;
+		int offsetCounter;
+		final ByteBuffer bb;
+		
+		//get values for offset part of the payload
+		amountCategories = categoryMap.size();
+		categoryOffsets= new int[2*amountCategories];
+		categoryOffsets[0] = (2*amountCategories+2)*(Integer.SIZE / Byte.SIZE)+(Long.SIZE/ Byte.SIZE);
+		offsetCounter = categoryOffsets[0];
+		int i= 0;
+		for (Entry<Category, Difficulty> entry : categoryMap.entrySet()) {
+			categoryOffsets[i] = offsetCounter;
+		    offsetCounter += entry.getValue().toString().getBytes(UTF8_CHARSET).length;
+		    i++;
+		    categoryOffsets[i] = offsetCounter;
+		    offsetCounter += entry.getKey().toString().getBytes(UTF8_CHARSET).length;
+		    i++;
+		}
+		
+		//fill payload with offset
+		bb = ByteBuffer.allocate(offsetCounter);
+		bb.putLong(csaMessage.getCategoryTimeout());
+		bb.putInt(csaMessage.getSelectingPlayerId());
+		bb.putInt(amountCategories);
+		for(int j = 0; j < categoryOffsets.length; j++) {
+			bb.putInt(categoryOffsets[j]);
+		}
+		
+		//fill payload with values
+		for (Entry<Category, Difficulty> entry : categoryMap.entrySet()) {
+		    bb.put(entry.getValue().toString().getBytes(UTF8_CHARSET));
+		    bb.put(entry.getKey().toString().getBytes(UTF8_CHARSET));
+		}
+		
+		return bb.array();
+	}
+
 	private byte[] questionToByteArray(Message sendMessage) {
 		QuestionMessage questionMessage = (QuestionMessage) sendMessage;
 		Question question = questionMessage.getQuestion();

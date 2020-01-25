@@ -107,12 +107,32 @@ public class TestSendParser {
 			assertEquals(dataplayerList[i], dataTest[i]);
 		}
 	}
+	
+	@Test
+	public void testCSAToByteArray() {
+		byte[] dataTest;
+		LinkedHashMap<Category, Difficulty> categoryMap = new LinkedHashMap<Category, Difficulty>();
+		categoryMap.put(Category.ANIMALS, Difficulty.EASY);
+		CategorySelectorAnnouncementMessage csa = new CategorySelectorAnnouncementMessage(256,1,categoryMap);
+
+		
+
+		byte[]dataplayerList = new byte[] {0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x23, 0x00, 0x00, 
+				0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 
+				0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x1c, 0x45, 0x61, 0x73, 0x79, 0x41, 0x6e, 
+				0x69, 0x6d, 0x61, 0x6c, 0x73
+		};
+		dataTest = sendParser.messageToByteArray(csa);
+		assertEquals( dataplayerList.length, dataTest.length);
+		for(int i = 0; i < dataplayerList.length; i++) {
+			assertEquals(dataplayerList[i], dataTest[i]);
+		}
+	}
 
 	@Test
 	public void testQuestionMessagetoByteArray() {
 		byte[] dataTest;
-		QuestionMessage QuestionMessage = new QuestionMessage();
-		QuestionMessage.setAnswerTimeout(0);
+		QuestionMessage QuestionMessage;
 		Question question = new Question();
 		question.setCategory(Category.ANIMALS);
 		question.setDifficulty(Difficulty.EASY);
@@ -121,7 +141,7 @@ public class TestSendParser {
 		options.add(0, "True");
 		options.add(1,"False");
 		question.setAnswerOptions(options);
-		QuestionMessage.setQuestion(question);
+		QuestionMessage = new QuestionMessage(0,question);
 		byte[]dataQuestionMessage = new byte[] {0x1, 0x1, 0x2, 0x0, 0x0, 0x0, 0x4A,
 				0x0, 0x0, 0x0, 0x20,    0x0, 0x0, 0x0, 0x24,     0x0, 0x0, 0x0, 0x2B, 
 				0x0, 0x0, 0x0, 0x2,     0x0, 0x0, 0x0, 0x0,      0x0, 0x0, 0x00, 0x00, 
