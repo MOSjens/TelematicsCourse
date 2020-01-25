@@ -37,7 +37,6 @@ public class QuestionDatabase {
 			//parameters.put("difficulty",difficulty.toString());
 			parameters.put("difficulty","easy");
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
-			System.out.print(ParameterStringBuilder.getParamsString(parameters));
 			out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
 			out.flush();
 			out.close();
