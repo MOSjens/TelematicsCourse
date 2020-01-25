@@ -1,14 +1,21 @@
 package Message;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import MessageType.InGameMessageType;
+
 public class BRMessage extends Message {
 
 	private int answeringResultID;
-	private int timeOut;
+	private long timeOut;
 	
-	public BRMessage(int version, int group, int type, int payLoadLength, String messsgeBody) {
-		super(version, group, type, payLoadLength, messsgeBody);
-		setAnsweringResultID(Integer.parseInt(messsgeBody.substring(0, 4)));
-		setTimeOut(Integer.parseInt(messsgeBody.substring(4)));
+	public BRMessage(byte[] messsgeBody) {
+		super(InGameMessageType.BUZZ_RESULT, messsgeBody);
+		ByteBuffer buffer = ByteBuffer.wrap(messsgeBody);
+		buffer.order(ByteOrder.BIG_ENDIAN);
+		setAnsweringResultID(buffer.getInt());
+		setTimeOut(buffer.getLong());
 	}
 
 	public int getAnsweringResultID() {
@@ -19,18 +26,18 @@ public class BRMessage extends Message {
 		this.answeringResultID = answeringResultID;
 	}
 
-	public int getTimeOut() {
+	public long getTimeOut() {
 		return timeOut;
 	}
 
-	public void setTimeOut(int timeOut) {
+	public void setTimeOut(long timeOut) {
 		this.timeOut = timeOut;
 	}
 	
 	@Override
 	public String toString() {
 		return Integer.toString(getVersion()) + getGroup().name() + getType() + Integer.toString(getPayloadLength())
-		   + Integer.toString(answeringResultID) +  Integer.toString(timeOut);
+		   + Integer.toString(answeringResultID) +  Long.toString(timeOut);
 	}
 
 	
