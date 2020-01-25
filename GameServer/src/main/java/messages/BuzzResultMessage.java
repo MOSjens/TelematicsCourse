@@ -13,7 +13,7 @@ public class BuzzResultMessage extends Message {
 	public BuzzResultMessage(int answeringPlayerId, long answerTimeout) {
 		super();
 		this.setMessageType(MessageType.BUZZ_RESULT);
-		this.setAnswerTimeout(answerTimeout);
+		this.setAnsweringPlayerId(answeringPlayerId);
 		this.setAnswerTimeout(answerTimeout);
 	}
 
@@ -21,8 +21,8 @@ public class BuzzResultMessage extends Message {
 		return answeringPlayerId;
 	}
 
-	public void setAnsweringPlayerId(int answeringPlayerId) {
-		this.answeringPlayerId = answeringPlayerId;
+	public void setAnsweringPlayerId(int answerTimeout2) {
+		this.answeringPlayerId = answerTimeout2;
 	}
 
 	public long getAnswerTimeout() {

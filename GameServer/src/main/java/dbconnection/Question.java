@@ -11,9 +11,24 @@ public class Question {
 	private ArrayList<String> answerOptions = new ArrayList<String>();
 
 	public Question() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
+	public Question(Difficulty difficulty, Category category, String questionText, ArrayList<String> answerOptions) {
+		this.setDifficulty(difficulty);
+		this.setCategory(category);
+		this.setQuestionText(questionText);
+		this.setCorrectAnswerIndex(-1);
+		this.setAnswerOptions(answerOptions);
+	}
+	
+	public Question(Difficulty difficulty, Category category, String questionText, int correctAnswer, ArrayList<String> answerOptions) {
+		this.setDifficulty(difficulty);
+		this.setCategory(category);
+		this.setQuestionText(questionText);
+		this.setCorrectAnswerIndex(correctAnswer);
+		this.setAnswerOptions(answerOptions);
+	}
 
 	public Difficulty getDifficulty() {
 		return difficulty;

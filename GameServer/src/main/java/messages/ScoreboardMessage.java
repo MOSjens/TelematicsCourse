@@ -43,7 +43,7 @@ public class ScoreboardMessage extends Message {
 	List<Map.Entry<Integer, Integer>> entries = new ArrayList<Map.Entry<Integer, Integer>>(mapPlayerIdToScore.entrySet());
 	Collections.sort(entries, new Comparator<Map.Entry<Integer, Integer>>() {
 		public int compare(Map.Entry<Integer, Integer> a, Map.Entry<Integer, Integer> b){
-			    return a.getValue().compareTo(b.getValue());
+			    return b.getValue().compareTo(a.getValue());
 		}
 	});
 			

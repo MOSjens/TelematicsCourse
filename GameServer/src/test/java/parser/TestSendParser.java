@@ -25,9 +25,7 @@ public class TestSendParser {
 	@Test
 	public void testAnswerResultToByteArray() {
 		byte[] dataTest;
-		AnswerResultMessage answerResult = new AnswerResultMessage();
-		answerResult.setCorrectAnswerID(10);
-		answerResult.setSelectedAnswerID(5);
+		AnswerResultMessage answerResult = new AnswerResultMessage(10,5);
 		byte[] dataAnswerResult = new byte[] { 0x01, 0x01, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x0a, 0x00,
 				0x00, 0x00, 0x05 };
 		dataTest = sendParser.messageToByteArray(answerResult);
@@ -40,9 +38,7 @@ public class TestSendParser {
 	@Test
 	public void testBuzzResultToByteArray() {
 		byte[] dataTest;
-		BuzzResultMessage buzzResult = new BuzzResultMessage();
-		buzzResult.setAnsweringPlayerId(99);
-		buzzResult.setAnswerTimeout(15000);
+		BuzzResultMessage buzzResult = new BuzzResultMessage(99, 15000);
 		byte[]databuzzResult = new byte[] {0x01,0x01,0x05,0x00,0x00,0x00,0x0c
 				,0x00,0x00,0x00,0x63
 				,0x00,0x00,0x00,0x00,0x00,0x00,0x3A, (byte)0x98
@@ -74,9 +70,7 @@ public class TestSendParser {
 	
 	@Test
 	public void testSignOnResponseToByteArray() {
-		SignOnResponseMessage signOnResponse = new SignOnResponseMessage();
-		signOnResponse.setPlayerId(60);
-		signOnResponse.setPlayerAlias("🦄🐿️");
+		SignOnResponseMessage signOnResponse = new SignOnResponseMessage(60,"🦄🐿️");
 		byte[]dataTest;
 		byte[]dataSignOnResponse = new byte[] {0x01,0x00,0x01,0x00,0x00,0x00,0x0f,0x00,0x00,0x00,0x3c,
 				(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
@@ -91,12 +85,11 @@ public class TestSendParser {
 	@Test
 	public void testplayerListToByteArray() {
 		byte[] dataTest;
-		PlayerListMessage playerList = new PlayerListMessage();
+		PlayerListMessage playerList;
 		LinkedHashMap<Integer,PairReadyAliasMessage> playerMap = new LinkedHashMap<Integer,PairReadyAliasMessage>();
 		playerMap.put(42, new PairReadyAliasMessage(ReadyState.READY,"lel"));
 		playerMap.put(3, new PairReadyAliasMessage(ReadyState.NOT_READY,"lul"));
-
-		playerList.setMapPlayerIdToAlias(playerMap);
+		playerList = new PlayerListMessage(playerMap);
 		byte[]dataplayerList = new byte[] {0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x18
 				, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x2a, 0x01, 
 				0x6c, 0x65, 0x6c, 0x00, 0x00, 0x00, 0x03, 0x00, 0x6c, 0x75, 0x6c
@@ -133,14 +126,11 @@ public class TestSendParser {
 	public void testQuestionMessagetoByteArray() {
 		byte[] dataTest;
 		QuestionMessage QuestionMessage;
-		Question question = new Question();
-		question.setCategory(Category.ANIMALS);
-		question.setDifficulty(Difficulty.EASY);
-		question.setQuestionText("Rabbits are carnivores");
+		Question question;
 		ArrayList<String> options = new ArrayList<String>();
 		options.add(0, "True");
 		options.add(1,"False");
-		question.setAnswerOptions(options);
+		question = new Question(Difficulty.EASY,Category.ANIMALS,"Rabbits are carnivores",options);
 		QuestionMessage = new QuestionMessage(0,question);
 		byte[]dataQuestionMessage = new byte[] {0x1, 0x1, 0x2, 0x0, 0x0, 0x0, 0x4A,
 				0x0, 0x0, 0x0, 0x20,    0x0, 0x0, 0x0, 0x24,     0x0, 0x0, 0x0, 0x2B, 
