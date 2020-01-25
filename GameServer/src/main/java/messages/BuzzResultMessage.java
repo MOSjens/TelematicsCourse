@@ -9,6 +9,13 @@ public class BuzzResultMessage extends Message {
 		super();
 		this.setMessageType(MessageType.BUZZ_RESULT);
 	}
+	
+	public BuzzResultMessage(int answeringPlayerId, long answerTimeout) {
+		super();
+		this.setMessageType(MessageType.BUZZ_RESULT);
+		this.setAnswerTimeout(answerTimeout);
+		this.setAnswerTimeout(answerTimeout);
+	}
 
 	public int getAnsweringPlayerId() {
 		return answeringPlayerId;

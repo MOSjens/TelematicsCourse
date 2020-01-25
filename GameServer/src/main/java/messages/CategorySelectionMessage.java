@@ -8,6 +8,12 @@ public class CategorySelectionMessage extends Message {
 		super();
 		this.setMessageType(MessageType.CATEGORY_SELECTION);
 	}
+	
+	public CategorySelectionMessage(int categoryIndex) {
+		super();
+		this.setMessageType(MessageType.CATEGORY_SELECTION);
+		this.setCategoryIndex(categoryIndex);
+	}
 
 	public int getCategoryIndex() {
 		return categoryIndex;

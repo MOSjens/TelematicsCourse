@@ -17,6 +17,13 @@ public class ScoreboardMessage extends Message {
 		this.setMessageType(MessageType.SCOREBOARD);
 	}
 	
+	public ScoreboardMessage(int roundLeft, LinkedHashMap<Integer, Integer> mapPlayerIdToScore) {
+		super();
+		this.setMessageType(MessageType.SCOREBOARD);
+		this.setRoundLeft(roundLeft);
+		this.setMapPlayerIdToScore(mapPlayerIdToScore);
+	}
+	
 	public LinkedHashMap<Integer, Integer> getMapPlayerIdToScore() {
 		return mapPlayerIdToScore;
 	}

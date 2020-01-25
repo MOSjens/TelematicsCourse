@@ -8,6 +8,13 @@ public class ScrewMessage extends Message {
 		super();
 		this.setMessageType(MessageType.SCREW);
 	}
+	
+	public ScrewMessage(int screwedPlayerId) {
+		super();
+		this.setMessageType(MessageType.SCREW);
+		this.setScrewedPlayerId(screwedPlayerId);
+	}
+
 
 	public int getScrewedPlayerId() {
 		return screwedPlayerId;

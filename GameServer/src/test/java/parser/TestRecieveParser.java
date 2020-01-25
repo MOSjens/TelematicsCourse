@@ -12,7 +12,7 @@ import messages.Message;
 import messages.MessageType;
 import messages.PlayerReadyMessage;
 import messages.ScrewMessage;
-import messages.SignOn;
+import messages.SignOnMessage;
 
 public class TestRecieveParser {
 	private RecieveParser recieveParser;
@@ -52,7 +52,7 @@ public class TestRecieveParser {
 		};
 		
 		Message newMessage = recieveParser.parse(data);
-		SignOn signOn = (SignOn) newMessage;
+		SignOnMessage signOn = (SignOnMessage) newMessage;
 		assertEquals( signOn.getVersion(), 1 );
 		assertEquals( signOn.getGroup(), 0);
 		assertEquals( signOn.getType(), 0);

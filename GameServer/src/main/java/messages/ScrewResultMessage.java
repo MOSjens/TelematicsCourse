@@ -10,6 +10,14 @@ public class ScrewResultMessage extends Message{
 		super();
 		this.setMessageType(MessageType.SCREW_RESULT);
 	}
+	
+	public ScrewResultMessage(int screwingPlayerId, int answeringPlayerId, long answerTimeout) {
+		super();
+		this.setMessageType(MessageType.SCREW_RESULT);
+		this.setScrewingPlayerId(screwingPlayerId);
+		this.setAnsweringPlayerId(answeringPlayerId);
+		this.setAnswerTimeout(answerTimeout);
+	}
 
 	public int getScrewingPlayerId() {
 		return screwingPlayerId;

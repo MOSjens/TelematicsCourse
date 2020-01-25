@@ -9,6 +9,13 @@ public class SignOnResponseMessage extends Message {
 		super();
 		this.setMessageType(MessageType.SIGN_ON_RESPONSE);
 	}
+	
+	public SignOnResponseMessage(int playerId, String playerAlias ) {
+		super();
+		this.setMessageType(MessageType.SIGN_ON_RESPONSE);
+		this.setPlayerId(playerId);
+		this.setPlayerAlias(playerAlias);
+	}
 
 	public int getPlayerId() {
 		return playerId;

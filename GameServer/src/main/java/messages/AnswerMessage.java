@@ -8,6 +8,12 @@ public class AnswerMessage extends Message{
 		super();
 		this.setMessageType(MessageType.ANSWER);
 	}
+	
+	public AnswerMessage(int answerId) {
+		super();
+		this.setMessageType(MessageType.ANSWER);
+		this.setAnswerId(answerId);
+	}
 
 	public int getAnswerId() {
 		return answerId;

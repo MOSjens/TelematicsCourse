@@ -5,12 +5,19 @@ import dbconnection.Question;
 public class QuestionMessage extends Message{
 	
 	private Question question;
-	private long answeringTimeout;
+	private long answerTimeout;
 	
 
 	public QuestionMessage() {
 		super();
 		this.setMessageType(MessageType.QUESTION);
+	}
+	
+	public QuestionMessage(long answerTimeout, Question question) {
+		super();
+		this.setMessageType(MessageType.QUESTION);
+		this.setAnswerTimeout(answerTimeout);
+		this.setQuestion(question);
 	}
 
 	public Question getQuestion() {
@@ -21,12 +28,12 @@ public class QuestionMessage extends Message{
 		this.question = question;
 	}
 
-	public long getAnsweringTimeout() {
-		return answeringTimeout;
+	public long getAnswerTimeout() {
+		return answerTimeout;
 	}
 
-	public void setAnsweringTimeout(long answeringTimeout) {
-		this.answeringTimeout = answeringTimeout;
+	public void setAnswerTimeout(long answeringTimeout) {
+		this.answerTimeout = answeringTimeout;
 	}
 	
 	

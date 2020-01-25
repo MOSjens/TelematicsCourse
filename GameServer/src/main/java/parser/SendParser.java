@@ -9,7 +9,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import dbconnection.Question;
-import messages.*;
+import messages.AnswerResultMessage;
+import messages.BuzzResultMessage;
+import messages.GeneralTextMessage;
+import messages.Message;
+import messages.PairReadyAliasMessage;
+import messages.PlayerListMessage;
+import messages.QuestionMessage;
+import messages.ScoreboardMessage;
+import messages.ScrewResultMessage;
+import messages.SignOnResponseMessage;
 
 /**
  * Parser to write message details into bytearray
@@ -29,13 +38,15 @@ public class SendParser {
 	}
 	
 	public byte[] messageToByteArray(Message sendMessage) {
-
+		
+		//fill header with version group and type
 		header = ByteBuffer.allocate(7);
 		payload = new byte[0];
-		header.put( (byte) sendMessage.getVersion());
-		header.put( (byte) sendMessage.getGroup());
+		header.put((byte) sendMessage.getVersion());
+		header.put((byte) sendMessage.getGroup());
 		header.put((byte) sendMessage.getType());
 		
+		//parse based on message type
 		switch(sendMessage.getMessageType()) {
 		case ANSWER:
 			break;
@@ -81,6 +92,8 @@ public class SendParser {
 			break;
 		
 		}
+		
+		//build complete tcp payload
 		payloadLength = payload.length;
 		header.putInt(payloadLength);
 		byteBuffer = ByteBuffer.allocate(payload.length+header.capacity());
@@ -103,6 +116,7 @@ public class SendParser {
 		int offsetCounter;
 		final ByteBuffer bb;
 		
+		//get values for offset part of the payload
 		amountOptions = answerOptions.size();
 		optionOffsets= new int[amountOptions];
 		generalOffsets[0] = (amountOptions+4)*(Integer.SIZE / Byte.SIZE)+(Long.SIZE/ Byte.SIZE);
@@ -119,17 +133,19 @@ public class SendParser {
 			i++;
 		}
 		
+		//fill payload with offsets
 		bb = ByteBuffer.allocate(offsetCounter);
 		for(int j = 0; j < generalOffsets.length; j++) {
 			bb.putInt(generalOffsets[j]);
 		}
-		
 		bb.putInt(amountOptions);
-		bb.putLong(questionMessage.getAnsweringTimeout());
+		bb.putLong(questionMessage.getAnswerTimeout());
 		
 		for(int j = 0; j < optionOffsets.length; j++) {
 			bb.putInt(optionOffsets[j]);
 		}
+		
+		//fill payload with values
 		bb.put(question.getDifficulty().toString().getBytes(UTF8_CHARSET));
 		bb.put(question.getCategory().toString().getBytes(UTF8_CHARSET));
 		bb.put(question.getQuestionText().getBytes(UTF8_CHARSET));
@@ -150,6 +166,8 @@ public class SendParser {
 		byte[] alias;
 		LinkedHashMap<Integer, PairReadyAliasMessage> playerMap = PlayerList.getMapPlayerIdToAlias();
 		amountPlayers = playerMap.size();
+		
+		//get values for offsets
 		playerOffsets = new int[amountPlayers];
 		playerOffsets[0] = amountPlayers *(Integer.SIZE / Byte.SIZE);
 		offsetCounter = playerOffsets[0];
@@ -160,10 +178,13 @@ public class SendParser {
 			i++;
 		}
 
+		//fill payload with offsets
 		bb = ByteBuffer.allocate(offsetCounter);
 		for(int j = 0; j < playerOffsets.length; j++) {
 			bb.putInt(playerOffsets[j]);
 		}
+		
+		//fill payload with values
 		for (Entry<Integer, PairReadyAliasMessage> entry : playerMap.entrySet()) {
 		    bb.putInt(entry.getKey());
 		    readyState = (byte) entry.getValue().readyState.getValue();

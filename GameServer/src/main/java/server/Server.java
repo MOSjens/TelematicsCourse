@@ -8,7 +8,7 @@ import java.util.Set;
 import client.Client;
 import client.MessageEvent;
 import client.MessageListener;
-import messages.SignOn;
+import messages.SignOnMessage;
 
 public class Server {
 
@@ -55,7 +55,7 @@ public class Server {
 class HandleMessageLister implements MessageListener {
 	@Override
 	public void handleMessage(MessageEvent e) {
-		SignOn signOn = (SignOn) e.getMessage();
+		SignOnMessage signOn = (SignOnMessage) e.getMessage();
 		System.out.println("Recieved: "+e.getMessage().getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
 	}
 }

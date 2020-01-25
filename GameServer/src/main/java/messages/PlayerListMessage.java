@@ -10,6 +10,12 @@ public class PlayerListMessage extends Message {
 		super();
 		this.setMessageType(MessageType.PLAYER_LIST);
 	}
+	
+	public PlayerListMessage(LinkedHashMap<Integer, PairReadyAliasMessage> mapPlayerIdToAlias) {
+		super();
+		this.setMessageType(MessageType.PLAYER_LIST);
+		this.setMapPlayerIdToAlias(mapPlayerIdToAlias);
+	}
 
 	public LinkedHashMap<Integer, PairReadyAliasMessage> getMapPlayerIdToAlias() {
 		return mapPlayerIdToAlias;

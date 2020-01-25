@@ -9,6 +9,12 @@ public class GeneralTextMessage extends Message {
 		this.setMessageType(MessageType.GENERAL_TEXT);
 	}
 
+	public GeneralTextMessage(String generalText) {
+		super();
+		this.setMessageType(MessageType.GENERAL_TEXT);
+		this.setGeneralText(generalText);
+	}
+	
 	public String getGeneralText() {
 		return generalText;
 	}

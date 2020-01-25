@@ -9,6 +9,13 @@ public class AnswerResultMessage extends Message {
 		super();
 		this.setMessageType(MessageType.ANSWER_RESULT);
 	}
+	
+	public AnswerResultMessage(int correctAnswerId, int selectedAnswerId) {
+		super();
+		this.setMessageType(MessageType.ANSWER_RESULT);
+		this.setCorrectAnswerID(correctAnswerId);
+		this.setSelectedAnswerID(selectedAnswerId);
+	}
 
 	public int getCorrectAnswerID() {
 		return correctAnswerID;

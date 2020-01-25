@@ -11,7 +11,7 @@ import messages.GeneralTextMessage;
 import messages.Message;
 import messages.PlayerReadyMessage;
 import messages.ScrewMessage;
-import messages.SignOn;
+import messages.SignOnMessage;
 
 /**
  * Parser to read bytearray and get message details
@@ -149,8 +149,8 @@ public class RecieveParser {
 		screw.setScrewedPlayerId(byteArrayToInt(data));
 		return screw;
 	}
-	private SignOn parseSignOn(Message message, byte[] data) {
-		SignOn signOn = new SignOn();
+	private SignOnMessage parseSignOn(Message message, byte[] data) {
+		SignOnMessage signOn = new SignOnMessage();
 		signOn.setVersion(message.getVersion());
 		signOn.setLength(message.getLength());
 		signOn.setPlayerAlias(new String(data,UTF8_CHARSET));
