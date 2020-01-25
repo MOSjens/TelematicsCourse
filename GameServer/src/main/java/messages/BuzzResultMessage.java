@@ -21,8 +21,8 @@ public class BuzzResultMessage extends Message {
 		return answeringPlayerId;
 	}
 
-	public void setAnsweringPlayerId(int answerTimeout2) {
-		this.answeringPlayerId = answerTimeout2;
+	public void setAnsweringPlayerId(int answeringPlayerId) {
+		this.answeringPlayerId = answeringPlayerId;
 	}
 
 	public long getAnswerTimeout() {
