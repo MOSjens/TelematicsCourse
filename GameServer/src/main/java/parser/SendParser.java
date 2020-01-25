@@ -114,12 +114,11 @@ public class SendParser {
 		int amountOptions ;
 		int offsetCounter;
 		final ByteBuffer bb;
-		byte[] option;
 		
 		amountOptions = answerOptions.size();
 		optionOffsets= new int[amountOptions];
 		generalOffsets[0] = (amountOptions+4)*(Integer.SIZE / Byte.SIZE)+(Long.SIZE/ Byte.SIZE);
-		offsetCounter = optionOffsets[0];
+		offsetCounter = generalOffsets[0];
 		offsetCounter+= question.getDifficulty().toString().getBytes(UTF8_CHARSET).length;
 		generalOffsets[1] = offsetCounter; 
 		offsetCounter+= question.getCategory().toString().getBytes(UTF8_CHARSET).length;
@@ -143,7 +142,9 @@ public class SendParser {
 		for(int j = 0; j < optionOffsets.length; j++) {
 			bb.putInt(optionOffsets[j]);
 		}
-		
+		bb.put(question.getDifficulty().toString().getBytes(UTF8_CHARSET));
+		bb.put(question.getCategory().toString().getBytes(UTF8_CHARSET));
+		bb.put(question.getQuestionText().getBytes(UTF8_CHARSET));
 		for(String answerOption: answerOptions){
 			bb.put( answerOption.getBytes(UTF8_CHARSET));
 		}
