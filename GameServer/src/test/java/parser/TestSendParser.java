@@ -166,11 +166,9 @@ public class TestSendParser {
 		};
 		
 		dataTest = sendParser.messageToByteArray(QuestionMessage);
-		System.out.println(Arrays.toString(dataTest));
 		assertEquals( dataQuestionMessage.length, dataTest.length);
 		for(int i = 0; i < dataQuestionMessage.length; i++) {
 			assertEquals(dataQuestionMessage[i], dataTest[i]);
-			System.out.println(i);
 		}
 	}
 

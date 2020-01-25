@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 
-import messages.Message;
-import messages.SignOn;
-import parser.RecieveParser;
-
 import javax.swing.event.EventListenerList;
+
+import messages.Message;
+import parser.RecieveParser;
 
 /**
  * Client with a connection to the server

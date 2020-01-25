@@ -1,15 +1,14 @@
 package server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.HashSet;
+import java.util.Set;
+
 import client.Client;
 import client.MessageEvent;
 import client.MessageListener;
 import messages.SignOn;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Server {
 

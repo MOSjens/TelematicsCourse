@@ -19,23 +19,22 @@ import messages.*;
  */
 public class SendParser {
 	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
-	private byte[] header;
+	private ByteBuffer header;
 	private byte[] payload;
-	private byte[] byteArray;
-	private int length;
-	private byte[] payloadLength;
+	private ByteBuffer byteBuffer;
+	private int payloadLength;
 
 	public SendParser() {
 		
 	}
 	
 	public byte[] messageToByteArray(Message sendMessage) {
-		header = new byte[7];
+
+		header = ByteBuffer.allocate(7);
 		payload = new byte[0];
-		header [0]= (byte) sendMessage.getVersion();
-		header [1]= (byte) sendMessage.getGroup();
-		header [2] = (byte) sendMessage.getType();
-		length = 0;
+		header.put( (byte) sendMessage.getVersion());
+		header.put( (byte) sendMessage.getGroup());
+		header.put((byte) sendMessage.getType());
 		
 		switch(sendMessage.getMessageType()) {
 		case ANSWER:
@@ -82,24 +81,13 @@ public class SendParser {
 			break;
 		
 		}
-		length = payload.length;
-		payloadLength = intToByteArray(length);
-		for(int i = 0; i < 4; i++) {
-			header[i+3] = payloadLength[i];
-		}
+		payloadLength = payload.length;
+		header.putInt(payloadLength);
+		byteBuffer = ByteBuffer.allocate(payload.length+header.capacity());
+		byteBuffer.put(header.array());
+		byteBuffer.put(payload);
 		
-		byteArray = new byte[payload.length+header.length];
-		int j =0;
-		for(int i = 0; i < payload.length+header.length; i++) {
-			if(i < header.length) {
-				byteArray [i] = header[i];
-			}
-			else {
-				byteArray [i] = payload[j];
-				j++;
-			}	
-		}
-		return byteArray;
+		return byteBuffer.array();
 		
 	}
 	

@@ -1,10 +1,17 @@
 package parser;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import messages.*;
+import messages.AnswerMessage;
+import messages.BuzzMessage;
+import messages.CategorySelectionMessage;
+import messages.GeneralTextMessage;
+import messages.Message;
+import messages.PlayerReadyMessage;
+import messages.ScrewMessage;
+import messages.SignOn;
 
 /**
  * Parser to read bytearray and get message details

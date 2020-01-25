@@ -1,8 +1,8 @@
 package client;
 
-import messages.Message;
-
 import java.util.EventObject;
+
+import messages.Message;
 
 public class MessageEvent extends EventObject {
     private Message message;
