@@ -15,7 +15,7 @@ public class TestQuestionDatabase {
 	@Test
 	public void testGetQuestion20() {
 		QuestionDatabase qdb = new QuestionDatabase();
-		qdb.getQuestion(20, Category.ANIMALS, Difficulty.EASY);
+		qdb.getQuestion(20, Category.ENTERTAINMENT_CARTOON, Difficulty.EASY);
 	}
 	
 	@Test

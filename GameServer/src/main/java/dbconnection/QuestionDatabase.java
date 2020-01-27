@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +22,9 @@ public class QuestionDatabase {
 	
 	
 	
-	public void getQuestion(int amount,Category category, Difficulty difficulty) {
+	public ArrayList<Question> getQuestion(int amount,Category category, Difficulty difficulty) {
 		HttpURLConnection con = null;
-
+		ArrayList<Question>  listOfQuestions = new ArrayList<Question>();
 		try {
 			url = new URL("https://opentdb.com/api.php?amount=1");
 			con = (HttpURLConnection) url.openConnection();
@@ -47,10 +48,13 @@ public class QuestionDatabase {
 			while ((inputLine = in.readLine()) != null) {
 				content.append(inputLine);
 			}
+			in.close();
+			
 			System.out.println(content.toString());
 			ResultParser parser = new ResultParser();
-			parser.parseResult(content.toString());
-			in.close();
+			JsonResult jsonResult = parser.parseResult(content.toString());
+			listOfQuestions = this.jsonResultToQuestions(jsonResult);
+			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,8 +62,27 @@ public class QuestionDatabase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return listOfQuestions;
 	}
 	public void getRandomQuestions(int amount) {
 		this.getQuestion(amount, null, null);
+	}
+	
+	public ArrayList<Question> jsonResultToQuestions(JsonResult jsonResult) {
+		ArrayList<Question>  listOfQuestions = new ArrayList<Question>();
+		Result[] results = jsonResult.getResults();
+		Question question = new Question();
+		
+		for(Result entry : results) {
+			question.setQuestionText(entry.getQuestion());
+			question.setCategory(Category.fromString(entry.getCategory()));
+			question.setDifficulty(Difficulty.valueOf(entry.getDifficulty().toUpperCase()));
+			listOfQuestions.add(question);
+		}
+		
+		
+		return null;
+		
 	}
 }
