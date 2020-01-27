@@ -28,14 +28,14 @@ public class QuestionDatabase {
 			url = new URL("https://opentdb.com/api.php?amount=1");
 			con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
-			con = (HttpURLConnection) url.openConnection();
 			con.setDoOutput(true);
 
 			Map<String, String> parameters = new HashMap<>();
 			parameters.put("amount",Integer.toString(amount));
+			if(category != null)
 			parameters.put("category",Integer.toString(category.getCategoryId()));
-			//parameters.put("difficulty",difficulty.toString());
-			parameters.put("difficulty","easy");
+			if(difficulty != null)
+			parameters.put("difficulty",difficulty.toString().toLowerCase());
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
 			out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
 			out.flush();
@@ -48,6 +48,8 @@ public class QuestionDatabase {
 				content.append(inputLine);
 			}
 			System.out.println(content.toString());
+			ResultParser parser = new ResultParser();
+			parser.parseResult(content.toString());
 			in.close();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -56,9 +58,8 @@ public class QuestionDatabase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		 
-
-
+	}
+	public void getRandomQuestions(int amount) {
+		this.getQuestion(amount, null, null);
 	}
 }
