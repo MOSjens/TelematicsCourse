@@ -2,9 +2,9 @@ package Message;
 
 import MessageType.PregamMessageType;
 
-public class ReadyMessage extends Message {
+public class PlayerReadyMessage extends Message {
 
-    public ReadyMessage() {
+    public PlayerReadyMessage() {
         super(PregamMessageType.PLAYER_READY);
     }
 

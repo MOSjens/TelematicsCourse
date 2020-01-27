@@ -1,6 +1,6 @@
 package Message;
 
-import java.nio.ByteBuffer;
+
 import java.nio.charset.StandardCharsets;
 
 import MessageType.PregamMessageType;
@@ -12,12 +12,6 @@ public class SignOnMessage extends Message {
         super(PregamMessageType.SIGN_ON, playerAlias.getBytes(StandardCharsets.UTF_8));
         this.playerAlias = playerAlias;
     }
-	
-	/* m�glicher l�sung f�r die server-side encoding von signOn
-	public SignOnMessage(byte[] messageBody) {
-		super(PregamMessageType.SIGN_ON, messageBody);
-		ByteBuffer buffer = ByteBuffer.wrap(messageBody);
-		this.playerAlias = StandardCharsets.UTF_8.decode(buffer).toString();
-	}
-	*/
+
+
 }

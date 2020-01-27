@@ -10,9 +10,9 @@ public class SignOnRespondMessage extends Message {
     private int playerID;
     private String alias;
 
-    public SignOnRespondMessage(byte[] messsgeBody) {
-        super(PregamMessageType.SIGN_ON_RESPONSE, messsgeBody);
-        ByteBuffer buffer = ByteBuffer.wrap(messsgeBody);
+    public SignOnRespondMessage(byte[] messageBody) {
+        super(PregamMessageType.SIGN_ON_RESPONSE, messageBody);
+        ByteBuffer buffer = ByteBuffer.wrap(messageBody);
         setPlayerID(buffer.getInt());
         setAlias(StandardCharsets.UTF_8.decode(buffer).toString());
     }
