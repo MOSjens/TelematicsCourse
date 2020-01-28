@@ -1,9 +1,8 @@
 package parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import org.junit.Before;
@@ -12,7 +11,18 @@ import org.junit.Test;
 import dbconnection.Category;
 import dbconnection.Difficulty;
 import dbconnection.Question;
-import messages.*;
+import messages.AnswerResultMessage;
+import messages.BuzzResultMessage;
+import messages.CategorySelectorAnnouncementMessage;
+import messages.GameEndMessage;
+import messages.GeneralTextMessage;
+import messages.PairReadyAliasMessage;
+import messages.PlayerListMessage;
+import messages.QuestionMessage;
+import messages.ReadyState;
+import messages.ScoreboardMessage;
+import messages.ScrewResultMessage;
+import messages.SignOnResponseMessage;
 
 public class TestSendParser {
 	private SendParser sendParser;

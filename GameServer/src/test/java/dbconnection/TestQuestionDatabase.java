@@ -1,7 +1,5 @@
 package dbconnection;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -23,11 +21,11 @@ public class TestQuestionDatabase {
 	@Test
 	public void testGetRandomQuestion() {
 		QuestionDatabase qdb = new QuestionDatabase();
-		ArrayList<Question> questions = qdb.getRandomQuestions(20);
+		ArrayList<Question> questions = qdb.getRandomQuestions(2);
 		for(Question question : questions) {
-			System.out.print(question.getQuestionText()+" "+question.getCorrectAnswerIndex());
+			System.out.println(question.getQuestionText()+" "+question.getCorrectAnswerIndex()+" "+question.getAnswerOptions().get(question.getCorrectAnswerIndex()));
 			for(String option : question.getAnswerOptions()) {
-				System.out.print(option);
+				System.out.println(option);
 			}
 		}
 		
