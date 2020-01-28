@@ -34,8 +34,6 @@ public class TestServer {
     				(byte) 0x84,(byte) 0xf0,(byte) 0x9f,(byte) 0x90,(byte) 0xbf,(byte) 0xef,(byte) 0xb8,(byte) 0x8f };
 
             exampleClient.sendMessage(data);
-            Thread.sleep(1);
-            exampleClient.sendMessage(data);
             Thread.sleep(300);
             exampleClient.stopConnection();
         } catch (IOException | InterruptedException e) {
@@ -55,7 +53,7 @@ public class TestServer {
     	    testConnectClient();
     	}, 300, TimeUnit.MILLISECONDS);
     	try {
-			executor.awaitTermination(700,  TimeUnit.MILLISECONDS);
+			executor.awaitTermination(1700,  TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

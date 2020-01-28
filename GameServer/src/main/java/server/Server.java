@@ -2,8 +2,6 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.HashSet;
-import java.util.Set;
 
 import client.Client;
 import client.MessageEvent;
@@ -12,13 +10,17 @@ import messages.SignOnMessage;
 
 public class Server {
 
-	private static Set<Client> playerList = new HashSet<Client>();
 	private static ServerSocket serverSocket = null;
 	private static int port = 6666;
+	private static ServerState serverState;
 
 	public static void main(String[] args) {
 		boolean startPhase = true;
 
+		Configuration config = new Configuration();
+		serverState = new ServerState( config.amountRounds );
+
+		// TODO implement game phases
 		try {
 			serverSocket = new ServerSocket(port);
 			System.out.println( "Server started on IP: " + serverSocket.getInetAddress().getHostAddress()
@@ -32,10 +34,10 @@ public class Server {
 		while (startPhase) {
 			//TODO Start Thread for every client until all clients are ready for 30 seconds.
 			try {
-				Client client = new Client( serverSocket.accept() );
+				Client client = new Client( serverSocket.accept(), serverState );
 				client.addMessageListener(new HandleMessageLister());
 				client.start();
-				playerList.add(client);
+				serverState.addPlayer( client );
 
 			} catch (IOException e) {
 				e.printStackTrace();

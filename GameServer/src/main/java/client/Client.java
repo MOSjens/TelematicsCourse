@@ -10,6 +10,7 @@ import javax.swing.event.EventListenerList;
 
 import messages.Message;
 import parser.RecieveParser;
+import server.ServerState;
 
 /**
  * Client with a connection to the server
@@ -21,13 +22,16 @@ public class Client extends Thread{
     private Socket socket = null;
     private DataOutputStream out;
     private DataInputStream in;
+    private ServerState serverState;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
 
-    public Client(Socket socket) {
+    public Client(Socket socket, ServerState serverState) {
         super("Client");
         this.socket = socket;
+        this.serverState = serverState;
+        messageListenerList = new EventListenerList();
         try {
             out = new DataOutputStream( socket.getOutputStream());
             in = new DataInputStream( socket.getInputStream() );
@@ -65,6 +69,7 @@ public class Client extends Thread{
 
     public void addMessageListener ( MessageListener listener ) {
         messageListenerList.add( MessageListener.class, listener );
+        System.out.println("Hello from the thread");
         //messageListener = listener;
     }
 
