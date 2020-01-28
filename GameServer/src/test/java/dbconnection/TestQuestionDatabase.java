@@ -21,7 +21,7 @@ public class TestQuestionDatabase {
 	@Test
 	public void testGetRandomQuestion() {
 		QuestionDatabase qdb = new QuestionDatabase();
-		ArrayList<Question> questions = qdb.getRandomQuestions(2);
+		ArrayList<Question> questions = qdb.getRandomQuestionsOffline();
 		for(Question question : questions) {
 			System.out.println(question.getQuestionText()+" "+question.getCorrectAnswerIndex()+" "+question.getAnswerOptions().get(question.getCorrectAnswerIndex()));
 			for(String option : question.getAnswerOptions()) {

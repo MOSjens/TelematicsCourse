@@ -2,6 +2,8 @@ package dbconnection;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -68,6 +70,37 @@ public class QuestionDatabase {
 
 	public ArrayList<Question> getRandomQuestions(int amount) {
 		return this.getQuestion(amount, null, null);
+	}
+	
+	public ArrayList<Question> getRandomQuestionsOffline()  {
+		ArrayList<Question> listOfQuestions;
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("./src/test/resources/Questions.txt"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String json = "";
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = reader.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append("\n");
+		        line = reader.readLine();
+		    }
+		    json = sb.toString();
+		    reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		ResultParser parser = new ResultParser();
+		JsonResult jsonResult = parser.parseResult(json);
+		listOfQuestions = this.jsonResultToQuestions(jsonResult);
+		return listOfQuestions;
 	}
 
 	public ArrayList<Question> jsonResultToQuestions(JsonResult jsonResult) {
