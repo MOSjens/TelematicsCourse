@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Connection to a question database
@@ -65,24 +66,45 @@ public class QuestionDatabase {
 		
 		return listOfQuestions;
 	}
-	public void getRandomQuestions(int amount) {
-		this.getQuestion(amount, null, null);
+	public ArrayList<Question> getRandomQuestions(int amount) {
+		return this.getQuestion(amount, null, null);
 	}
 	
 	public ArrayList<Question> jsonResultToQuestions(JsonResult jsonResult) {
+		Random random = new Random();
 		ArrayList<Question>  listOfQuestions = new ArrayList<Question>();
+		ArrayList<String> answerOptions = new ArrayList<String>();
+		int amountOptions = 0;
+		int randomIndex = 0;
+		
 		Result[] results = jsonResult.getResults();
 		Question question = new Question();
 		
 		for(Result entry : results) {
+			question = new Question();
+			answerOptions = new ArrayList<String>();
 			question.setQuestionText(entry.getQuestion());
 			question.setCategory(Category.fromString(entry.getCategory()));
 			question.setDifficulty(Difficulty.valueOf(entry.getDifficulty().toUpperCase()));
+			amountOptions = entry.getIncorrectAnswers().length +1;
+			randomIndex = random.nextInt(amountOptions);
+			question.setCorrectAnswerIndex(randomIndex);
+			int i =0;
+			for(String option : entry.getIncorrectAnswers()) {
+				if(i == randomIndex) {
+					answerOptions.add(i, entry.getCorrectAnswer());
+					i++;
+				}
+				answerOptions.add(i, option);
+				i++;
+				
+			}
+			question.setAnswerOptions(answerOptions);
 			listOfQuestions.add(question);
 		}
 		
 		
-		return null;
+		return listOfQuestions;
 		
 	}
 }
