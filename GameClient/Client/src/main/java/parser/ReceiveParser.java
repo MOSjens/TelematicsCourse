@@ -17,11 +17,13 @@ import Message.ParseException;
 import Message.SRMessage;
 import Message.ScoreBoardMessage;
 import Message.SignOnRespondMessage;
+import Message.PlayerListingMessage;
 import MessageType.GeneralMessageType;
 import MessageType.InGameMessageType;
 import MessageType.MessageType;
 import MessageType.PostGameMessageType;
 import MessageType.PregamMessageType;
+
 import client.Parser;
 
 public class ReceiveParser extends Parser {
@@ -84,7 +86,8 @@ public class ReceiveParser extends Parser {
             	{ 
             	case GENERAL_TEXT:
             		return new GTextMessage(Messagebody);
-            		
+            		case PLAYER_LIST:
+            		    return new PlayerListingMessage(Messagebody);
             		default:
                 break;
             	}
