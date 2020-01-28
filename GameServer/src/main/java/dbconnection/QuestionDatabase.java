@@ -52,7 +52,6 @@ public class QuestionDatabase {
 			}
 			in.close();
 
-			System.out.println(content.toString());
 			ResultParser parser = new ResultParser();
 			JsonResult jsonResult = parser.parseResult(content.toString());
 			listOfQuestions = this.jsonResultToQuestions(jsonResult);

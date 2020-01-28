@@ -42,7 +42,7 @@ public class TestClient {
         ExampleClient exampleClient = new ExampleClient();
         try {
             exampleClient.startConnection("127.0.0.1", 6667);
-            Thread.sleep(900);
+            Thread.sleep(200);
             exampleClient.stopConnection();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class TestClient {
     	    testConnectClient();
     	}, 400, TimeUnit.MILLISECONDS);
     	try {
-			executor.awaitTermination(1500,  TimeUnit.MILLISECONDS);
+			executor.awaitTermination(700,  TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
