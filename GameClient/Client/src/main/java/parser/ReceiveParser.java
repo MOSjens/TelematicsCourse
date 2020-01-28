@@ -7,13 +7,20 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import Message.BRMessage;
+import Message.CSAnnounceMessage;
+import Message.EndGameMessage;
+import Message.GTextMessage;
 import Message.Message;
 import Message.MessageGroup;
 import Message.ParseException;
+import Message.SRMessage;
 import Message.ScoreBoardMessage;
 import Message.SignOnRespondMessage;
+import MessageType.GeneralMessageType;
 import MessageType.InGameMessageType;
 import MessageType.MessageType;
+import MessageType.PostGameMessageType;
 import MessageType.PregamMessageType;
 import client.Parser;
 
@@ -46,16 +53,41 @@ public class ReceiveParser extends Parser {
                 break;
             case IN_GAME:
                 switch ((InGameMessageType) type) {
+                
                     case SCOREBOARD:
                         return new ScoreBoardMessage(Messagebody);
+                    case  BUZZ_RESULT:
+                    	return new  BRMessage(Messagebody);
+                    case SCREW_RESULT:
+                    	return new SRMessage(Messagebody);
+                    case CATAGORY_SELECTION_ANNOUNCEMENT:
+                    	return new CSAnnounceMessage(Messagebody);
+                    
+                 
+                    	
                     default:
                         break;
                 }
                 break;
             case POST_GAME:
-                break;
+            	switch((PostGameMessageType) type)
+            	{
+            	case GAME_END:
+            		return new EndGameMessage();
+            		default:
+            			break;
+            	}
+        
+             
             case GENERAL:
+            	switch ((GeneralMessageType) type)
+            	{ 
+            	case GENERAL_TEXT:
+            		return new GTextMessage(Messagebody);
+            		
+            		default:
                 break;
+            	}
         }
         return null;
 
