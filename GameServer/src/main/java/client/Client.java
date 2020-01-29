@@ -49,6 +49,14 @@ public class Client extends Thread{
 	public void setPlayerAlias(String playerAlias) {
 		this.playerAlias = playerAlias;
 	}
+	
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public void setPlayerId(int playerId) {
+		this.playerId = playerId;
+	}
 
 	public void run() {
 
@@ -92,6 +100,7 @@ public class Client extends Thread{
             listener.handleMessage( event );
         }
     }
+
 
 
 }
