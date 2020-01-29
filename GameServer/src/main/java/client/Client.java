@@ -9,6 +9,7 @@ import java.util.Arrays;
 import javax.swing.event.EventListenerList;
 
 import messages.Message;
+import messages.ReadyState;
 import parser.RecieveParser;
 import server.ServerState;
 
@@ -25,6 +26,8 @@ public class Client extends Thread{
     private ServerState serverState;
     private String playerAlias;
     private int playerId;
+    private ReadyState readyState;
+    private int score;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
@@ -33,6 +36,8 @@ public class Client extends Thread{
         super("Client");
         this.socket = socket;
         this.serverState = serverState;
+        this.readyState = ReadyState.NOT_READY;
+        this.score = 0;
         messageListenerList = new EventListenerList();
         try {
             out = new DataOutputStream( socket.getOutputStream());
@@ -57,6 +62,23 @@ public class Client extends Thread{
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
 	}
+
+	public ReadyState getReadyState() {
+		return readyState;
+	}
+
+	public void setReadyState(ReadyState readyState) {
+		this.readyState = readyState;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
 
 	public void run() {
 
@@ -100,7 +122,5 @@ public class Client extends Thread{
             listener.handleMessage( event );
         }
     }
-
-
 
 }

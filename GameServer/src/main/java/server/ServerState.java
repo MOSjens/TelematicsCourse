@@ -3,9 +3,11 @@ package server;
 import client.Client;
 import dbconnection.Question;
 import dbconnection.QuestionDatabase;
+import messages.ScoreboardMessage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -50,5 +52,15 @@ public class ServerState {
 
 	public ArrayList<Question> getQuestionList() {
 		return questionList;
+	}
+	
+	public ScoreboardMessage createScoreboardMessage() {
+		LinkedHashMap<Integer, Integer> scoreMap = new LinkedHashMap<Integer, Integer>();
+		for(Client player: this.getPlayerList()) {
+			scoreMap.put(player.getPlayerId(), player.getScore());
+		}
+		ScoreboardMessage scoreboardMessage = new ScoreboardMessage(this.getRoundsLeft(),scoreMap);
+		return scoreboardMessage;
+		
 	}
 }
