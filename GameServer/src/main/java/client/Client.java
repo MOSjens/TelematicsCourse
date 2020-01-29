@@ -23,15 +23,20 @@ public class Client extends Thread{
     private DataOutputStream out;
     private DataInputStream in;
     private ServerState serverState;
+    private int playerID;
+    private int score;
+    private String alias;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
 
-    public Client(Socket socket, ServerState serverState) {
+    public Client(Socket socket, ServerState serverState, int playerID) {
         super("Client");
         this.socket = socket;
         this.serverState = serverState;
         messageListenerList = new EventListenerList();
+        this.score = 0; // Initial score is zero.
+        this.playerID = playerID;
         try {
             out = new DataOutputStream( socket.getOutputStream());
             in = new DataInputStream( socket.getInputStream() );
@@ -83,5 +88,27 @@ public class Client extends Thread{
         }
     }
 
+    public int getScore() {
+        return score;
+    }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public void setPlayerID(int playerID) {
+        this.playerID = playerID;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 }

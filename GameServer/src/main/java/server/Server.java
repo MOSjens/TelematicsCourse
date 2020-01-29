@@ -15,12 +15,13 @@ public class Server {
 	private static ServerState serverState;
 
 	public static void main(String[] args) {
-		boolean startPhase = true;
+		int playerID = 0;
+		GamePhase gamePhase = GamePhase.STARTUP_PHASE;
 
 		Configuration config = new Configuration();
 		serverState = new ServerState( config.amountRounds );
 
-		// TODO implement game phases
+		// Start Server Socket.
 		try {
 			serverSocket = new ServerSocket(port);
 			System.out.println( "Server started on IP: " + serverSocket.getInetAddress().getHostAddress()
@@ -31,19 +32,44 @@ public class Server {
 		}
 
 		// Start Phase: Here the clients connect to the server.
-		while (startPhase) {
+		while (true) {
 			//TODO Start Thread for every client until all clients are ready for 30 seconds.
-			try {
-				Client client = new Client( serverSocket.accept(), serverState );
-				client.addMessageListener(new HandleMessageLister());
-				client.start();
-				serverState.addPlayer( client );
+			if ( gamePhase == GamePhase.STARTUP_PHASE ) {
+				try {
+					Client client = new Client( serverSocket.accept(), serverState, playerID );
+					client.addMessageListener(new HandleMessageLister());
+					client.start();
+					serverState.addPlayer( client );
 
-			} catch (IOException e) {
-				e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				playerID++;
 			}
-			// TODO break the loop
-			// TODO finish
+
+			// Or shift all logic to Enum and Handle every Phase equal, by waiting on the Message, save it in the
+			// serverState and execute GamePhase.nextPhase?
+			// Alternative leave it as below and only execute nextPhase when it was the correct Message?
+
+			if (gamePhase == GamePhase.GAME_PHASE) {
+				// GamePhase
+			}
+
+			if (gamePhase == GamePhase.CATEGORY_SELECTION_PHASE) {
+				// Category selection
+			}
+
+			if (gamePhase == GamePhase.PLAYER_SELECTION_PHASE) {
+				// Player Selection
+			}
+
+			if (gamePhase == GamePhase.QUESTION_PLAY_PHASE) {
+				// Question Play Phase
+			}
+
+			if ( gamePhase == GamePhase.CLOSING_PHASE ) {
+				break;
+			}
 		}
 
 		try {
