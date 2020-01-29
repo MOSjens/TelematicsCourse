@@ -38,6 +38,7 @@ public class Server {
 				client.addMessageListener(new HandleMessageLister());
 				client.start();
 				serverState.addPlayer( client );
+				
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -57,7 +58,12 @@ public class Server {
 class HandleMessageLister implements MessageListener {
 	@Override
 	public void handleMessage(MessageEvent e) {
+		
+		//TODO Dummy Code here
 		SignOnMessage signOn = (SignOnMessage) e.getMessage();
 		System.out.println("Recieved: "+e.getMessage().getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
+		Client source = (Client) e.getSource();
+		source.setPlayerAlias(signOn.getPlayerAlias());
+		System.out.println(source.getPlayerAlias());
 	}
 }

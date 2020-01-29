@@ -23,6 +23,8 @@ public class Client extends Thread{
     private DataOutputStream out;
     private DataInputStream in;
     private ServerState serverState;
+    private String playerAlias;
+    private int playerId;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
@@ -40,7 +42,15 @@ public class Client extends Thread{
         }
     }
 
-    public void run() {
+    public String getPlayerAlias() {
+		return playerAlias;
+	}
+
+	public void setPlayerAlias(String playerAlias) {
+		this.playerAlias = playerAlias;
+	}
+
+	public void run() {
 
         while (true) {
             // Only messages with a size of 1024 byte can be handled.
