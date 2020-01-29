@@ -23,33 +23,35 @@ public class TestServer {
     }
 
     
-    public void testConnectClient(){
+    public void testConnectClient(byte[] data){
         ExampleClient exampleClient = new ExampleClient();
         try {
             exampleClient.startConnection("127.0.0.1", 6666);
-
-            // Example to Send
-            byte[] data = new byte[] { 0x01,0x00,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
-    				(byte) 0x84,(byte) 0xf0,(byte) 0x9f,(byte) 0x90,(byte) 0xbf,(byte) 0xef,(byte) 0xb8,(byte) 0x8f };
-
             exampleClient.sendMessage(data);
             Thread.sleep(300);
             exampleClient.stopConnection();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
+        }     
     }
+    
     
     @Test
     public void testServer() {
-
+        // Example to Send
+        byte[] dataMessage1 = new byte[] { 0x01,0x00,0x00,0x00,0x00,0x00,0x0b,(byte) 0xf0,(byte) 0x9f,(byte) 0xa6,
+				(byte) 0x84,(byte) 0xf0,(byte) 0x9f,(byte) 0x90,(byte) 0xbf,(byte) 0xef,(byte) 0xb8,(byte) 0x8f };
+        byte[] dataMessage2 = new byte[] { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x65, 0x6c, 0x6c, 0x65, 0x6c, 0x65 };
     	 
     	ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
     	executor.submit(() -> {
     		startServer();
     	});
     	ScheduledFuture<?> future = executor.schedule(() -> {
-    	    testConnectClient();
+    	    testConnectClient(dataMessage1);
+    	}, 300, TimeUnit.MILLISECONDS);
+    	ScheduledFuture<?> future2 = executor.schedule(() -> {
+    	    testConnectClient(dataMessage2);
     	}, 300, TimeUnit.MILLISECONDS);
     	try {
 			executor.awaitTermination(1700,  TimeUnit.MILLISECONDS);
@@ -59,6 +61,7 @@ public class TestServer {
 		}
 		
     	future.cancel(true);
+    	future2.cancel(true);
     	
     }
     
