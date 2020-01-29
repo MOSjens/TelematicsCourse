@@ -31,7 +31,7 @@ public class ServerState {
         return roundsLeft;
     }
 
-    public void decreaseRoundsLest() {
+    public void decreaseRoundsLeft() {
         roundsLeft--;
     }
 
