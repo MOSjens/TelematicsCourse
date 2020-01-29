@@ -9,6 +9,7 @@ import messages.BuzzMessage;
 import messages.CategorySelectionMessage;
 import messages.GeneralTextMessage;
 import messages.Message;
+import messages.MessageType;
 import messages.PlayerReadyMessage;
 import messages.ScrewMessage;
 import messages.SignOnMessage;
@@ -51,11 +52,11 @@ public class RecieveParser {
 		recievedMessage.setMessageType();
 		payload = new byte[0];
 		if(data.length < (recievedMessage.getLength()+7)) {
-			//TODO
-			System.out.print(data.length+","+recievedMessage.getLength());
-			return null;
+			System.out.print("Recieved message payloadlength is shorter than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
 		} else if(data.length > (recievedMessage.getLength()+7)){
-			//TODO
+			System.out.print("Recieved message payloadlength is shorter than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
 		}
 		else {
 			payload = new byte[recievedMessage.getLength()];
@@ -103,6 +104,9 @@ public class RecieveParser {
 			recievedMessage = this.parseSignOn(recievedMessage, payload);
 			break;
 		case SIGN_ON_RESPONSE:
+			break;
+		case UNDEFINED:
+			
 			break;
 		default:
 			break;

@@ -96,6 +96,8 @@ public class SendParser {
 		case SIGN_ON_RESPONSE:
 			payload = signOnResponseToByteArray(sendMessage);
 			break;
+		case UNDEFINED:
+			break;
 		default:
 			break;
 		
