@@ -5,6 +5,10 @@ import java.util.LinkedHashMap;
 import dbconnection.Category;
 import dbconnection.Difficulty;
 
+/** category selector announcement with a map of categories to difficulties and the id of the selecting player
+ * @author IG4
+ *
+ */
 public class CategorySelectorAnnouncementMessage extends Message {
 	
 	private long categoryTimeout;

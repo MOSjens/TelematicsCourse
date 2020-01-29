@@ -2,6 +2,10 @@ package dbconnection;
 
 import com.google.gson.annotations.SerializedName;
 
+/** class for the json Result from the question database or the textfile
+ * @author IG4
+ *
+ */
 public class  JsonResult{
 	
 	@SerializedName("response_code") private int responseCode;

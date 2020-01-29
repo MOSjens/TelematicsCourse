@@ -1,5 +1,9 @@
 package messages;
 
+/** general text message to pass information to the client
+ * @author IG4
+ *
+ */
 public class GeneralTextMessage extends Message {
 	
 	private String generalText;

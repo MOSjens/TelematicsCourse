@@ -1,7 +1,7 @@
 package messages;
 
 /**
- * Enum for alle types of messages
+ * Enum for all types of messages
  * 
  * @author IG4
  *

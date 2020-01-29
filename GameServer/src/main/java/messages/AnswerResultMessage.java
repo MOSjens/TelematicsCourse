@@ -1,5 +1,9 @@
 package messages;
 
+/** answer result message with the chosen answer by the player and the correct answer
+ * @author IG4
+ *
+ */
 public class AnswerResultMessage extends Message {
 	
 	private int correctAnswerID;

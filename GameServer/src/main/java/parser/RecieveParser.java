@@ -27,6 +27,10 @@ public class RecieveParser {
 	private byte type;
 	private byte[]length = new byte[4];
 	
+	/** parse bytearray from tcp socket to a information in a message the server can handle
+	 * @param data bytearray to parse
+	 * @return message with information for server
+	 */
 	public Message parse(byte[] data){
 		Message recievedMessage = new Message();
 		for(int i = 0; i < 7; i++) {

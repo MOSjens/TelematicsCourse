@@ -24,6 +24,12 @@ import org.apache.commons.text.StringEscapeUtils;
 public class QuestionDatabase {
 	private URL url;
 
+	/** get a list of questions from the database
+	 * @param amount amount of questions
+	 * @param category category of the questions
+	 * @param difficulty difficulty of the questions
+	 * @return list of questions
+	 */
 	public ArrayList<Question> getQuestion(int amount, Category category, Difficulty difficulty) {
 		HttpURLConnection con = null;
 		ArrayList<Question> listOfQuestions = new ArrayList<Question>();
@@ -67,10 +73,17 @@ public class QuestionDatabase {
 		return listOfQuestions;
 	}
 
+	/** get questions of random categories from the database
+	 * @param amount amount of the questions
+	 * @return list of questions
+	 */
 	public ArrayList<Question> getRandomQuestions(int amount) {
 		return this.getQuestion(amount, null, null);
 	}
 	
+	/** read questions from a text file (when no internet connection)
+	 * @return list of questions
+	 */
 	public ArrayList<Question> getRandomQuestionsOffline()  {
 		ArrayList<Question> listOfQuestions;
 		BufferedReader reader = null;
