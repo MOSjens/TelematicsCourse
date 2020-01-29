@@ -40,6 +40,10 @@ public class SendParser {
 		
 	}
 	
+	/** parse message to a byte array to send via tcp
+	 * @param sendMessage message to send
+	 * @return byteArray that can be sent through tcp socket
+	 */
 	public byte[] messageToByteArray(Message sendMessage) {
 		
 		//fill header with version group and type
@@ -91,6 +95,8 @@ public class SendParser {
 			break;
 		case SIGN_ON_RESPONSE:
 			payload = signOnResponseToByteArray(sendMessage);
+			break;
+		case UNDEFINED:
 			break;
 		default:
 			break;

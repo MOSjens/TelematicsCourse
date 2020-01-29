@@ -2,6 +2,10 @@ package messages;
 
 import dbconnection.Question;
 
+/** question message with question text answer options and difficulty
+ * @author IG4
+ *
+ */
 public class QuestionMessage extends Message{
 	
 	private Question question;

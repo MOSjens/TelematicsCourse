@@ -1,5 +1,9 @@
 package messages;
 
+/** category selection message with the selected category index by the player
+ * @author IG4
+ *
+ */
 public class CategorySelectionMessage extends Message {
 	
 	private int categoryIndex;

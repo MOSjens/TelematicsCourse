@@ -1,5 +1,10 @@
 package dbconnection;
 
+
+/** Enum for the difficulties of questions
+ * @author IG4
+ *
+ */
 public enum Difficulty {
 	
 	EASY("Easy"), MEDIUM("Medium"), HARD("Hard");

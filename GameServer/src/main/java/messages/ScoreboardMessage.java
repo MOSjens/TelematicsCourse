@@ -7,6 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Scoreboard message with map from player id to score
+ * @author IG4
+ *
+ */
 public class ScoreboardMessage extends Message {
 	
 	private int  roundLeft;

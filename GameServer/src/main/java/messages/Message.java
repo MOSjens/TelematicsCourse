@@ -162,6 +162,7 @@ public class Message {
 						break;
 					}
 					default:{
+						this.setMessageType(MessageType.UNDEFINED);
 						break;
 					}
 				}
@@ -210,6 +211,7 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
@@ -222,6 +224,7 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
@@ -238,12 +241,14 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
 				break;
 			}
 			default:{
+				this.setMessageType(MessageType.UNDEFINED);
 				break;
 			}
 		}

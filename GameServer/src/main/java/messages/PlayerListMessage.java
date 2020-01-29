@@ -2,6 +2,10 @@ package messages;
 
 import java.util.LinkedHashMap;
 
+/** player list message with a list of all player to inform all players about ready state and alias of other players
+ * @author IG4
+ *
+ */
 public class PlayerListMessage extends Message {
 	
 	private LinkedHashMap<Integer, PairReadyAliasMessage> mapPlayerIdToAlias = new LinkedHashMap<Integer, PairReadyAliasMessage>();

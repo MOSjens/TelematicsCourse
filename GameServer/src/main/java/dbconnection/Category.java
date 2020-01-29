@@ -1,5 +1,9 @@
 package dbconnection;
 
+/** Enum for the categories of questions
+ * @author IG4
+ *
+ */
 public enum Category {
 
 	GENERAL_KNOWLEDGE(9,"General Knowledge"), ENTERTAINMENT_BOOKS(10,"Entertainment: Books"), 

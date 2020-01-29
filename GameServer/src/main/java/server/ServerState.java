@@ -1,8 +1,13 @@
 package server;
 
 import client.Client;
+import dbconnection.Question;
+import dbconnection.QuestionDatabase;
+import messages.ScoreboardMessage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -15,19 +20,20 @@ public class ServerState {
     private Set<Client> playerList;
     // private ? scoreboard
     // private ? readyState
-    // private ? questionList
+    private ArrayList<Question> questionList;
     // private ? gamePhase
 
     public ServerState(int roundsLeft ) {
         this.roundsLeft = roundsLeft;
         playerList = new HashSet<Client>();
+        questionList = new ArrayList<Question>();
     }
 
     public int getRoundsLeft() {
         return roundsLeft;
     }
 
-    public void decreaseRoundsLest() {
+    public void decreaseRoundsLeft() {
         roundsLeft--;
     }
 
@@ -38,4 +44,23 @@ public class ServerState {
     public Set<Client> getPlayerList() {
         return playerList;
     }
+    
+	public void fillQuestionList(int amount) {
+		QuestionDatabase qdb = new QuestionDatabase();
+		questionList.addAll(qdb.getRandomQuestions(amount));
+	}
+
+	public ArrayList<Question> getQuestionList() {
+		return questionList;
+	}
+	
+	public ScoreboardMessage createScoreboardMessage() {
+		LinkedHashMap<Integer, Integer> scoreMap = new LinkedHashMap<Integer, Integer>();
+		for(Client player: this.getPlayerList()) {
+			scoreMap.put(player.getPlayerID(), player.getScore());
+		}
+		ScoreboardMessage scoreboardMessage = new ScoreboardMessage(this.getRoundsLeft(),scoreMap);
+		return scoreboardMessage;
+		
+	}
 }

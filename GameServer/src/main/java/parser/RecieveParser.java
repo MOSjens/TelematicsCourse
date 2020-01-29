@@ -9,6 +9,7 @@ import messages.BuzzMessage;
 import messages.CategorySelectionMessage;
 import messages.GeneralTextMessage;
 import messages.Message;
+import messages.MessageType;
 import messages.PlayerReadyMessage;
 import messages.ScrewMessage;
 import messages.SignOnMessage;
@@ -27,6 +28,10 @@ public class RecieveParser {
 	private byte type;
 	private byte[]length = new byte[4];
 	
+	/** parse bytearray from tcp socket to a information in a message the server can handle
+	 * @param data bytearray to parse
+	 * @return message with information for server
+	 */
 	public Message parse(byte[] data){
 		Message recievedMessage = new Message();
 		for(int i = 0; i < 7; i++) {
@@ -47,11 +52,11 @@ public class RecieveParser {
 		recievedMessage.setMessageType();
 		payload = new byte[0];
 		if(data.length < (recievedMessage.getLength()+7)) {
-			//TODO
-			System.out.print(data.length+","+recievedMessage.getLength());
-			return null;
+			System.out.print("Recieved message payloadlength is shorter than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
 		} else if(data.length > (recievedMessage.getLength()+7)){
-			//TODO
+			System.out.print("Recieved message payloadlength is shorter than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
 		}
 		else {
 			payload = new byte[recievedMessage.getLength()];
@@ -99,6 +104,9 @@ public class RecieveParser {
 			recievedMessage = this.parseSignOn(recievedMessage, payload);
 			break;
 		case SIGN_ON_RESPONSE:
+			break;
+		case UNDEFINED:
+			
 			break;
 		default:
 			break;

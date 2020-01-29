@@ -1,5 +1,9 @@
 package messages;
 
+/** answer message with the index of the answer
+ * @author IG4
+ *
+ */
 public class AnswerMessage extends Message{
 	
 	private int answerId;

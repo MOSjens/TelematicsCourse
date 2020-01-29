@@ -1,5 +1,9 @@
 package messages;
 
+/** screw result message to show a screw has happened and who has to answer
+ * @author IG4
+ *
+ */
 public class ScrewResultMessage extends Message{
 	
 	private int screwingPlayerId;

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import javax.swing.event.EventListenerList;
 
 import messages.Message;
+import messages.ReadyState;
 import parser.RecieveParser;
 import server.ServerState;
 
@@ -26,6 +27,7 @@ public class Client extends Thread{
     private int playerID;
     private int score;
     private String alias;
+    private ReadyState readyState;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
@@ -34,6 +36,8 @@ public class Client extends Thread{
         super("Client");
         this.socket = socket;
         this.serverState = serverState;
+        this.readyState = ReadyState.NOT_READY;
+        this.score = 0;
         messageListenerList = new EventListenerList();
         this.score = 0; // Initial score is zero.
         this.playerID = playerID;
@@ -45,7 +49,8 @@ public class Client extends Thread{
         }
     }
 
-    public void run() {
+
+	public void run() {
 
         while (true) {
             // Only messages with a size of 1024 byte can be handled.
@@ -88,6 +93,7 @@ public class Client extends Thread{
         }
     }
 
+
     public int getScore() {
         return score;
     }
@@ -110,5 +116,13 @@ public class Client extends Thread{
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public ReadyState getReadyState() {
+        return readyState;
+    }
+
+    public void setReadyState(ReadyState readyState) {
+        this.readyState = readyState;
     }
 }

@@ -2,6 +2,10 @@ package dbconnection;
 
 import com.google.gson.annotations.SerializedName;
 
+/** class for one question in the json result from the database
+ * @author IG4
+ *
+ */
 public class Result {
 	@SerializedName("category") private String category;
 	@SerializedName("type") private String type;
