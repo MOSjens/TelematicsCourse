@@ -31,10 +31,10 @@ import messages.SignOnResponseMessage;
  */
 public class SendParser {
 	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
+	private static final int  HEADER_LENGTH = 7;
 	private ByteBuffer header;
 	private byte[] payload;
 	private ByteBuffer byteBuffer;
-	private int payloadLength;
 
 	public SendParser() {
 		
@@ -47,7 +47,7 @@ public class SendParser {
 	public byte[] messageToByteArray(Message sendMessage) {
 		
 		//fill header with version group and type
-		header = ByteBuffer.allocate(7);
+		header = ByteBuffer.allocate(HEADER_LENGTH);
 		payload = new byte[0];
 		header.put((byte) sendMessage.getVersion());
 		header.put((byte) sendMessage.getGroup());
@@ -104,9 +104,8 @@ public class SendParser {
 		}
 		
 		//build complete tcp payload
-		payloadLength = payload.length;
-		header.putInt(payloadLength);
-		byteBuffer = ByteBuffer.allocate(payload.length+header.capacity());
+		header.putInt(payload.length);
+		byteBuffer = ByteBuffer.allocate(payload.length+HEADER_LENGTH);
 		byteBuffer.put(header.array());
 		byteBuffer.put(payload);
 		
