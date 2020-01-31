@@ -2,10 +2,13 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import client.Client;
 import client.MessageEvent;
 import client.MessageListener;
+import messages.Message;
 import messages.SignOnMessage;
 
 public class Server {
@@ -13,10 +16,12 @@ public class Server {
 	private static ServerSocket serverSocket = null;
 	private static int port = 6666;
 	private static ServerState serverState;
+	private static BlockingQueue<Message> inputMessages;
+
 
 	public static void main(String[] args) {
-		int playerID = 0;
 		GamePhase gamePhase = GamePhase.STARTUP_PHASE;
+		inputMessages = new LinkedBlockingQueue<Message>();
 
 		Configuration config = new Configuration();
 		serverState = new ServerState( config.amountRounds );
@@ -31,20 +36,32 @@ public class Server {
 			System.exit(-1);
 		}
 
-		// Start Phase: Here the clients connect to the server.
-		while (true) {
-			//TODO Start Thread for every client until all clients are ready for 30 seconds.
-			if ( gamePhase == GamePhase.STARTUP_PHASE ) {
-				try {
-					Client client = new Client( serverSocket.accept(), serverState, playerID );
-					client.addMessageListener(new HandleMessageLister());
-					client.start();
-					serverState.addPlayer( client );
-
-				} catch (IOException e) {
-					e.printStackTrace();
+		// Connect clients in the background.
+		Thread connectClients = new Thread(){
+			@Override
+			public void run() {
+				int playerID = 0;
+				while (true) {
+					try {
+						Client client = new Client( serverSocket.accept(), serverState, playerID );
+						client.addMessageListener(new HandleMessageLister());
+						client.start();
+						serverState.addPlayer( client );
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					playerID++;
 				}
-				playerID++;
+			}
+		};
+
+		//TODO stop after 30 seconds.
+		connectClients.start();
+
+
+		while (true) {
+			if ( gamePhase == GamePhase.STARTUP_PHASE ) {
+
 			}
 
 			// Or shift all logic to Enum and Handle every Phase equal, by waiting on the Message, save it in the
@@ -78,13 +95,29 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+
+	public static void startNewClient() {
+
+	}
+
+	public static BlockingQueue<Message> getInputMessages() {
+		return inputMessages;
+	}
+
+	public static ServerState getServerState() {
+		return serverState;
+	}
+
 }
 
 class HandleMessageLister implements MessageListener {
 	@Override
 	public void handleMessage(MessageEvent e) {
-		
-		//TODO Dummy Code here
+		try {
+			Server.getInputMessages().put (e.getMessage());
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
 		SignOnMessage signOn = (SignOnMessage) e.getMessage();
 		System.out.println("Recieved: "+e.getMessage().getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
 		Client source = (Client) e.getSource();

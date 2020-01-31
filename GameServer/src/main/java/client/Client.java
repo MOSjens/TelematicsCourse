@@ -79,7 +79,6 @@ public class Client extends Thread{
 
     public void addMessageListener ( MessageListener listener ) {
         messageListenerList.add( MessageListener.class, listener );
-        System.out.println("Hello from the thread");
         //messageListener = listener;
     }
 
