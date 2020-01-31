@@ -44,8 +44,6 @@ public class PlayerListMessage extends Message {
 		    	  this.playerIDS[i]= playerID ;
 		    	 this.readyStateS[i]=readyState;
 		    	  this.playerAliaseS[i]=playerAlias;
-		    	  
-		    	 
 			}
 			}
 		
