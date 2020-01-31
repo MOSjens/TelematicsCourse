@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import client.Client;
 import client.MessageEvent;
@@ -16,12 +17,12 @@ public class Server {
 	private static ServerSocket serverSocket = null;
 	private static int port = 6666;
 	private static ServerState serverState;
-	private static BlockingQueue<Message> inputMessages;
+	private static BlockingQueue<IncomingMessage> inputMessages;
 
 
 	public static void main(String[] args) {
 		GamePhase gamePhase = GamePhase.STARTUP_PHASE;
-		inputMessages = new LinkedBlockingQueue<Message>();
+		inputMessages = new LinkedBlockingQueue<IncomingMessage>();
 
 		Configuration config = new Configuration();
 		serverState = new ServerState( config.amountRounds );
@@ -41,7 +42,7 @@ public class Server {
 			@Override
 			public void run() {
 				int playerID = 0;
-				while (true) {
+				while ( true ) {
 					try {
 						Client client = new Client( serverSocket.accept(), serverState, playerID );
 						client.addMessageListener(new HandleMessageLister());
@@ -55,33 +56,17 @@ public class Server {
 			}
 		};
 
-		//TODO stop after 30 seconds.
 		connectClients.start();
+		//connectClients.
 
 
 		while (true) {
-			if ( gamePhase == GamePhase.STARTUP_PHASE ) {
 
-			}
-
-			// Or shift all logic to Enum and Handle every Phase equal, by waiting on the Message, save it in the
-			// serverState and execute GamePhase.nextPhase?
-			// Alternative leave it as below and only execute nextPhase when it was the correct Message?
-
-			if (gamePhase == GamePhase.GAME_PHASE) {
-				// GamePhase
-			}
-
-			if (gamePhase == GamePhase.CATEGORY_SELECTION_PHASE) {
-				// Category selection
-			}
-
-			if (gamePhase == GamePhase.PLAYER_SELECTION_PHASE) {
-				// Player Selection
-			}
-
-			if (gamePhase == GamePhase.QUESTION_PLAY_PHASE) {
-				// Question Play Phase
+			try {
+				IncomingMessage incomingMessage = inputMessages.take();
+				gamePhase = gamePhase.nextPhase( incomingMessage );
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			if ( gamePhase == GamePhase.CLOSING_PHASE ) {
@@ -96,11 +81,8 @@ public class Server {
 		}
 	}
 
-	public static void startNewClient() {
 
-	}
-
-	public static BlockingQueue<Message> getInputMessages() {
+	public static BlockingQueue<IncomingMessage> getInputMessages() {
 		return inputMessages;
 	}
 
@@ -114,14 +96,10 @@ class HandleMessageLister implements MessageListener {
 	@Override
 	public void handleMessage(MessageEvent e) {
 		try {
-			Server.getInputMessages().put (e.getMessage());
+			IncomingMessage incomingMessage = new IncomingMessage(e.getMessage(), ( Client ) e.getSource() );
+			Server.getInputMessages().put (incomingMessage);
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		}
-		SignOnMessage signOn = (SignOnMessage) e.getMessage();
-		System.out.println("Recieved: "+e.getMessage().getMessageType().name()+" Alias = "+ signOn.getPlayerAlias());
-		Client source = (Client) e.getSource();
-		source.setAlias(signOn.getPlayerAlias());
-		System.out.println(source.getAlias());
 	}
 }
