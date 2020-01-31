@@ -1,5 +1,9 @@
 package messages;
 
+/** buzzresult message to tell a player that he buzzed first and is aloud to answer
+ * @author IG4
+ *
+ */
 public class BuzzResultMessage extends Message {
 	
 	private int answeringPlayerId;

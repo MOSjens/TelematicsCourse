@@ -2,6 +2,10 @@ package dbconnection;
 
 import java.util.ArrayList;
 
+/** one question in the game
+ * @author IG4
+ *
+ */
 public class Question {
 	
 	private Difficulty difficulty;

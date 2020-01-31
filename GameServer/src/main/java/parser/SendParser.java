@@ -31,19 +31,23 @@ import messages.SignOnResponseMessage;
  */
 public class SendParser {
 	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
+	private static final int  HEADER_LENGTH = 7;
 	private ByteBuffer header;
 	private byte[] payload;
 	private ByteBuffer byteBuffer;
-	private int payloadLength;
 
 	public SendParser() {
 		
 	}
 	
+	/** parse message to a byte array to send via tcp
+	 * @param sendMessage message to send
+	 * @return byteArray that can be sent through tcp socket
+	 */
 	public byte[] messageToByteArray(Message sendMessage) {
 		
 		//fill header with version group and type
-		header = ByteBuffer.allocate(7);
+		header = ByteBuffer.allocate(HEADER_LENGTH);
 		payload = new byte[0];
 		header.put((byte) sendMessage.getVersion());
 		header.put((byte) sendMessage.getGroup());
@@ -92,15 +96,16 @@ public class SendParser {
 		case SIGN_ON_RESPONSE:
 			payload = signOnResponseToByteArray(sendMessage);
 			break;
+		case UNDEFINED:
+			break;
 		default:
 			break;
 		
 		}
 		
 		//build complete tcp payload
-		payloadLength = payload.length;
-		header.putInt(payloadLength);
-		byteBuffer = ByteBuffer.allocate(payload.length+header.capacity());
+		header.putInt(payload.length);
+		byteBuffer = ByteBuffer.allocate(payload.length+HEADER_LENGTH);
 		byteBuffer.put(header.array());
 		byteBuffer.put(payload);
 		

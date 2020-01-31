@@ -9,7 +9,9 @@ import java.util.Arrays;
 import javax.swing.event.EventListenerList;
 
 import messages.Message;
+import messages.ReadyState;
 import parser.RecieveParser;
+import server.ServerState;
 
 /**
  * Client with a connection to the server
@@ -21,13 +23,24 @@ public class Client extends Thread{
     private Socket socket = null;
     private DataOutputStream out;
     private DataInputStream in;
+    private ServerState serverState;
+    private int playerID;
+    private int score;
+    private String alias;
+    private ReadyState readyState;
 
     private EventListenerList messageListenerList;
     //private MessageListener messageListener;
 
-    public Client(Socket socket) {
+    public Client(Socket socket, ServerState serverState, int playerID) {
         super("Client");
         this.socket = socket;
+        this.serverState = serverState;
+        this.readyState = ReadyState.NOT_READY;
+        this.score = 0;
+        messageListenerList = new EventListenerList();
+        this.score = 0; // Initial score is zero.
+        this.playerID = playerID;
         try {
             out = new DataOutputStream( socket.getOutputStream());
             in = new DataInputStream( socket.getInputStream() );
@@ -36,7 +49,8 @@ public class Client extends Thread{
         }
     }
 
-    public void run() {
+
+	public void run() {
 
         while (true) {
             // Only messages with a size of 1024 byte can be handled.
@@ -65,6 +79,7 @@ public class Client extends Thread{
 
     public void addMessageListener ( MessageListener listener ) {
         messageListenerList.add( MessageListener.class, listener );
+        System.out.println("Hello from the thread");
         //messageListener = listener;
     }
 
@@ -79,4 +94,35 @@ public class Client extends Thread{
     }
 
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public void setPlayerID(int playerID) {
+        this.playerID = playerID;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public ReadyState getReadyState() {
+        return readyState;
+    }
+
+    public void setReadyState(ReadyState readyState) {
+        this.readyState = readyState;
+    }
 }

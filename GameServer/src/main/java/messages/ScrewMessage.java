@@ -1,5 +1,9 @@
 package messages;
 
+/** screw message from player to force another player to answer
+ * @author IG4
+ *
+ */
 public class ScrewMessage extends Message {
 	
 	private int screwedPlayerId;

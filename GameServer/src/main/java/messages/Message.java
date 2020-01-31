@@ -26,12 +26,9 @@ public class Message {
 		return version;
 	}
 	public void setVersion(int version) {
-		if(version<1) {
-			version = 1;
-		}
-		if(version >128){
-			version= 128;
-		}
+		/*
+		 * if(version<1) { version = 1; } if(version >128){ version= 128; }
+		 */		
 		this.version = version;
 	}
 	
@@ -39,24 +36,18 @@ public class Message {
 		return group;
 	}
 	public void setGroup(int group) {
-		if(group < 0) {
-			group = 0;
-		}
-		if(group > 3){
-			group = 3;
-		}
+		/*
+		 * if(group < 0) { group = 0; } if(group > 3){ group = 3; }
+		 */
 		this.group = group;
 	}
 	public int getType() {
 		return type;
 	}
 	public void setType(int type) {
-		if(type < 0) {
-			type = 0;
-		}
-		if(type >128){
-			type= 128;
-		}
+		/*
+		 * if(type < 0) { type = 0; } if(type >128){ type= 128; }
+		 */
 		this.type = type;
 	}
 	public int getLength() {
@@ -162,6 +153,7 @@ public class Message {
 						break;
 					}
 					default:{
+						this.setMessageType(MessageType.UNDEFINED);
 						break;
 					}
 				}
@@ -210,6 +202,7 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
@@ -222,6 +215,7 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
@@ -238,12 +232,14 @@ public class Message {
 					break;
 				}
 				default:{
+					this.setMessageType(MessageType.UNDEFINED);
 					break;
 				}
 			}
 				break;
 			}
 			default:{
+				this.setMessageType(MessageType.UNDEFINED);
 				break;
 			}
 		}

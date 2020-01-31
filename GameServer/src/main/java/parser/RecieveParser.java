@@ -3,12 +3,14 @@ package parser;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import messages.AnswerMessage;
 import messages.BuzzMessage;
 import messages.CategorySelectionMessage;
 import messages.GeneralTextMessage;
 import messages.Message;
+import messages.MessageType;
 import messages.PlayerReadyMessage;
 import messages.ScrewMessage;
 import messages.SignOnMessage;
@@ -21,43 +23,48 @@ import messages.SignOnMessage;
  */
 public class RecieveParser {
 	private final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
-	private byte[] header = new byte[7];
+	private static final int  HEADER_LENGTH = 7;
+	private byte[] header = new byte[HEADER_LENGTH];
 	private byte version;
 	private byte group;
 	private byte type;
-	private byte[]length = new byte[4];
+	private byte[]length;
 	
+	/** parse bytearray from tcp socket to a information in a message the server can handle
+	 * @param data bytearray to parse
+	 * @return message with information for server
+	 */
 	public Message parse(byte[] data){
 		Message recievedMessage = new Message();
-		for(int i = 0; i < 7; i++) {
-			header[i] = data[i];
-		}
+		header = new byte[HEADER_LENGTH];
+		length = new byte[4];
+		//get header information from byte array
+		header = Arrays.copyOfRange(data, 0, HEADER_LENGTH);
 		version = header[0];
 		group = header[1];
 		type = header[2];
-		for(int i = 3; i < 7; i++) {
-			length[i-3] = header[i];
-		}
+		length = Arrays.copyOfRange(header, 3, HEADER_LENGTH);
 		byte[] payload;
 		
+		//fill message with header information and get message type
 		recievedMessage.setVersion(version);
 		recievedMessage.setGroup(group);
 		recievedMessage.setType(type);
 		recievedMessage.setLength(byteArrayToInt(length));
 		recievedMessage.setMessageType();
 		payload = new byte[0];
-		if(data.length < (recievedMessage.getLength()+7)) {
-			//TODO
-			System.out.print(data.length+","+recievedMessage.getLength());
-			return null;
-		} else if(data.length > (recievedMessage.getLength()+7)){
-			//TODO
+		if(data.length < (recievedMessage.getLength()+HEADER_LENGTH)) {
+			System.out.println("ERROR: Recieved message payload length is shorter than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
+			return recievedMessage;
+		} else if(data.length > (recievedMessage.getLength()+HEADER_LENGTH)){
+			System.out.println("ERROR: Recieved message payload length is longer than expected");
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
+			return recievedMessage;
 		}
 		else {
 			payload = new byte[recievedMessage.getLength()];
-			for(int i = 0; i < recievedMessage.getLength(); i++) {
-				payload[i] = data[i+7];
-			}
+			payload = Arrays.copyOfRange(data, HEADER_LENGTH, data.length);
 		}
 		
 		switch(recievedMessage.getMessageType()) {
@@ -99,6 +106,9 @@ public class RecieveParser {
 			recievedMessage = this.parseSignOn(recievedMessage, payload);
 			break;
 		case SIGN_ON_RESPONSE:
+			break;
+		case UNDEFINED:
+			System.out.println("ERROR: UNDEFINED Message");
 			break;
 		default:
 			break;

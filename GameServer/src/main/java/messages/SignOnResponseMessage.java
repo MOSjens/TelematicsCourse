@@ -1,5 +1,9 @@
 package messages;
 
+/** sign on response message to signal player his assigned player id and alias
+ * @author IG4
+ *
+ */
 public class SignOnResponseMessage extends Message {
 	
 	private int playerId;
