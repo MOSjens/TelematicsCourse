@@ -10,6 +10,9 @@ import org.junit.Test;
 
 import client.Client;
 import messages.MessageType;
+import messages.PairReadyAlias;
+import messages.PlayerListMessage;
+import messages.ReadyState;
 import messages.ScoreboardMessage;
 
 public class TestServerState {
@@ -50,6 +53,32 @@ public class TestServerState {
 	int score1 = scoreMap.get(1);
 	assertEquals(10, score0);
 	assertEquals(20, score1);
+	
+	}
+	
+	//@Test throws exceptions because no real sockets are used
+	public void TestCreatePlayerList() {
+	ServerState serverState = new ServerState(10);
+	Socket serverSocket = new Socket();
+	Client client1 = new Client(serverSocket, null, 0);
+	serverState.addPlayer( client1 );
+	Client client2 = new Client(serverSocket, null ,1);
+	serverState.addPlayer( client2 );
+	client1.setPlayerID(0);
+	client1.setReadyState(ReadyState.DISCONNECTED);
+	client1.setAlias("lol");
+	client2.setPlayerID(1);
+	client2.setReadyState(ReadyState.NOT_READY);
+	client2.setAlias("lel");
+	PlayerListMessage playerlist = serverState.createPlayerlistMessage();
+	assertEquals(MessageType.PLAYER_LIST, playerlist.getMessageType());
+	LinkedHashMap<Integer, PairReadyAlias>  playerMap = playerlist.getMapPlayerIdToAlias();
+	PairReadyAlias pair0 = playerMap.get(0);
+	PairReadyAlias pair1 = playerMap.get(1);
+	assertEquals(ReadyState.DISCONNECTED, pair0.readyState);
+	assertEquals("lol", pair0.alias);
+	assertEquals(ReadyState.NOT_READY, pair1.readyState);
+	assertEquals("lel", pair1.alias);
 	
 	}
 }
