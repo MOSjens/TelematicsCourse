@@ -67,7 +67,8 @@ public class QuestionDatabase {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			listOfQuestions.addAll(getRandomQuestionsOffline().subList(0, amount));
+			//e.printStackTrace();
 		}
 
 		return listOfQuestions;
