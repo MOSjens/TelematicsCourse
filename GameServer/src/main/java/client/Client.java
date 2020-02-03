@@ -41,7 +41,7 @@ public class Client extends Thread{
         this.score = 0;
         messageListenerList = new EventListenerList();
         this.score = 0; // Initial score is zero.
-        this.screwsLeft = 1;
+        this.screwsLeft = 1; //screws left for this player
         this.playerID = playerID;
         try {
             out = new DataOutputStream( socket.getOutputStream());
@@ -131,16 +131,13 @@ public class Client extends Thread{
         this.readyState = readyState;
     }
 
-
 	public int getScrewsLeft() {
 		return screwsLeft;
 	}
 
-
 	public void setScrewsLeft(int screwsLeft) {
 		this.screwsLeft = screwsLeft;
 	}
-
 
 	public void decreaseScrewsLeft() {
 		this.screwsLeft--;

@@ -81,5 +81,14 @@ public class TestServerState {
 	assertEquals("lel", pair1.alias);
 	
 	}
+	
+	@Test
+	public void TestSolveAliasConflict() {
+		ServerState serverState = new ServerState(10);
+		assertEquals("foo", serverState.solveAliasConflict("foo"));
+		assertEquals("foo2", serverState.solveAliasConflict("foo"));
+		assertEquals("foo3", serverState.solveAliasConflict("foo"));
+		assertEquals("foo4", serverState.solveAliasConflict("foo"));
+	}
 }
 

@@ -8,6 +8,7 @@ import messages.PlayerListMessage;
 import messages.ScoreboardMessage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class ServerState {
 
     private int roundsLeft;
     private Set<Client> playerList;
+    private HashMap<String, Integer> aliasMap;
     // private ? scoreboard
     // private ? readyState
     private ArrayList<Question> questionList;
@@ -27,8 +29,10 @@ public class ServerState {
 
     public ServerState(int roundsLeft ) {
         this.roundsLeft = roundsLeft;
-        playerList = new HashSet<Client>();
-        questionList = new ArrayList<Question>();
+        this.playerList = new HashSet<Client>();
+        this.questionList = new ArrayList<Question>();
+        this.aliasMap = new HashMap<String, Integer>();
+        
     }
 
     public int getRoundsLeft() {
@@ -76,5 +80,18 @@ public class ServerState {
 		PlayerListMessage playerlistMessage = new PlayerListMessage(playerMap);
 		return playerlistMessage;
 		
+	}
+	
+	public String solveAliasConflict(String alias) {
+		String newAlias = alias;
+		if(this.aliasMap.containsKey(alias)) {
+			newAlias = alias + this.aliasMap.get(alias).toString();
+			this.aliasMap.put(alias,this.aliasMap.get(alias)+1);
+		}
+		else {
+			this.aliasMap.put(alias, 2);
+		}
+		
+		return newAlias;
 	}
 }
