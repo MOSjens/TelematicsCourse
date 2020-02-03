@@ -70,7 +70,8 @@ public class ServerState {
 		HashSet<Category> categoriesUsed = new HashSet<Category>();
 		while (questionSample.size() < amount && iter.hasNext())  {
 			Question question = iter.next();
-			if(!categoriesUsed.contains(question.getCategory())){
+			if(!(categoriesUsed.contains(question.getCategory()))){
+				categoriesUsed.add(question.getCategory());
 				questionSample.add(question);
 				
 			}
