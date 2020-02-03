@@ -22,7 +22,11 @@ public enum StateEnum {
 
     RE_BUZZ_SCREW(9, "RE_BUZZ_SCREW"),
 
-    ANSWERER(10, "ANSWERER");
+    ANSWERER(10, "ANSWERER"),
+
+    NONE_SELECTOR(11, "NONE_SELECTOR"),
+
+    NONE_ANSWERER(12, "NONE_ANSWERER");
 
     private int key;
 
