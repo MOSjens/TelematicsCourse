@@ -85,10 +85,21 @@ public class TestServerState {
 	@Test
 	public void TestSolveAliasConflict() {
 		ServerState serverState = new ServerState(10);
+		//not sure if there is a prettier way to do this
 		assertEquals("foo", serverState.solveAliasConflict("foo"));
-		assertEquals("foo2", serverState.solveAliasConflict("foo"));
+		assertEquals("foo2", serverState.solveAliasConflict("foo2"));
+		assertEquals("foo22", serverState.solveAliasConflict("foo"));
+		assertEquals("foo222", serverState.solveAliasConflict("foo22"));
 		assertEquals("foo3", serverState.solveAliasConflict("foo"));
 		assertEquals("foo4", serverState.solveAliasConflict("foo"));
+		assertEquals("foo223", serverState.solveAliasConflict("foo22"));
+		assertEquals("foo5", serverState.solveAliasConflict("foo5"));
+		assertEquals("foo52", serverState.solveAliasConflict("foo"));
+		
+		assertEquals("bar", serverState.solveAliasConflict("bar"));
+		assertEquals("bar2", serverState.solveAliasConflict("bar"));
+		
+		assertEquals("foo23", serverState.solveAliasConflict("foo2"));
 	}
 }
 

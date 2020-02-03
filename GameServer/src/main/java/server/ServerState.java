@@ -86,7 +86,9 @@ public class ServerState {
 		String newAlias = alias;
 		if(this.aliasMap.containsKey(alias)) {
 			newAlias = alias + this.aliasMap.get(alias).toString();
+			newAlias = this.solveAliasConflict(newAlias);
 			this.aliasMap.put(alias,this.aliasMap.get(alias)+1);
+			this.aliasMap.put(newAlias,2);
 		}
 		else {
 			this.aliasMap.put(alias, 2);
