@@ -16,7 +16,7 @@ import messages.BuzzResultMessage;
 import messages.CategorySelectorAnnouncementMessage;
 import messages.GeneralTextMessage;
 import messages.Message;
-import messages.PairReadyAliasMessage;
+import messages.PairReadyAlias;
 import messages.PlayerListMessage;
 import messages.QuestionMessage;
 import messages.ScoreboardMessage;
@@ -215,7 +215,7 @@ public class SendParser {
 		final ByteBuffer bb;
 		byte readyState;
 		byte[] alias;
-		LinkedHashMap<Integer, PairReadyAliasMessage> playerMap = PlayerList.getMapPlayerIdToAlias();
+		LinkedHashMap<Integer, PairReadyAlias> playerMap = PlayerList.getMapPlayerIdToAlias();
 		amountPlayers = playerMap.size();
 		
 		//get values for offsets
@@ -223,7 +223,7 @@ public class SendParser {
 		playerOffsets[0] = amountPlayers *(Integer.SIZE / Byte.SIZE);
 		offsetCounter = playerOffsets[0];
 		int i = 0;
-		for (Entry<Integer, PairReadyAliasMessage> entry : playerMap.entrySet()) {
+		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
 			playerOffsets[i] = offsetCounter;
 			offsetCounter += (entry.getValue().alias.getBytes(UTF8_CHARSET).length +(Integer.SIZE / Byte.SIZE)+1);
 			i++;
@@ -236,7 +236,7 @@ public class SendParser {
 		}
 		
 		//fill payload with values
-		for (Entry<Integer, PairReadyAliasMessage> entry : playerMap.entrySet()) {
+		for (Entry<Integer, PairReadyAlias> entry : playerMap.entrySet()) {
 		    bb.putInt(entry.getKey());
 		    readyState = (byte) entry.getValue().readyState.getValue();
 		    alias = entry.getValue().alias.getBytes(UTF8_CHARSET);

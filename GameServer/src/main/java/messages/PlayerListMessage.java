@@ -8,24 +8,24 @@ import java.util.LinkedHashMap;
  */
 public class PlayerListMessage extends Message {
 	
-	private LinkedHashMap<Integer, PairReadyAliasMessage> mapPlayerIdToAlias = new LinkedHashMap<Integer, PairReadyAliasMessage>();
+	private LinkedHashMap<Integer, PairReadyAlias> mapPlayerIdToAlias = new LinkedHashMap<Integer, PairReadyAlias>();
 
 	public PlayerListMessage() {
 		super();
 		this.setMessageType(MessageType.PLAYER_LIST);
 	}
 	
-	public PlayerListMessage(LinkedHashMap<Integer, PairReadyAliasMessage> mapPlayerIdToAlias) {
+	public PlayerListMessage(LinkedHashMap<Integer, PairReadyAlias> mapPlayerIdToAlias) {
 		super();
 		this.setMessageType(MessageType.PLAYER_LIST);
 		this.setMapPlayerIdToAlias(mapPlayerIdToAlias);
 	}
 
-	public LinkedHashMap<Integer, PairReadyAliasMessage> getMapPlayerIdToAlias() {
+	public LinkedHashMap<Integer, PairReadyAlias> getMapPlayerIdToAlias() {
 		return mapPlayerIdToAlias;
 	}
 
-	public void setMapPlayerIdToAlias(LinkedHashMap<Integer, PairReadyAliasMessage> mapPlayerIdToAlias) {
+	public void setMapPlayerIdToAlias(LinkedHashMap<Integer, PairReadyAlias> mapPlayerIdToAlias) {
 		this.mapPlayerIdToAlias = mapPlayerIdToAlias;
 	}
 	

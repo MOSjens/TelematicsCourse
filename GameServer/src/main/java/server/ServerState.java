@@ -3,6 +3,8 @@ package server;
 import client.Client;
 import dbconnection.Question;
 import dbconnection.QuestionDatabase;
+import messages.PairReadyAlias;
+import messages.PlayerListMessage;
 import messages.ScoreboardMessage;
 
 import java.util.ArrayList;
@@ -61,6 +63,18 @@ public class ServerState {
 		}
 		ScoreboardMessage scoreboardMessage = new ScoreboardMessage(this.getRoundsLeft(),scoreMap);
 		return scoreboardMessage;
+		
+	}
+	
+	public PlayerListMessage createPlayerlistMessage() {
+		LinkedHashMap<Integer, PairReadyAlias>  playerMap = new LinkedHashMap<Integer, PairReadyAlias>();
+		PairReadyAlias pairReadyAlias;
+		for(Client player: this.getPlayerList()) {
+			pairReadyAlias = new PairReadyAlias(player.getReadyState(), player.getAlias());
+			playerMap.put(player.getPlayerID(), pairReadyAlias);
+		}
+		PlayerListMessage playerlistMessage = new PlayerListMessage(playerMap);
+		return playerlistMessage;
 		
 	}
 }

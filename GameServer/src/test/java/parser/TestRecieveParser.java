@@ -189,5 +189,16 @@ public class TestRecieveParser {
 		Message newMessage = recieveParser.parse(data);
 		assertEquals(1, newMessage.getVersion());
 		assertEquals(MessageType.UNDEFINED, newMessage.getMessageType());
+	}	@Test
+	public void testParseMessageShorterThanHeader() {
+		byte[]data = new byte[] {
+				0x01, 0x01, 0x0a, 0x00, 0x00, 0x00
+		};
+		
+		Message newMessage = recieveParser.parse(data);
+		assertEquals(1, newMessage.getVersion());
+		assertEquals(MessageType.UNDEFINED, newMessage.getMessageType());
 	}
+	
+	
 }

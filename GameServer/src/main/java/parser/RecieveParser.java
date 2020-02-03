@@ -38,6 +38,12 @@ public class RecieveParser {
 		Message recievedMessage = new Message();
 		header = new byte[HEADER_LENGTH];
 		length = new byte[4];
+		
+		if(data.length < HEADER_LENGTH) {
+			System.out.println("ERROR: Recieved message is shorter than header length: " + data.length+" bytes" );
+			recievedMessage.setMessageType(MessageType.UNDEFINED);
+			return recievedMessage;
+		}	
 		//get header information from byte array
 		header = Arrays.copyOfRange(data, 0, HEADER_LENGTH);
 		version = header[0];
@@ -54,11 +60,13 @@ public class RecieveParser {
 		recievedMessage.setMessageType();
 		payload = new byte[0];
 		if(data.length < (recievedMessage.getLength()+HEADER_LENGTH)) {
-			System.out.println("ERROR: Recieved message payload length is shorter than expected");
+			System.out.println("ERROR: Recieved message payload length is shorter than expected: "
+					+ data.length +" < " + (recievedMessage.getLength()+HEADER_LENGTH));
 			recievedMessage.setMessageType(MessageType.UNDEFINED);
 			return recievedMessage;
 		} else if(data.length > (recievedMessage.getLength()+HEADER_LENGTH)){
-			System.out.println("ERROR: Recieved message payload length is longer than expected");
+			System.out.println("ERROR: Recieved message payload length is longer than expected: "
+					+ data.length +" > " + (recievedMessage.getLength()+HEADER_LENGTH));
 			recievedMessage.setMessageType(MessageType.UNDEFINED);
 			return recievedMessage;
 		}
@@ -108,7 +116,8 @@ public class RecieveParser {
 		case SIGN_ON_RESPONSE:
 			break;
 		case UNDEFINED:
-			System.out.println("ERROR: UNDEFINED Message");
+			System.out.println("ERROR: UNDEFINED Message. Group: "
+		+ recievedMessage.getGroup() + ", Type: " + recievedMessage.getType());
 			break;
 		default:
 			break;

@@ -4,10 +4,10 @@ package messages;
  * @author IG4
  *
  */
-public class PairReadyAliasMessage { 
+public class PairReadyAlias { 
 	  public final ReadyState readyState; 
 	  public final String alias; 
-	  public PairReadyAliasMessage(ReadyState x, String y) { 
+	  public PairReadyAlias(ReadyState x, String y) { 
 	    this.readyState = x; 
 	    this.alias = y; 
 	  } 

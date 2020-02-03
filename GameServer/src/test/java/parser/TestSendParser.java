@@ -16,7 +16,7 @@ import messages.BuzzResultMessage;
 import messages.CategorySelectorAnnouncementMessage;
 import messages.GameEndMessage;
 import messages.GeneralTextMessage;
-import messages.PairReadyAliasMessage;
+import messages.PairReadyAlias;
 import messages.PlayerListMessage;
 import messages.QuestionMessage;
 import messages.ReadyState;
@@ -96,9 +96,9 @@ public class TestSendParser {
 	public void testplayerListToByteArray() {
 		byte[] dataTest;
 		PlayerListMessage playerList;
-		LinkedHashMap<Integer,PairReadyAliasMessage> playerMap = new LinkedHashMap<Integer,PairReadyAliasMessage>();
-		playerMap.put(42, new PairReadyAliasMessage(ReadyState.READY,"lel"));
-		playerMap.put(3, new PairReadyAliasMessage(ReadyState.NOT_READY,"lul"));
+		LinkedHashMap<Integer,PairReadyAlias> playerMap = new LinkedHashMap<Integer,PairReadyAlias>();
+		playerMap.put(42, new PairReadyAlias(ReadyState.READY,"lel"));
+		playerMap.put(3, new PairReadyAlias(ReadyState.NOT_READY,"lul"));
 		playerList = new PlayerListMessage(playerMap);
 		byte[]dataplayerList = new byte[] {0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x18
 				, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x2a, 0x01, 
