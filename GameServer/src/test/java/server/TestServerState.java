@@ -2,13 +2,15 @@ package server;
 
 import static org.junit.Assert.*;
 
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.junit.Test;
 
 import client.Client;
+import dbconnection.Category;
+import dbconnection.Question;
 import messages.MessageType;
 import messages.PairReadyAlias;
 import messages.PlayerListMessage;
@@ -100,5 +102,24 @@ public class TestServerState {
 		
 		assertEquals("foo23", serverState.solveAliasConflict("foo2"));
 	}
+	
+	@Test
+	public void testGetQuestionSample() {
+		ServerState serverState = new ServerState(10);
+		serverState.fillQuestionList(10);
+		for (Question question : serverState.getQuestionList()) {
+			Category category = question.getCategory();
+			System.out.println(category.toString());
+		}
+		System.out.println("---------------------");
+		assertEquals(10, serverState.getQuestionList().size());
+		ArrayList<Question> questionSample = serverState.getQuestionSample(5);
+		assertEquals(5, questionSample.size());
+		assertEquals(5, serverState.getQuestionList().size());
+		for (Question question : questionSample) {
+			System.out.println(question.getCategory().toString());
+		}
+	}
+
 }
 

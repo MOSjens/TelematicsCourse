@@ -1,8 +1,11 @@
 package server;
 
 import client.Client;
+import dbconnection.Category;
+import dbconnection.Difficulty;
 import dbconnection.Question;
 import dbconnection.QuestionDatabase;
+import messages.CategorySelectorAnnouncementMessage;
 import messages.PairReadyAlias;
 import messages.PlayerListMessage;
 import messages.ScoreboardMessage;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.ListIterator;
 import java.util.Set;
 
 /**
@@ -60,6 +64,23 @@ public class ServerState {
 		return questionList;
 	}
 	
+	public ArrayList<Question> getQuestionSample(int amount) {
+		ArrayList<Question> questionSample = new ArrayList<Question>();
+		ListIterator<Question> iter = this.questionList.listIterator();
+		HashSet<Category> categoriesUsed = new HashSet<Category>();
+		while (questionSample.size() < amount && iter.hasNext())  {
+			Question question = iter.next();
+			if(!categoriesUsed.contains(question.getCategory())){
+				questionSample.add(question);
+				
+			}
+		}
+		for (Question question : questionSample) {
+			this.questionList.remove(question);
+		}
+		return questionSample;
+	}
+	
 	public ScoreboardMessage createScoreboardMessage() {
 		LinkedHashMap<Integer, Integer> scoreMap = new LinkedHashMap<Integer, Integer>();
 		for(Client player: this.getPlayerList()) {
@@ -82,13 +103,23 @@ public class ServerState {
 		
 	}
 	
+	public CategorySelectorAnnouncementMessage createCategorySelectorAnnouncementMessage(long categoryTimeout, int selectingPlayerId, 
+			ArrayList<Question> questions) {
+		LinkedHashMap <Category,Difficulty> categoryDifficultyMap = new LinkedHashMap <Category,Difficulty>();
+		for(Question question : questions) {
+			categoryDifficultyMap.put(question.getCategory(), question.getDifficulty());
+		}
+		CategorySelectorAnnouncementMessage CSAMessage = 
+				new CategorySelectorAnnouncementMessage(categoryTimeout, selectingPlayerId, categoryDifficultyMap);
+		return CSAMessage;		
+	}
+	
 	public String solveAliasConflict(String alias) {
 		String newAlias = alias;
 		if(this.aliasMap.containsKey(alias)) {
 			newAlias = alias + this.aliasMap.get(alias).toString();
 			newAlias = this.solveAliasConflict(newAlias);
 			this.aliasMap.put(alias,this.aliasMap.get(alias)+1);
-			this.aliasMap.put(newAlias,2);
 		}
 		else {
 			this.aliasMap.put(alias, 2);
