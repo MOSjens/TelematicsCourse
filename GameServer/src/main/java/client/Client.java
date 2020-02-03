@@ -26,6 +26,7 @@ public class Client extends Thread{
     private ServerState serverState;
     private int playerID;
     private int score;
+    private int screwsLeft;
     private String alias;
     private ReadyState readyState;
 
@@ -40,6 +41,7 @@ public class Client extends Thread{
         this.score = 0;
         messageListenerList = new EventListenerList();
         this.score = 0; // Initial score is zero.
+        this.screwsLeft = 1;
         this.playerID = playerID;
         try {
             out = new DataOutputStream( socket.getOutputStream());
@@ -100,6 +102,10 @@ public class Client extends Thread{
     public void setScore(int score) {
         this.score = score;
     }
+    
+    public void changeScore(int points) {
+    	this.score += points;
+    }
 
     public int getPlayerID() {
         return playerID;
@@ -124,4 +130,19 @@ public class Client extends Thread{
     public void setReadyState(ReadyState readyState) {
         this.readyState = readyState;
     }
+
+
+	public int getScrewsLeft() {
+		return screwsLeft;
+	}
+
+
+	public void setScrewsLeft(int screwsLeft) {
+		this.screwsLeft = screwsLeft;
+	}
+
+
+	public void decreaseScrewsLeft() {
+		this.screwsLeft--;
+	}
 }
