@@ -94,8 +94,7 @@ public class TestServerState {
 		assertEquals("foo4", serverState.solveAliasConflict("foo"));
 		assertEquals("foo223", serverState.solveAliasConflict("foo22"));
 		assertEquals("foo5", serverState.solveAliasConflict("foo5"));
-		assertEquals("foo52", serverState.solveAliasConflict("foo"));
-		
+		assertEquals("foo52", serverState.solveAliasConflict("foo"));	
 		assertEquals("bar", serverState.solveAliasConflict("bar"));
 		assertEquals("bar2", serverState.solveAliasConflict("bar"));
 		

@@ -120,7 +120,7 @@ public class Client extends Thread{
     }
 
     public void setAlias(String alias) {
-        this.alias = alias;
+        this.alias = serverState.solveAliasConflict(alias);
     }
 
     public ReadyState getReadyState() {
