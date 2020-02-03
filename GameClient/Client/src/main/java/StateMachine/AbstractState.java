@@ -1,7 +1,12 @@
 package StateMachine;
 
+import Message.Message;
+
 public abstract class AbstractState implements IState{
     private StateEnum stateEnum;
+
+
+
 
     public AbstractState(StateEnum stateEnum)
     {

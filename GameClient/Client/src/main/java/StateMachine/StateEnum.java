@@ -26,7 +26,9 @@ public enum StateEnum {
 
     NONE_SELECTOR(11, "NONE_SELECTOR"),
 
-    NONE_ANSWERER(12, "NONE_ANSWERER");
+    NONE_ANSWERER(12, "NONE_ANSWERER"),
+
+    END_GAME(13, "END_GAME");
 
     private int key;
 
