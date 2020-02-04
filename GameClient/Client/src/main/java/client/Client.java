@@ -39,6 +39,7 @@ public class Client {
                 //string playerName=system.in.readln();
                 // Message signOn = new SignOnMessage(playerName);
                 outToServer.write(signon.getEncodedMessage());
+
                 while (true) {
                     //genausso sollte bei den parser sein also getrente header und body behandeln und den body can man an den constroctor geben.
                     byte[] header = inFromServer.readNBytes(7);

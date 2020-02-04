@@ -4,7 +4,7 @@ import Message.MessageGroup;
 import Message.ParseException;
 
 public enum InGameMessageType implements MessageType {
-    CATAGORY_SELECTION_ANNOUNCEMENT(0), CATAGORY_SELECTION(1), QUESTION(2), ANSWER(3), BUZZ(4), BUZZ_RESULT(5),
+    CATEGORY_SELECTION_ANNOUNCEMENT(0), CATEGORY_SELECTION(1), QUESTION(2), ANSWER(3), BUZZ(4), BUZZ_RESULT(5),
     SCOREBOARD(6), ANSWER_RESULT(7), SCREW(8), SCREW_RESULT(9);
 
     private InGameMessageType(int i) {

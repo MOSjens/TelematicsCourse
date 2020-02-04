@@ -53,6 +53,5 @@ public class Message {
         buffer.put(getMessageBody());
 
         return buffer.array();
-
     }
 }
