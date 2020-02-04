@@ -5,12 +5,16 @@ import static org.junit.Assert.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
 import client.Client;
 import dbconnection.Category;
+import dbconnection.Difficulty;
 import dbconnection.Question;
+import dbconnection.QuestionDatabase;
+import messages.CategorySelectorAnnouncementMessage;
 import messages.MessageType;
 import messages.PairReadyAlias;
 import messages.PlayerListMessage;
@@ -118,6 +122,37 @@ public class TestServerState {
 		assertEquals(5, serverState.getQuestionList().size());
 		for (Question question : questionSample) {
 			System.out.println(question.getCategory().toString());
+		}
+	}
+	
+	@Test
+	public void testCreateCategorySelectorAnnouncementMessage(			) {
+		ServerState serverState = new ServerState(10);
+		ArrayList<Question> questions = new ArrayList<Question>();
+		long categoryTimeout = 15000;
+		int selectingPlayerId = 10;
+		Question question1 = new Question(Difficulty.EASY, Category.ENTERTAINMENT_VIDEOGAMES, "",0, null);
+		Question question2 = new Question(Difficulty.EASY, Category.ENTERTAINMENT_CARTOON, "",0, null);
+		questions.add(question1);
+		questions.add(question2);
+
+		CategorySelectorAnnouncementMessage CSAMessage = 
+				serverState.createCategorySelectorAnnouncementMessage(categoryTimeout, selectingPlayerId, questions);
+		
+		assertEquals(2, CSAMessage.getCategoryDifficultyMap().size() );
+		int i = 1;
+		for(Entry<Category,Difficulty> entry : CSAMessage.getCategoryDifficultyMap().entrySet()) {
+			if(i==1) {
+				assertEquals(Category.ENTERTAINMENT_VIDEOGAMES, entry.getKey());
+				assertEquals(Difficulty.EASY, entry.getValue());
+				i++;
+			}
+			else if(i==2) {
+				assertEquals(Category.ENTERTAINMENT_CARTOON, entry.getKey());
+				assertEquals(Difficulty.EASY, entry.getValue());
+				i++;
+				
+			}
 		}
 	}
 
