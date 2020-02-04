@@ -5,10 +5,7 @@ import dbconnection.Category;
 import dbconnection.Difficulty;
 import dbconnection.Question;
 import dbconnection.QuestionDatabase;
-import messages.CategorySelectorAnnouncementMessage;
-import messages.PairReadyAlias;
-import messages.PlayerListMessage;
-import messages.ScoreboardMessage;
+import messages.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,5 +124,17 @@ public class ServerState {
 		}
 		
 		return newAlias;
+	}
+
+	public Boolean everyPlayerReady() {
+    	Boolean ready = false;
+    	for (Client client: playerList) {
+    		if (client.getReadyState() == ReadyState.READY) {
+    			ready = true;
+			} else if (client.getReadyState() == ReadyState.NOT_READY) {
+    			return false;
+			}
+		}
+    	return ready;
 	}
 }

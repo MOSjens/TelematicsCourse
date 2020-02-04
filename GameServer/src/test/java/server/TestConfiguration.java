@@ -13,10 +13,12 @@ public class TestConfiguration {
 		+" qTimeout: "+ config.questionTimeout
 		+" aTimeout: "+ config.answerTimeout
 		+" cTimeout: "+ config.categoryTimeout);*/
-		assertEquals( config.amountRounds, 10 );
-		assertEquals( config.questionTimeout, 60 );
-		assertEquals( config.categoryTimeout, 15 );
-		assertEquals( config.answerTimeout, 15 );
+		assertEquals( 10, config.amountRounds );
+		assertEquals( 60, config.questionTimeout );
+		assertEquals( 15, config.categoryTimeout );
+		assertEquals( 15, config.answerTimeout );
+		assertEquals( 30, config.gameStartTimeout);
+		assertEquals( 10, config.maximumPlayers );
 	}
 
 }

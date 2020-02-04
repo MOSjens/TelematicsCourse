@@ -17,6 +17,8 @@ public class Configuration {
 	public int categoryTimeout;
 	public int questionTimeout;
 	public int answerTimeout;
+	public int gameStartTimeout;
+	public int maximumPlayers;
 	
 	public Configuration() {
 			try {
@@ -46,6 +48,8 @@ public class Configuration {
 			questionTimeout = Integer.parseInt(prop.getProperty("questionTimeout"));
 			categoryTimeout = Integer.parseInt(prop.getProperty("categoryTimeout"));
 			answerTimeout = Integer.parseInt(prop.getProperty("answerTimeout"));
+			gameStartTimeout = Integer.parseInt(prop.getProperty("gameStartTimeout"));
+			maximumPlayers = Integer.parseInt(prop.getProperty("maximumPlayers"));
 
  
 		} catch (Exception e) {

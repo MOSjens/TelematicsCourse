@@ -2,6 +2,8 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -9,8 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import client.Client;
 import client.MessageEvent;
 import client.MessageListener;
-import messages.Message;
-import messages.SignOnMessage;
 
 public class Server {
 
@@ -18,6 +18,8 @@ public class Server {
 	private static int port = 6666;
 	private static ServerState serverState;
 	private static BlockingQueue<IncomingMessage> inputMessages;
+	private static AtomicBoolean stillConnectClients;
+	private static int secondsTillStart;
 
 
 	public static void main(String[] args) {
@@ -26,6 +28,9 @@ public class Server {
 
 		Configuration config = new Configuration();
 		serverState = new ServerState( config.amountRounds );
+
+		stillConnectClients = new AtomicBoolean(true);
+		secondsTillStart = config.gameStartTimeout;
 
 		// Start Server Socket.
 		try {
@@ -42,22 +47,28 @@ public class Server {
 			@Override
 			public void run() {
 				int playerID = 0;
-				while ( true ) {
+				while ( stillConnectClients.get() ) {
 					try {
 						Client client = new Client( serverSocket.accept(), serverState, playerID );
+						if (!stillConnectClients.get()) break; // Because the function above is blocking.
 						client.addMessageListener(new HandleMessageLister());
 						client.start();
 						serverState.addPlayer( client );
+						// reset Timeout if already started
+						secondsTillStart = config.gameStartTimeout;
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 					playerID++;
+					if (playerID >= config.maximumPlayers) break;
 				}
 			}
 		};
 
 		connectClients.start();
-		//connectClients.
+
+
+
 
 
 		while (true) {
@@ -88,6 +99,18 @@ public class Server {
 
 	public static ServerState getServerState() {
 		return serverState;
+	}
+
+	public static void setStillConnectClients( Boolean connectClients ) {
+		stillConnectClients.set( connectClients );
+	}
+
+	public static int getSecondsTillStart() {
+		return secondsTillStart;
+	}
+
+	public static void decreaseSecondsTillStart() {
+		secondsTillStart--;
 	}
 
 }

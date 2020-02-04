@@ -1,7 +1,13 @@
 package server;
 
 import client.Client;
+import messages.MessageType;
+import messages.PlayerReadyMessage;
+import messages.ReadyState;
 import messages.SignOnMessage;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public enum GamePhase {
 
@@ -9,15 +15,50 @@ public enum GamePhase {
     STARTUP_PHASE() {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            // Define Transition here ..
-            SignOnMessage signOn = (SignOnMessage) incomingMessage.getMessage();
-            System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()
-                    + " Alias = " + signOn.getPlayerAlias());
-            Client source = incomingMessage.getSourceClient();
-            source.setAlias(signOn.getPlayerAlias());
-            System.out.println(source.getAlias());
+
+            if (incomingMessage.getMessage().getMessageType() == MessageType.SIGN_ON) {
+                SignOnMessage signOn = (SignOnMessage) incomingMessage.getMessage();
+                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()
+                        + " Alias = " + signOn.getPlayerAlias());
+                Client sourceClient = incomingMessage.getSourceClient();
+                sourceClient.setAlias(signOn.getPlayerAlias());
+                System.out.println(sourceClient.getAlias());
+            }
+            if (incomingMessage.getMessage().getMessageType() == MessageType.PLAYER_READY) {
+                PlayerReadyMessage playerReady = (PlayerReadyMessage) incomingMessage.getMessage();
+                Client sourceClient = incomingMessage.getSourceClient();
+                sourceClient.setReadyState(ReadyState.READY);
+                // TODO send PlayerList Message
+                if (Server.getServerState().everyPlayerReady()) {
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (Server.getSecondsTillStart() > 0)
+                                Server.decreaseSecondsTillStart();
+
+                            if (Server.getSecondsTillStart() == 0) {
+                                Server.setStillConnectClients( false );
+                                // TODO Send null Message to GamePhase
+                                timer.cancel();
+                            }
+                        }
+                    };
+                    timer.schedule(task, 0, 1000);
+                    return WAIT_FOR_GAME_PHASE;
+                }
+            }
+
+
+
             return this;
-            //TODO Start Timer if everyone is ready and leave phase after 30 seconds.
+        }
+    },
+
+    WAIT_FOR_GAME_PHASE {
+        @Override
+        public GamePhase nextPhase(IncomingMessage incomingMessage) {
+            return null;
         }
     },
 

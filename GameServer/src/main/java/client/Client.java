@@ -75,7 +75,6 @@ public class Client extends Thread{
         }
         // TODO disconnect handling
         // TODO client logic
-        // TODO how does the client inform the server? listener?
 
     }
 
