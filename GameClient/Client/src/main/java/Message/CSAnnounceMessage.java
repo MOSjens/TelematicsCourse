@@ -9,7 +9,7 @@ import java.util.List;
 public class CSAnnounceMessage extends Message {
 
     private long timeOut;
-    private int playerID;
+    private int selectedplayerID;
     private int numberOfCategories;
     private List<String> difficulty;
     private List<String> categories;
@@ -17,10 +17,10 @@ public class CSAnnounceMessage extends Message {
     private List<Integer> categoriesIndex;
 
     public CSAnnounceMessage(byte[] messageBody) {
-        super(InGameMessageType.CATAGORY_SELECTION_ANNOUNCEMENT);
+        super(InGameMessageType.CATEGORY_SELECTION_ANNOUNCEMENT);
         ByteBuffer buffer = ByteBuffer.wrap(messageBody);
         setTimeOut(buffer.getLong());
-        setPlayerID(buffer.getInt());
+        setSelectedplayerID(buffer.getInt());
         setNumberOfCategories(buffer.getInt());
 
         difficulty = new ArrayList<>(numberOfCategories);
@@ -64,12 +64,12 @@ public class CSAnnounceMessage extends Message {
         this.timeOut = timeOut;
     }
 
-    public int getPlayerID() {
-        return playerID;
+    public int getSelectedplayerID() {
+        return selectedplayerID;
     }
 
-    public void setPlayerID(int playerID) {
-        this.playerID = playerID;
+    public void setSelectedplayerID(int selectedplayerID) {
+        this.selectedplayerID = selectedplayerID;
     }
 
     public int getNumberOfCategories() {

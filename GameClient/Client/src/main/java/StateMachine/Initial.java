@@ -3,9 +3,6 @@ package StateMachine;
 import Message.Message;
 import Message.SignOnMessage;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 public class Initial extends AbstractState {
 
     public Initial(StateEnum stateEnum) {
@@ -22,7 +19,8 @@ public class Initial extends AbstractState {
 
     @Override
     public IState receiveMessage(Context context) {
-        switch (context.getInputMessage().getType().getValue()) {
+        Message message = context.getInputMessage();
+        switch (message.getType().getValue()) {
             case 0:
 
             case 1: { break;}
@@ -36,6 +34,6 @@ public class Initial extends AbstractState {
             }
 
         }
-        return this;
+        return Context.INITIAL_STATE;
     }
 }

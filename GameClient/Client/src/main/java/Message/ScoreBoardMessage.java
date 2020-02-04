@@ -44,4 +44,12 @@ public class ScoreBoardMessage extends Message {
         return this.playerScores[i];
     }
 
+    public int[] getPlayerIds() {
+        return playerIds;
+    }
+
+    public int[] getPlayerScores() {
+        return playerScores;
+    }
+
 }

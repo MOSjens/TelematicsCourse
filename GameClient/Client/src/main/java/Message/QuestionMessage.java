@@ -11,7 +11,7 @@ public class QuestionMessage extends Message {
     private String question;
     private int numberOfAnswer;
     private String[] answer;
-    private Long timeOut;
+    private long timeOut;
     private int[] answerIndex;
 
     public QuestionMessage(byte[] messageBody) {

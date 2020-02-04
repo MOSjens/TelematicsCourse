@@ -8,7 +8,7 @@ import MessageType.InGameMessageType;
 public class CategorySelectionMessage extends Message {
 
     public CategorySelectionMessage(int categoryIndex) {
-        super(InGameMessageType.CATAGORY_SELECTION);
+        super(InGameMessageType.CATEGORY_SELECTION);
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putInt(categoryIndex);

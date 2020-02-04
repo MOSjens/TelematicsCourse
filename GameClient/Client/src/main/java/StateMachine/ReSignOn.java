@@ -1,7 +1,9 @@
 package StateMachine;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import Message.Message;
+import Message.PlayerReadyMessage;
+
 
 public class ReSignOn extends AbstractState {
 
@@ -11,12 +13,30 @@ public class ReSignOn extends AbstractState {
 
 
     @Override
-    public IState sendMessage(Context context, OutputStream stream) {
-        return null;
+    public IState sendMessage(Context context) {
+        IState nextState = Context.READY_STATE;
+        context.setOutputMessage(new PlayerReadyMessage());
+        return nextState;
     }
 
     @Override
-    public IState receiveMessage(Context context, InputStream stream) {
-        return null;
+    public IState receiveMessage(Context context) {
+        Message message = context.getInputMessage();
+        switch (message.getType().getValue()) {
+            case 0:
+
+            case 1: { break;}
+
+            case 2: {
+                IState nextState = Context.END_GAME;
+                return nextState;
+            }
+            case 3: {
+                System.out.println(context.getInputMessage());
+            }
+
+        }
+        return Context.RE_SIGN_ON_STATE;
+
     }
 }
