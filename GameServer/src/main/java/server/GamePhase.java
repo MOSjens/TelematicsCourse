@@ -26,9 +26,8 @@ public enum GamePhase {
                 // Send SignOn Response to clint
                 sourceClient.sendMessage(serverState.createSignOnResponseMessage(sourceClient));
 
-                // Send Player List to everyone who is Signed on or ready
+                // Send Player List to everyone in the playerList.
                 for ( Client client: serverState.getPlayerList() ) {
-                    //System.out.println( "Send :" + client.getAlias() );
                     client.sendMessage(serverState.createPlayerlistMessage());
                 }
             }
@@ -45,7 +44,7 @@ public enum GamePhase {
                         e.printStackTrace();
                     }
 
-                    // send scoreboard before game starts
+                    // Send scoreboard before game starts.
                     for ( Client client: serverState.getPlayerList() ) {
                         client.sendMessage(serverState.createScoreboardMessage());
                     }
@@ -62,14 +61,16 @@ public enum GamePhase {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
             ServerState serverState = Server.getServerState();
-            // every round an other Player is allowed to choose the category
-            int playerID = serverState.getRoundsLeft() % serverState.getPlayerList().size();
+            // Every round an other Player is allowed to choose the category.
+            serverState.setCategorySelector(serverState.getRoundsLeft() % serverState.getPlayerList().size());
+            // Pick 4 questions with different Categories
+            serverState.setActualCategorySelection(serverState.getQuestionSample(4));
 
-            // TODO send Category Selector Announcement
+            // Send Category Selector Announcement.
             CategorySelectorAnnouncementMessage CSAMessage = serverState.createCategorySelectorAnnouncementMessage(
                     Server.getConfiguration().categoryTimeout,
-                    playerID,
-                    new ArrayList<Question>());
+                    serverState.getCategorySelector(),
+                    serverState.getActualCategorySelection());
             for ( Client client: serverState.getPlayerList() ) {
                 client.sendMessage(CSAMessage);
             }
@@ -80,17 +81,32 @@ public enum GamePhase {
     CATEGORY_SELECTION_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            if (incomingMessage.getMessage().getMessageType() == MessageType.CATEGORY_SELECTION) {
-                
-            }
+            // TODO Timeout !
+            ServerState serverState = Server.getServerState();
+            // Check if the right person responses.
+            if ((incomingMessage.getMessage().getMessageType() == MessageType.CATEGORY_SELECTION) &&
+                    (incomingMessage.getSourceClient().getPlayerID() == serverState.getCategorySelector())) {
+                // Get selected question.
+                CategorySelectionMessage categorySelectionMessage = (CategorySelectionMessage) incomingMessage.getMessage();
+                Question question = serverState.getActualCategorySelection().get(categorySelectionMessage.getCategoryIndex());
+                QuestionMessage questionMessage = new QuestionMessage(
+                        Server.getConfiguration().answerTimeout,
+                        question);
 
-            return PLAYER_SELECTION_PHASE;
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(questionMessage);
+                }
+                return PLAYER_SELECTION_PHASE;
+            }
+            return this;
         }
     },
 
     PLAYER_SELECTION_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
+            // TODO Await Buzz or screw
+            // TODO Timeout
             return QUESTION_PLAY_PHASE;
         }
     },
@@ -99,7 +115,7 @@ public enum GamePhase {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
             if (Server.getServerState().getRoundsLeft() > 0){
-                return GAME_PHASE;
+                return GAME_PHASE.nextPhase(null);
             }
             return CLOSING_PHASE;
         }

@@ -23,20 +23,37 @@ public class ServerState {
     private int roundsLeft;
     private Set<Client> playerList;
     private HashMap<String, Integer> aliasMap;
-    // private ? scoreboard
-    // private ? readyState
     private ArrayList<Question> questionList;
-    // private ? gamePhase
+    private ArrayList<Question> actualCategorySelection;
+    private int categorySelector; // PlayerID who chooses the category
+
 
     public ServerState(int roundsLeft ) {
         this.roundsLeft = roundsLeft;
         this.playerList = new HashSet<Client>();
         this.questionList = new ArrayList<Question>();
         this.aliasMap = new HashMap<String, Integer>();
-        
+        // Initially fill question List
+		fillQuestionList(50);
     }
 
-    public int getRoundsLeft() {
+	public ArrayList<Question> getActualCategorySelection() {
+		return actualCategorySelection;
+	}
+
+	public void setActualCategorySelection(ArrayList<Question> actualCategorySelection) {
+		this.actualCategorySelection = actualCategorySelection;
+	}
+
+	public int getCategorySelector() {
+		return categorySelector;
+	}
+
+	public void setCategorySelector(int categorySelector) {
+		this.categorySelector = categorySelector;
+	}
+
+	public int getRoundsLeft() {
         return roundsLeft;
     }
 
