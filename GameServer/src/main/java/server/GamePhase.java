@@ -1,6 +1,7 @@
 package server;
 
 import client.Client;
+import dbconnection.Difficulty;
 import dbconnection.Question;
 import messages.*;
 
@@ -92,6 +93,7 @@ public enum GamePhase {
                 QuestionMessage questionMessage = new QuestionMessage(
                         Server.getConfiguration().answerTimeout,
                         question);
+                serverState.setActualQuestion(question);
 
                 for ( Client client: serverState.getPlayerList() ) {
                     client.sendMessage(questionMessage);
@@ -105,28 +107,100 @@ public enum GamePhase {
     PLAYER_SELECTION_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            // TODO Await Buzz or screw
             // TODO Timeout
-            return QUESTION_PLAY_PHASE;
+            ServerState serverState = Server.getServerState();
+            if (incomingMessage.getMessage().getMessageType() == MessageType.BUZZ) {
+                BuzzResultMessage BZMessage = new BuzzResultMessage(
+                        incomingMessage.getSourceClient().getPlayerID(),
+                        Server.getConfiguration().answerTimeout);
+                serverState.setAnswerGiver(incomingMessage.getSourceClient().getPlayerID());
+                serverState.setScrewer(-1); // Because Buzz round, there is no screwer.
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(BZMessage);
+                }
+                return QUESTION_PLAY_PHASE;
+            }
+
+            // Check if screwing player has screws left.
+            if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
+                    (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
+
+                ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
+                ScrewResultMessage SRMessage = new ScrewResultMessage(
+                        incomingMessage.getSourceClient().getPlayerID(),
+                        screwMessage.getScrewedPlayerId(),
+                        Server.getConfiguration().answerTimeout);
+                serverState.setAnswerGiver(screwMessage.getScrewedPlayerId());
+                serverState.setScrewer(incomingMessage.getSourceClient().getPlayerID());
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(SRMessage);
+                }
+                    return QUESTION_PLAY_PHASE;
+            }
+            return this;
         }
     },
 
     QUESTION_PLAY_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            if (Server.getServerState().getRoundsLeft() > 0){
-                return GAME_PHASE.nextPhase(null);
+            ServerState serverState = Server.getServerState();
+            // Check if client is allowed to answer
+            if ((incomingMessage.getMessage().getMessageType() == MessageType.ANSWER) &&
+                    (incomingMessage.getSourceClient().getPlayerID() == serverState.getAnswerGiver())) {
+                AnswerMessage answerMessage = (AnswerMessage) incomingMessage.getMessage();
+                serverState.decreaseRoundsLeft();
+
+                boolean answerCorrect = (answerMessage.getAnswerId() == serverState.getActualQuestion().getCorrectAnswerIndex());
+                int points = getPoints(serverState.getActualQuestion().getDifficulty(), answerCorrect);
+                // change points to answering player
+                incomingMessage.getSourceClient().changeScore(points);
+                // Change points of screwing player
+                if (serverState.getScrewer() != -1) {   // Screw
+                    serverState.getPlayerByID(serverState.getScrewer()).changeScore(points * -1);
+                }
+                AnswerResultMessage answerResultMessage = new AnswerResultMessage(
+                        serverState.getActualQuestion().getCorrectAnswerIndex(),
+                        answerMessage.getAnswerId());
+
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(answerResultMessage);
+                }
+                // Divided in two loops to not send both messages at once.
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(serverState.createScoreboardMessage());
+                }
+                if (serverState.getRoundsLeft() > 0) {
+                    return GAME_PHASE.nextPhase(null);
+                } else {
+                    return CLOSING_PHASE.nextPhase(null);
+                }
             }
-            return CLOSING_PHASE;
+            // TODO Timeout
+            return this;
+        }
+        int getPoints(Difficulty difficulty, Boolean answerCorrect) {
+            switch(difficulty){
+                case EASY:
+                    return answerCorrect ? 1 : -1;
+                case MEDIUM:
+                    return answerCorrect ? 2 : -2;
+                case HARD:
+                    return answerCorrect ? 3 : -3;
+                default:
+                    return 0;
+            }
         }
     },
 
     CLOSING_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            //TODO start new round or Stay in the closing phase?
-            return CLOSING_PHASE;
-            // return GAME_PHASE;
+            GameEndMessage gameEndMessage = new GameEndMessage();
+            for ( Client client: Server.getServerState().getPlayerList() ) {
+                client.sendMessage(gameEndMessage);
+            }
+            return this;
         }
     };
 

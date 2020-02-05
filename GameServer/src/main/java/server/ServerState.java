@@ -25,7 +25,10 @@ public class ServerState {
     private HashMap<String, Integer> aliasMap;
     private ArrayList<Question> questionList;
     private ArrayList<Question> actualCategorySelection;
+    private Question actualQuestion;
     private int categorySelector; // PlayerID who chooses the category
+	private int answerGiver; // PlayerID who is allowed or forced to answer
+	private int screwer; // PlayerID of client who screws an other player: -1 if buzz round;
 
 
     public ServerState(int roundsLeft ) {
@@ -45,12 +48,45 @@ public class ServerState {
 		this.actualCategorySelection = actualCategorySelection;
 	}
 
+	public Question getActualQuestion() {
+		return actualQuestion;
+	}
+
+	public void setActualQuestion(Question actualQuestion) {
+		this.actualQuestion = actualQuestion;
+	}
+
 	public int getCategorySelector() {
 		return categorySelector;
 	}
 
 	public void setCategorySelector(int categorySelector) {
 		this.categorySelector = categorySelector;
+	}
+
+	public int getAnswerGiver() {
+		return answerGiver;
+	}
+
+	public void setAnswerGiver(int answerGiver) {
+		this.answerGiver = answerGiver;
+	}
+
+	public int getScrewer() {
+		return screwer;
+	}
+
+	public void setScrewer(int screwer) {
+		this.screwer = screwer;
+	}
+
+	public Client getPlayerByID(int ID) {
+    	for (Client client: playerList) {
+    		if( client.getPlayerID() == ID) {
+    			return client;
+			}
+		}
+    	return null;
 	}
 
 	public int getRoundsLeft() {

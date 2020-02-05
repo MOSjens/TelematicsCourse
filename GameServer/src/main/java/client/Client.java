@@ -46,7 +46,6 @@ public class Client extends Thread{
         this.sendParser = new SendParser();
         this.serverState = serverState;
         this.readyState = ReadyState.NOT_READY;
-        this.score = 0;
         messageListenerList = new EventListenerList();
         this.score = 0; // Initial score is zero.
         this.screwsLeft = 1; //screws left for this player
