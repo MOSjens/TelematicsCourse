@@ -27,9 +27,9 @@ public class TestServerState {
 	public void testFillQuestionList() {
 		ServerState serverState = new ServerState(10);
 		serverState.fillQuestionList(5);
-		assertEquals(5, serverState.getQuestionList().size());
+		assertEquals(55, serverState.getQuestionList().size());
 		serverState.fillQuestionList(5);
-		assertEquals(10, serverState.getQuestionList().size());
+		assertEquals(60, serverState.getQuestionList().size());
 	}
 
 	@Test
@@ -116,10 +116,10 @@ public class TestServerState {
 			System.out.println(category.toString());
 		}
 		System.out.println("---------------------");
-		assertEquals(10, serverState.getQuestionList().size());
+		assertEquals(60, serverState.getQuestionList().size());
 		ArrayList<Question> questionSample = serverState.getQuestionSample(5);
 		assertEquals(5, questionSample.size());
-		assertEquals(5, serverState.getQuestionList().size());
+		assertEquals(55, serverState.getQuestionList().size());
 		for (Question question : questionSample) {
 			System.out.println(question.getCategory().toString());
 		}
