@@ -5,12 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.event.EventListenerList;
 
 import messages.Message;
 import messages.ReadyState;
 import parser.RecieveParser;
+import parser.SendParser;
 import server.ServerState;
 
 /**
@@ -23,6 +26,9 @@ public class Client extends Thread{
     private Socket socket = null;
     private DataOutputStream out;
     private DataInputStream in;
+    private BlockingQueue<Message> outgoingMessages;
+    private RecieveParser recieveParser;
+    private SendParser sendParser;
     private ServerState serverState;
     private int playerID;
     private int score;
@@ -31,11 +37,13 @@ public class Client extends Thread{
     private ReadyState readyState;
 
     private EventListenerList messageListenerList;
-    //private MessageListener messageListener;
 
     public Client(Socket socket, ServerState serverState, int playerID) {
         super("Client");
         this.socket = socket;
+        this.outgoingMessages = new LinkedBlockingQueue<Message>();
+        this.recieveParser = new RecieveParser();
+        this.sendParser = new SendParser();
         this.serverState = serverState;
         this.readyState = ReadyState.NOT_READY;
         this.score = 0;
@@ -57,17 +65,25 @@ public class Client extends Thread{
         while (true) {
             // Only messages with a size of 1024 byte can be handled.
             byte[] temp = new byte[1024];
-            byte[] data;
+            byte[] incomingData;
+            byte[] outgoingData;
             int number = 0;
             try {
+                // Receive Message
                 if ((number = in.read( temp )) != -1 ) {
-                    data = Arrays.copyOf(temp, number);
+                    incomingData = Arrays.copyOf(temp, number);
+                    // TODO delete
                     System.out.println("Bytes Read: " + number);
 
-                    RecieveParser recieveParser = new RecieveParser();
-                    Message message = recieveParser.parse(data);
+                    Message message = recieveParser.parse(incomingData);
                     notifyListeners( new MessageEvent(this, message ) );
-
+                }
+                // Send Message
+                Message outgoingMessage = outgoingMessages.poll();
+                if ( outgoingMessage != null ) {
+                    outgoingData = sendParser.messageToByteArray(outgoingMessage);
+                    out.write(outgoingData);
+                    System.out.println( "Send Message: " + outgoingMessage.getMessageType().toString());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -78,9 +94,12 @@ public class Client extends Thread{
 
     }
 
+    public void sendMessage(Message message){
+        this.outgoingMessages.add(message);
+    }
+
     public void addMessageListener ( MessageListener listener ) {
         messageListenerList.add( MessageListener.class, listener );
-        //messageListener = listener;
     }
 
     public void removeMessageListener( MessageListener listener ) {

@@ -27,7 +27,12 @@ public class ExampleClient {
 
     public byte[] awaitMassage() throws IOException {
         byte[] temp = new byte[1000];
-        int number = in.read( temp );
+        int number = 0;
+        while (true){
+            number = in.read( temp );
+            System.out.println( number );
+            if (number != -1) break;
+        }
         byte[] resp = Arrays.copyOf(temp, number);
         return resp;
     }

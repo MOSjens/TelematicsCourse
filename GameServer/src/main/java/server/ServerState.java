@@ -111,6 +111,11 @@ public class ServerState {
 				new CategorySelectorAnnouncementMessage(categoryTimeout, selectingPlayerId, categoryDifficultyMap);
 		return CSAMessage;		
 	}
+
+	public SignOnResponseMessage createSignOnResponseMessage(Client client) {
+    	SignOnResponseMessage SORMessage = new SignOnResponseMessage(client.getPlayerID(), client.getAlias());
+    	return SORMessage;
+	}
 	
 	public String solveAliasConflict(String alias) {
 		String newAlias = alias;
@@ -137,4 +142,5 @@ public class ServerState {
 		}
     	return ready;
 	}
+
 }
