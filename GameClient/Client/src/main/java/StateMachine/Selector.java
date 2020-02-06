@@ -1,7 +1,9 @@
 package StateMachine;
 
+import Message.CategorySelectionMessage;
 import Message.Message;
 import Message.QuestionMessage;
+import MessageType.InGameMessageType;
 
 public class Selector extends AbstractState{
 
@@ -11,7 +13,18 @@ public class Selector extends AbstractState{
 
     @Override
     public IState sendMessage(Context context) {
-        return Context.SELECTOR;
+    	 CategorySelectionMessage cs= (CategorySelectionMessage)context.getInputMessage();
+    	 while(context.getTimeOut()>0) {
+    		 if(cs!=null) {
+    	 context.setOutputMessage(cs);
+    	 
+    	 }
+    	 }
+    	 return Context.RE_QUESTION;
+    	 
+    	 
+    	 
+       
     }
 
     @Override
@@ -20,17 +33,10 @@ public class Selector extends AbstractState{
         switch(message.getGroup().getValue()) {
             case 0:{ break;}
 
-            case 1:{
-                if(message.getType().getValue() == 2) {
-                    QuestionMessage questionMessage = (QuestionMessage)message;
-                    context.setTimeOut(questionMessage.getTimeOut());
-                    context.setCategory(questionMessage.getCategory());
-                    context.setDifficulty(questionMessage.getDifficulty());
-                    context.setQuestion(questionMessage.getQuestion());
-                    context.setAnswer(questionMessage.getAnswer());
-                    return Context.RE_QUESTION;
+            case 1:{ break;
+                
                 }
-            }
+            
 
             case 2: {
                 IState nextState = Context.END_GAME;

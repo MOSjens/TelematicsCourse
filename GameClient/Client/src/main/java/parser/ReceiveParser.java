@@ -62,7 +62,7 @@ public class ReceiveParser extends Parser {
                     	return new  BRMessage(Messagebody);
                     case SCREW_RESULT:
                     	return new SRMessage(Messagebody);
-                    case CATAGORY_SELECTION_ANNOUNCEMENT:
+                    case CATEGORY_SELECTION_ANNOUNCEMENT:
                     	return new CSAnnounceMessage(Messagebody);
                     
                  

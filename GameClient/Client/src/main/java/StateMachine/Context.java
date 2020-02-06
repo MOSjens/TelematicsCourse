@@ -28,7 +28,7 @@ public class Context {
 
     public Context(IState initState)
     {
-        initState(initState);
+        initState(SIGN_ON_STATE);
 
     }
     public Message getInputMessage() {

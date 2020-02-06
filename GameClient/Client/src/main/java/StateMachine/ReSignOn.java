@@ -3,6 +3,8 @@ package StateMachine;
 
 import Message.Message;
 import Message.PlayerReadyMessage;
+import Message.SignOnMessage;
+import Message.SignOnRespondMessage;
 
 
 public class ReSignOn extends AbstractState {
@@ -14,16 +16,24 @@ public class ReSignOn extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        IState nextState = Context.READY_STATE;
-        context.setOutputMessage(new PlayerReadyMessage());
-        return nextState;
+       IState nextState = Context.RE_SIGN_ON_STATE;
+        //context.setOutputMessage(new PlayerReadyMessage());
+       return nextState;
     }
 
     @Override
     public IState receiveMessage(Context context) {
         Message message = context.getInputMessage();
-        switch (message.getType().getValue()) {
+        switch (message.getGroup().getValue()) {
             case 0:
+            {
+            	SignOnRespondMessage res=(SignOnRespondMessage)message;
+            	context.setPlayerID(res.getPlayerID());
+            	context.setPlayerAlias(res.getAlias());
+            	return Context.READY_STATE;
+            	
+       
+            }
 
             case 1: { break;}
 
