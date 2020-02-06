@@ -85,7 +85,7 @@ public class TestServer {
     	
     }
     
-    @Test
+    //@Test
     public void testServerPhase() {
         // Example to Send
     	

@@ -80,11 +80,13 @@ public class Client extends Thread{
                 // Send Message
                 Message outgoingMessage = outgoingMessages.poll();
                 if ( outgoingMessage != null ) {
+                	System.out.println("queue:");
                     outgoingData = sendParser.messageToByteArray(outgoingMessage);
                     out.write(outgoingData);
+                    out.flush();
                     System.out.println( "Send Message: " + outgoingMessage.getMessageType().toString());
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -94,6 +96,7 @@ public class Client extends Thread{
     }
 
     public void sendMessage(Message message){
+    	System.out.println("Added Message to queue: " + message.getMessageType());
         this.outgoingMessages.add(message);
     }
 

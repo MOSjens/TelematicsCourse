@@ -38,6 +38,7 @@ public enum GamePhase {
                 sourceClient.setReadyState(ReadyState.READY);
                 System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ " from id: " + sourceClient.getPlayerID() );
                 if (Server.getServerState().everyPlayerReady()) {
+                	System.out.println("All players ready");
                     // Wait for 30 sec.
                     try {
                         Thread.sleep(Server.getConfiguration().gameStartTimeout * 1000);
@@ -49,7 +50,7 @@ public enum GamePhase {
                     for ( Client client: serverState.getPlayerList() ) {
                         client.sendMessage(serverState.createScoreboardMessage());
                     }
-
+                    System.out.println("Start Game");
                     return GAME_PHASE.nextPhase(null);
                 }
             }
@@ -66,7 +67,7 @@ public enum GamePhase {
             serverState.setCategorySelector(serverState.getRoundsLeft() % serverState.getPlayerList().size());
             // Pick 4 questions with different Categories
             serverState.setActualCategorySelection(serverState.getQuestionSample(4));
-
+            System.out.println("Player selecting: " + serverState.getCategorySelector());
             // Send Category Selector Announcement.
             CategorySelectorAnnouncementMessage CSAMessage = serverState.createCategorySelectorAnnouncementMessage(
                     Server.getConfiguration().categoryTimeout,
