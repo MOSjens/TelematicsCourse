@@ -36,7 +36,7 @@ public enum GamePhase {
                 PlayerReadyMessage playerReady = (PlayerReadyMessage) incomingMessage.getMessage();
                 Client sourceClient = incomingMessage.getSourceClient();
                 sourceClient.setReadyState(ReadyState.READY);
-
+                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ " from id: " + sourceClient.getPlayerID() );
                 if (Server.getServerState().everyPlayerReady()) {
                     // Wait for 30 sec.
                     try {
@@ -89,6 +89,8 @@ public enum GamePhase {
                     (incomingMessage.getSourceClient().getPlayerID() == serverState.getCategorySelector())) {
                 // Get selected question.
                 CategorySelectionMessage categorySelectionMessage = (CategorySelectionMessage) incomingMessage.getMessage();
+                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name() +
+                		"Index:" + categorySelectionMessage.getCategoryIndex());
                 Question question = serverState.getActualCategorySelection().get(categorySelectionMessage.getCategoryIndex());
                 QuestionMessage questionMessage = new QuestionMessage(
                         Server.getConfiguration().answerTimeout,
@@ -109,7 +111,9 @@ public enum GamePhase {
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
             // TODO Timeout
             ServerState serverState = Server.getServerState();
-            if (incomingMessage.getMessage().getMessageType() == MessageType.BUZZ) {
+            if (incomingMessage.getMessage().getMessageType() == MessageType.BUZZ) { 
+            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+            			" from id: " + incomingMessage.getSourceClient().getPlayerID() );
                 BuzzResultMessage BZMessage = new BuzzResultMessage(
                         incomingMessage.getSourceClient().getPlayerID(),
                         Server.getConfiguration().answerTimeout);
@@ -124,8 +128,10 @@ public enum GamePhase {
             // Check if screwing player has screws left.
             if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
                     (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
-
                 ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
+            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+            			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
+            			" screwing id: " + screwMessage.getScrewedPlayerId());
                 ScrewResultMessage SRMessage = new ScrewResultMessage(
                         incomingMessage.getSourceClient().getPlayerID(),
                         screwMessage.getScrewedPlayerId(),
@@ -149,6 +155,9 @@ public enum GamePhase {
             if ((incomingMessage.getMessage().getMessageType() == MessageType.ANSWER) &&
                     (incomingMessage.getSourceClient().getPlayerID() == serverState.getAnswerGiver())) {
                 AnswerMessage answerMessage = (AnswerMessage) incomingMessage.getMessage();
+            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+            			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
+            			" with answer id: " + answerMessage.getAnswerId());
                 serverState.decreaseRoundsLeft();
 
                 boolean answerCorrect = (answerMessage.getAnswerId() == serverState.getActualQuestion().getCorrectAnswerIndex());
