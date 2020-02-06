@@ -63,6 +63,11 @@ public class ServerState {
 	public void setCategorySelector(int categorySelector) {
 		this.categorySelector = categorySelector;
 	}
+	
+	public void returnQuestions() {
+		actualCategorySelection.remove(actualQuestion);
+		questionList.addAll(actualCategorySelection);
+	}
 
 	public int getAnswerGiver() {
 		return answerGiver;

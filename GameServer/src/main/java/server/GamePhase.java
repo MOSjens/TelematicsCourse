@@ -94,7 +94,7 @@ public enum GamePhase {
                         Server.getConfiguration().answerTimeout,
                         question);
                 serverState.setActualQuestion(question);
-
+                serverState.returnQuestions();
                 for ( Client client: serverState.getPlayerList() ) {
                     client.sendMessage(questionMessage);
                 }

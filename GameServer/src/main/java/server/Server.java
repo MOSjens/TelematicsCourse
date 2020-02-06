@@ -1,6 +1,8 @@
 package server;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,14 +33,18 @@ public class Server {
 
 		// Start Server Socket.
 		try {
+			final DatagramSocket socket = new DatagramSocket();
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			//serverSocket.getInetAddress().getHostAddress() //doesnt give a correct ip address
 			serverSocket = new ServerSocket(port);
-			System.out.println( "Server started on IP: " + serverSocket.getInetAddress().getHostAddress()
+			System.out.println( "Server started on IP: " + socket.getLocalAddress().getHostAddress()
 					+ " and Port: "	+ serverSocket.getLocalPort()  );
+			socket.close();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port: " + port + ".");
 			System.exit(-1);
 		}
-
+		
 		// Connect clients in the background.
 		Thread connectClients = new Thread(){
 			@Override
