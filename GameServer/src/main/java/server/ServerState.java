@@ -23,20 +23,78 @@ public class ServerState {
     private int roundsLeft;
     private Set<Client> playerList;
     private HashMap<String, Integer> aliasMap;
-    // private ? scoreboard
-    // private ? readyState
     private ArrayList<Question> questionList;
-    // private ? gamePhase
+    private ArrayList<Question> actualCategorySelection;
+    private Question actualQuestion;
+    private int categorySelector; // PlayerID who chooses the category
+	private int answerGiver; // PlayerID who is allowed or forced to answer
+	private int screwer; // PlayerID of client who screws an other player: -1 if buzz round;
+
 
     public ServerState(int roundsLeft ) {
         this.roundsLeft = roundsLeft;
         this.playerList = new HashSet<Client>();
         this.questionList = new ArrayList<Question>();
         this.aliasMap = new HashMap<String, Integer>();
-        
+        // Initially fill question List
+		fillQuestionList(50);
     }
 
-    public int getRoundsLeft() {
+	public ArrayList<Question> getActualCategorySelection() {
+		return actualCategorySelection;
+	}
+
+	public void setActualCategorySelection(ArrayList<Question> actualCategorySelection) {
+		this.actualCategorySelection = actualCategorySelection;
+	}
+
+	public Question getActualQuestion() {
+		return actualQuestion;
+	}
+
+	public void setActualQuestion(Question actualQuestion) {
+		this.actualQuestion = actualQuestion;
+	}
+
+	public int getCategorySelector() {
+		return categorySelector;
+	}
+
+	public void setCategorySelector(int categorySelector) {
+		this.categorySelector = categorySelector;
+	}
+	
+	public void returnQuestions() {
+		actualCategorySelection.remove(actualQuestion);
+		questionList.addAll(actualCategorySelection);
+	}
+
+	public int getAnswerGiver() {
+		return answerGiver;
+	}
+
+	public void setAnswerGiver(int answerGiver) {
+		this.answerGiver = answerGiver;
+	}
+
+	public int getScrewer() {
+		return screwer;
+	}
+
+	public void setScrewer(int screwer) {
+		this.screwer = screwer;
+	}
+
+	public Client getPlayerByID(int ID) {
+    	for (Client client: playerList) {
+    		if( client.getPlayerID() == ID) {
+    			return client;
+			}
+		}
+    	return null;
+	}
+
+	public int getRoundsLeft() {
         return roundsLeft;
     }
 
@@ -111,6 +169,11 @@ public class ServerState {
 				new CategorySelectorAnnouncementMessage(categoryTimeout, selectingPlayerId, categoryDifficultyMap);
 		return CSAMessage;		
 	}
+
+	public SignOnResponseMessage createSignOnResponseMessage(Client client) {
+    	SignOnResponseMessage SORMessage = new SignOnResponseMessage(client.getPlayerID(), client.getAlias());
+    	return SORMessage;
+	}
 	
 	public String solveAliasConflict(String alias) {
 		String newAlias = alias;
@@ -137,4 +200,5 @@ public class ServerState {
 		}
     	return ready;
 	}
+
 }

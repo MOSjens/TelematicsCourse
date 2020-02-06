@@ -18,6 +18,7 @@ import messages.CategorySelectorAnnouncementMessage;
 import messages.MessageType;
 import messages.PairReadyAlias;
 import messages.PlayerListMessage;
+import messages.QuestionMessage;
 import messages.ReadyState;
 import messages.ScoreboardMessage;
 
@@ -27,9 +28,9 @@ public class TestServerState {
 	public void testFillQuestionList() {
 		ServerState serverState = new ServerState(10);
 		serverState.fillQuestionList(5);
-		assertEquals(5, serverState.getQuestionList().size());
+		assertEquals(55, serverState.getQuestionList().size());
 		serverState.fillQuestionList(5);
-		assertEquals(10, serverState.getQuestionList().size());
+		assertEquals(60, serverState.getQuestionList().size());
 	}
 
 	@Test
@@ -111,15 +112,15 @@ public class TestServerState {
 	public void testGetQuestionSample() {
 		ServerState serverState = new ServerState(10);
 		serverState.fillQuestionList(10);
-		for (Question question : serverState.getQuestionList()) {
-			Category category = question.getCategory();
-			System.out.println(category.toString());
-		}
+		/*
+		 * for (Question question : serverState.getQuestionList()) { Category category =
+		 * question.getCategory(); System.out.println(category.toString()); }
+		 */
 		System.out.println("---------------------");
-		assertEquals(10, serverState.getQuestionList().size());
+		assertEquals(60, serverState.getQuestionList().size());
 		ArrayList<Question> questionSample = serverState.getQuestionSample(5);
 		assertEquals(5, questionSample.size());
-		assertEquals(5, serverState.getQuestionList().size());
+		assertEquals(55, serverState.getQuestionList().size());
 		for (Question question : questionSample) {
 			System.out.println(question.getCategory().toString());
 		}
@@ -154,6 +155,22 @@ public class TestServerState {
 				
 			}
 		}
+	}
+	
+	@Test
+	public void testReturnQuestions() {
+		ServerState serverState = new ServerState(10);
+		assertEquals(50, serverState.getQuestionList().size());
+        serverState.setActualCategorySelection(serverState.getQuestionSample(4));
+        assertEquals(46, serverState.getQuestionList().size());
+        assertEquals(4, serverState.getActualCategorySelection().size());
+        Question question = serverState.getActualCategorySelection().get(0);
+        serverState.setActualQuestion(question);
+        //System.out.println(serverState.getActualQuestion().getQuestionText());
+        serverState.returnQuestions();
+        assertEquals(49, serverState.getQuestionList().size());
+        
+
 	}
 
 }

@@ -1,9 +1,9 @@
 package server;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,29 +19,32 @@ public class Server {
 	private static ServerState serverState;
 	private static BlockingQueue<IncomingMessage> inputMessages;
 	private static AtomicBoolean stillConnectClients;
-	private static int secondsTillStart;
+	private static Configuration config;
 
 
 	public static void main(String[] args) {
 		GamePhase gamePhase = GamePhase.STARTUP_PHASE;
 		inputMessages = new LinkedBlockingQueue<IncomingMessage>();
 
-		Configuration config = new Configuration();
+		config = new Configuration();
 		serverState = new ServerState( config.amountRounds );
 
 		stillConnectClients = new AtomicBoolean(true);
-		secondsTillStart = config.gameStartTimeout;
 
 		// Start Server Socket.
 		try {
+			final DatagramSocket socket = new DatagramSocket();
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			//serverSocket.getInetAddress().getHostAddress() //doesnt give a correct ip address
 			serverSocket = new ServerSocket(port);
-			System.out.println( "Server started on IP: " + serverSocket.getInetAddress().getHostAddress()
+			System.out.println( "Server started on IP: " + socket.getLocalAddress().getHostAddress()
 					+ " and Port: "	+ serverSocket.getLocalPort()  );
+			socket.close();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port: " + port + ".");
 			System.exit(-1);
 		}
-
+		
 		// Connect clients in the background.
 		Thread connectClients = new Thread(){
 			@Override
@@ -53,9 +56,6 @@ public class Server {
 						if (!stillConnectClients.get()) break; // Because the function above is blocking.
 						client.addMessageListener(new HandleMessageLister());
 						client.start();
-						serverState.addPlayer( client );
-						// reset Timeout if already started
-						secondsTillStart = config.gameStartTimeout;
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -68,14 +68,13 @@ public class Server {
 		connectClients.start();
 
 
-
-
-
 		while (true) {
 
 			try {
 				IncomingMessage incomingMessage = inputMessages.take();
-				gamePhase = gamePhase.nextPhase( incomingMessage );
+				if (incomingMessage != null) {
+					gamePhase = gamePhase.nextPhase( incomingMessage );
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -105,13 +104,11 @@ public class Server {
 		stillConnectClients.set( connectClients );
 	}
 
-	public static int getSecondsTillStart() {
-		return secondsTillStart;
+	public static Configuration getConfiguration () {
+		return config;
 	}
 
-	public static void decreaseSecondsTillStart() {
-		secondsTillStart--;
-	}
+
 
 }
 

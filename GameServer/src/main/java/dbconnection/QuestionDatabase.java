@@ -89,7 +89,7 @@ public class QuestionDatabase {
 		ArrayList<Question> listOfQuestions;
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new FileReader("./src/test/resources/Questions.txt"));
+			reader = new BufferedReader(new FileReader("src/main/resources/Questions.txt"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
