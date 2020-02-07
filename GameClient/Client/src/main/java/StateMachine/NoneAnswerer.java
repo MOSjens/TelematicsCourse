@@ -15,11 +15,8 @@ public class NoneAnswerer extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        
-  
-        	IState nextstate = Context.RE_SCORE_BOARD_STATE;
-        
-            return nextstate;
+        IState nextstate = Context.RE_SCORE_BOARD_STATE;
+        return nextstate;
     }
     @Override
     public IState receiveMessage(Context context) {
@@ -29,31 +26,24 @@ public class NoneAnswerer extends AbstractState {
             
 
             case 1:{ 
-            	if (message.getType()==InGameMessageType.SCOREBOARD)
-        	{
-                
-            	
-       		 ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage)message;
-                context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
-                context.setPlayerIds(scoreBoardMessage.getPlayerIds());
-                context.setPlayerScores(scoreBoardMessage.getPlayerScores());
-                return Context.RE_SCORE_BOARD_STATE;
-       	}
-            
-            
-            
+            	if (message.getType()==InGameMessageType.SCOREBOARD) {
+            	    ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage)message;
+                    context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
+                    context.setPlayerIds(scoreBoardMessage.getPlayerIds());
+                    context.setPlayerScores(scoreBoardMessage.getPlayerScores());
+                    return Context.RE_SCORE_BOARD_STATE;
             	}
+            	return Context.NONE_ANSWERER;
+            }
             	
-            
-
             case 2: {
                 IState nextState = Context.END_GAME;
                 return nextState;
             }
-            case 3: {
-                System.out.println(context.getInputMessage());
-            }
 
+            case 3: {
+                System.out.println(context.getInputMessage().toString());
+            }
         }
         return Context.NONE_ANSWERER;
     }

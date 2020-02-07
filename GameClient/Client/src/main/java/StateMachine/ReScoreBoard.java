@@ -42,7 +42,7 @@ public class ReScoreBoard extends AbstractState {
             }
 
             case 3: {
-                System.out.println(context.getInputMessage().getMessageBody());
+                System.out.println(context.getInputMessage().getMessageBody().toString());
             }
         }
 

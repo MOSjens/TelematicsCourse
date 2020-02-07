@@ -34,7 +34,7 @@ public class BuzzScrew extends AbstractState {
                 if(message.getType() == InGameMessageType.BUZZ_RESULT) {
                     BRMessage brMessage = (BRMessage)message;
                     context.setTimeOut(brMessage.getTimeOut());
-                    context.setTimeOut(brMessage.getAnsweringResultID());
+                    context.setAnsweringPlayerID(brMessage.getAnsweringResultID());
                     return Context.RE_BUZZ_SCREW;
                 }
             }
@@ -44,7 +44,7 @@ public class BuzzScrew extends AbstractState {
                 return nextState;
             }
             case 3: {
-                System.out.println(context.getInputMessage());
+                System.out.println(context.getInputMessage().toString());
             }
 
         }

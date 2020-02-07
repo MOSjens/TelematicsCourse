@@ -2,10 +2,7 @@ package StateMachine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import Message.CSAnnounceMessage;
-import Message.QuestionMessage;
-import Message.ScoreBoardMessage;
-import Message.SignOnRespondMessage;
+import Message.*;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -106,7 +103,38 @@ public class testState {
         assertEquals(StateEnum.RE_QUESTION, ((AbstractState)context.getState()).getStateEnum());
 
         //re question to buzz and screw
+        context.setDecision(true);
+        context.setScrewID(1);
+        context.sendMessage();
+        assertEquals(StateEnum.BUZZ_SCREW, ((AbstractState)context.getState()).getStateEnum());
 
+        //buzz and screw to re buzz and screw
+        byte[] messagebody4 = {0x01,0x01,0x05,0x00,0x00,0x00,0x0c,0x00,0x00,0x00,0x02,0x00,0x00,0x00
+                ,0x00,0x00,0x00,0x00,0x00};
+        stream = new ByteArrayInputStream(messagebody4);
+        BRMessage brMessage = null;
+        try {
+            brMessage = (BRMessage)ReceiveParser.ParsMessage(stream);
+        }catch (Exception e) {
+
+        }
+        assertEquals(2, brMessage.getAnsweringResultID());
+
+        context.setInputMessage(brMessage);
+        context.receiveMessage();
+        assertEquals(StateEnum.RE_BUZZ_SCREW, ((AbstractState)context.getState()).getStateEnum());
+
+        //re buzz and screw to non answerer
+        context.setPlayerID(2);
+        context.setSelectedAnswerIndex(0);
+        context.sendMessage();
+        assertEquals(StateEnum.ANSWERER, ((AbstractState)context.getState()).getStateEnum());
+
+
+        //non answer to score board
+        context.setInputMessage(scoreBoardMessage);
+        context.receiveMessage();
+        assertEquals(StateEnum.RE_SCORE_BOARD, ((AbstractState)context.getState()).getStateEnum());
     }
 
 

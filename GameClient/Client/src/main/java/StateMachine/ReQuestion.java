@@ -34,7 +34,7 @@ public class ReQuestion extends AbstractState {
                 return nextState;
             }
             case 3: {
-                System.out.println(context.getInputMessage());
+                System.out.println(context.getInputMessage().toString());
             }
 
         }

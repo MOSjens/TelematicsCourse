@@ -239,6 +239,15 @@ public class Context {
         date.setScrewerPlayerID(screwerPlayerID);
     }
 
+
+    public int getSelectedAnswerIndex() {
+        return date.getSelectedAnswerIndex();
+    }
+
+    public void setSelectedAnswerIndex(int selectedAnswerIndex) {
+        date.setSelectedAnswerIndex(selectedAnswerIndex);
+    }
+
     public void initState(IState state)
     {
         this.setState(state);

@@ -19,35 +19,21 @@ public class EndGame extends AbstractState {
     	Message message = context.getInputMessage();
     	switch (message.getGroup().getValue())
     	{
-    	case 0:
-    	{
-    		
-    		IState nexIState= Context.END_GAME;
-    		return nexIState;
-      		
-    	}
-    	
-    		
-    		
-    	case 1:
-    	{
-    		IState nexIState= Context.END_GAME;
-    		return nexIState;
-    		
-    		
-    	}
-    		
-    		
-    		
-    	case 2:{
-            IState nextState = Context.END_GAME;
-            return nextState;
-    		
-    	}
-    		
-    	case 3:{
-            System.out.println(context.getInputMessage());
-        }
+    		case 0: {}
+    		case 1: {
+    			IState nexIState= Context.END_GAME;
+    			return nexIState;
+    		}
+
+    		case 2:{
+            	IState nextState = Context.END_GAME;
+            	return nextState;
+    		}
+
+    		case 3:{
+            	System.out.println(context.getInputMessage().toString());
+    		}
+
     	}
         return Context.END_GAME;
     }

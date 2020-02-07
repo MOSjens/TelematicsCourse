@@ -7,25 +7,33 @@ import java.util.List;
  * this class is for store the in game data and update it
  */
 public class ClientData {
-    private int playerID;
-    private String alias;
-    private int roundsLeft;
-    private List<Integer> playerIds;
-    private List<Integer> playerScores;
-    private long timeOut;
-    private List<String> difficulties;
-    private List<String> categories;
-    private int selectedIndex;
-    private int selectedPlayerID;
-    private String difficulty;
-    private String category;
-    private String question;
-    private String[] answer;
+    private int playerID; //ID that client assigned for player
+    private String alias;//alias that player tapped
+    private int roundsLeft;//the rounds is game can play
+    private List<Integer> playerIds;// the list of player id in the scoreboard
+    private List<Integer> playerScores;// the list of score in the scoreboard
+    private long timeOut;// time out of the message
+    private List<String> difficulties;//list of difficulties in the category selection message
+    private List<String> categories;//list of categories in the category selection message
+    private int selectedIndex;// the index of selected question
+    private int selectedPlayerID;// ID of the player who is chosen to select the category
+    private String difficulty;// difficulty of the question
+    private String category;// category of the question
+    private String question;//question body
+    private String[] answer;// answer that could be selected
     private boolean decision; //0 for buzz, 1 for screw
-    private int screwID;
-    private int answeringPlayerID;
-    private int screwerPlayerID;
+    private int screwID;//id of the player who get screwed
+    private int answeringPlayerID;// id of player who answer the question
+    private int screwerPlayerID;//id of the player who do the screw action
+    private int selectedAnswerIndex;
 
+    public int getSelectedAnswerIndex() {
+        return selectedAnswerIndex;
+    }
+
+    public void setSelectedAnswerIndex(int selectedAnswerIndex) {
+        this.selectedAnswerIndex = selectedAnswerIndex;
+    }
 
     public int getAnsweringPlayerID() {
         return answeringPlayerID;
