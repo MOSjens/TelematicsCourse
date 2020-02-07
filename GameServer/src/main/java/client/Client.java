@@ -59,13 +59,15 @@ public class Client extends Thread{
     }
 
 
-	public void run() {
-
-        while (true) {
+    public void run() {
+		Client source = this;
+		Thread readData = new Thread() {
+			@Override
+			public void run() {
+        while (true) {     	
             // Only messages with a size of 1024 byte can be handled.
             byte[] temp = new byte[1024];
             byte[] incomingData;
-            byte[] outgoingData;
             int number = 0;
             try {
                 // Receive Message
@@ -75,8 +77,22 @@ public class Client extends Thread{
                     System.out.println("Bytes Read: " + number);
 
                     Message message = recieveParser.parse(incomingData);
-                    notifyListeners( new MessageEvent(this, message ) );
+                    notifyListeners( new MessageEvent(source, message ) );
                 }
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        }
+        // TODO disconnect handling
+        // TODO client logic
+		}
+		};
+		Thread writeData = new Thread() {
+			@Override
+			public void run() {
+        while (true) {
+            byte[] outgoingData;
+            try {
                 // Send Message
                 Message outgoingMessage = outgoingMessages.poll();
                 if ( outgoingMessage != null ) {
@@ -92,7 +108,10 @@ public class Client extends Thread{
         }
         // TODO disconnect handling
         // TODO client logic
-
+		}
+		};
+		readData.start();
+		writeData.start();
     }
 
     public void sendMessage(Message message){
