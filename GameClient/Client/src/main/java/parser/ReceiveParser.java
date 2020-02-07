@@ -18,6 +18,7 @@ import Message.SRMessage;
 import Message.ScoreBoardMessage;
 import Message.SignOnRespondMessage;
 import Message.PlayerListingMessage;
+import Message.QuestionMessage;
 import MessageType.GeneralMessageType;
 import MessageType.InGameMessageType;
 import MessageType.MessageType;
@@ -29,8 +30,6 @@ import client.Parser;
 public class ReceiveParser extends Parser {
 
     public ReceiveParser() {
-
-
     }
 
     public static Message ParsMessage(InputStream InStream) throws IOException, ParseException {
@@ -64,7 +63,8 @@ public class ReceiveParser extends Parser {
                     	return new SRMessage(Messagebody);
                     case CATEGORY_SELECTION_ANNOUNCEMENT:
                     	return new CSAnnounceMessage(Messagebody);
-                    
+                    case QUESTION:
+                        return new QuestionMessage(Messagebody);
                  
                     	
                     default:

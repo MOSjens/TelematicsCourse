@@ -2,8 +2,6 @@ package StateMachine;
 
 import Message.CSAnnounceMessage;
 import Message.CategorySelectionMessage;
-import Message.Message;
-import MessageType.InGameMessageType;
 
 
 public class CSA extends AbstractState {
@@ -15,12 +13,12 @@ public class CSA extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        // if (context.getSelectedPlayerID() == context.getPlayerID()) {
-          //  IState nextState = Context.SELECTOR;
-            //context.setOutputMessage(new CategorySelectionMessage(context.getSelectedIndex()));
-        //    return nextState;
-        //}
-        IState nextState = Context.CATEGORY_SELECTION_ANNOUNCEMENT;
+        if (context.getSelectedPlayerID() == context.getPlayerID()) {
+            IState nextState = Context.SELECTOR;
+            context.setOutputMessage(new CategorySelectionMessage(context.getSelectedIndex()));
+            return nextState;
+        }
+        IState nextState = Context.NONE_SELECTOR;
         return nextState;
     }
 
@@ -30,19 +28,7 @@ public class CSA extends AbstractState {
         switch (message.getType().getValue()) {
             case 0:
 
-            case 1: { 
-            	if (message.getSelectedplayerID() == context.getPlayerID()) {
-            		if(message.getType()== InGameMessageType.CATEGORY_SELECTION_ANNOUNCEMENT) {
-                        CSAnnounceMessage csAnnounceMessage = (CSAnnounceMessage)message;
-                        context.setSelectedPlayerID(csAnnounceMessage.getSelectedplayerID());
-                        context.setTimeOut(csAnnounceMessage.getTimeOut());
-                        context.setDifficulties(csAnnounceMessage.getDifficulty());
-                        context.setCategories(csAnnounceMessage.getCategories());
-                        
-            		return Context.SELECTOR;
-            	}
-
-            }}
+            case 1: { break;}
 
             case 2: {
                 IState nextState = Context.END_GAME;

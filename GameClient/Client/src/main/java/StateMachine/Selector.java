@@ -13,29 +13,23 @@ public class Selector extends AbstractState{
 
     @Override
     public IState sendMessage(Context context) {
-    	 CategorySelectionMessage cs= (CategorySelectionMessage)context.getInputMessage();
-    	 while(context.getTimeOut()>0) {
-    		 if(cs!=null) {
-    	 context.setOutputMessage(cs);
-    	 
-    	 }
-    	 }
-    	 return Context.RE_QUESTION;
-    	 
-    	 
-    	 
-       
+    	 return Context.SELECTOR;
     }
 
     @Override
     public IState receiveMessage(Context context) {
-        Message message = context.getOutputMessage();
+        Message message = context.getInputMessage();
         switch(message.getGroup().getValue()) {
             case 0:{ break;}
 
-            case 1:{ break;
-                
+            case 1:{
+                if(message.getType() == InGameMessageType.QUESTION) {
+                    QuestionMessage questionMessage = (QuestionMessage)message;
+                    context.setQuestion(questionMessage.getQuestion());
+                    context.setAnswer(questionMessage.getAnswer());
+                    return Context.RE_QUESTION;
                 }
+            }
             
 
             case 2: {

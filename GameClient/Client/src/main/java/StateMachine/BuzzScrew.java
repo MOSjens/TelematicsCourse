@@ -1,8 +1,7 @@
 package StateMachine;
-import Message.Buzz;
+import Message.BRMessage;
 import Message.Message;
-import Message.QuestionMessage;
-import Message.Screw;
+import Message.SRMessage;
 import MessageType.InGameMessageType;
 
 public class BuzzScrew extends AbstractState {
@@ -14,22 +13,7 @@ public class BuzzScrew extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-         
-    	 if( InGameMessageType.BUZZ != null)
-    	 {
-    	IState  nextState = Context.RE_BUZZ_SCREW;
-         context.setOutputMessage(new Buzz());
-         return nextState;
-         }
-    	 
-    	 else {
-    		 Screw s= (Screw)context.getInputMessage();
-    		 context.setOutputMessage(s);
-    	   IState nextState = Context.RE_BUZZ_SCREW;
-    	   
-    	   return nextState;
-    	 }
-         
+        return null;
     }
 
     @Override
@@ -38,21 +22,21 @@ public class BuzzScrew extends AbstractState {
         switch (message.getGroup().getValue()) {
             case 0:{break;}
 
-            case 1: { 
-            	switch (message.getType().getValue())
-            	{
-            	case 2:
-            	{  
-            		QuestionMessage QN= (QuestionMessage) message;
-            		
-            		context.setTimeOut(QN.getTimeOut());
-            		context.setDifficulty(QN.getDifficulty());
-            		context.setCategory(QN.getCategory());
-            		context.setQuestion(QN.getQuestion());
-            		 return Context.RE_QUESTION;
-            		
-            	}
-            	}	
+            case 1: {
+                if(message.getType() == InGameMessageType.SCREW_RESULT) {
+                    SRMessage srMessage = (SRMessage) message;
+                    context.setTimeOut(srMessage.getTimeOut());
+                    context.setScrewerPlayerID(srMessage.getScrewerPlayerID());
+                    context.setAnsweringPlayerID(srMessage.getAnsweringPlayerID());
+                    return Context.RE_BUZZ_SCREW;
+                }
+
+                if(message.getType() == InGameMessageType.BUZZ_RESULT) {
+                    BRMessage brMessage = (BRMessage)message;
+                    context.setTimeOut(brMessage.getTimeOut());
+                    context.setTimeOut(brMessage.getAnsweringResultID());
+                    return Context.RE_BUZZ_SCREW;
+                }
             }
 
             case 2: {

@@ -21,6 +21,43 @@ public class ClientData {
     private String category;
     private String question;
     private String[] answer;
+    private boolean decision; //0 for buzz, 1 for screw
+    private int screwID;
+    private int answeringPlayerID;
+    private int screwerPlayerID;
+
+
+    public int getAnsweringPlayerID() {
+        return answeringPlayerID;
+    }
+
+    public void setAnsweringPlayerID(int answeringPlayerID) {
+        this.answeringPlayerID = answeringPlayerID;
+    }
+
+    public int getScrewerPlayerID() {
+        return screwerPlayerID;
+    }
+
+    public void setScrewerPlayerID(int screwerPlayerID) {
+        this.screwerPlayerID = screwerPlayerID;
+    }
+
+    public boolean isDecision() {
+        return decision;
+    }
+
+    public void setDecision(boolean decision) {
+        this.decision = decision;
+    }
+
+    public int getScrewID() {
+        return screwID;
+    }
+
+    public void setScrewID(int screwID) {
+        this.screwID = screwID;
+    }
 
     public String getDifficulty() {
         return difficulty;

@@ -28,9 +28,9 @@ public class Context {
 
     public Context(IState initState)
     {
-        initState(SIGN_ON_STATE);
-
+        initState(initState);
     }
+
     public Message getInputMessage() {
         return inputMessage;
     }
@@ -50,11 +50,11 @@ public class Context {
 
 
 
-    public void SendMessage() {
+    public void sendMessage() {
         setState(this.state.sendMessage(this));
     }
 
-    public void ReceiveMessage() {
+    public void receiveMessage() {
         setState(this.state.receiveMessage(this));
     }
 
@@ -73,6 +73,7 @@ public class Context {
 
     public void setPlayerID(int playerID) {
         System.out.println("your player ID is" + playerID);
+        System.out.println("if you are ready please enter \"ready\"");
         date.setPlayerID(playerID);
     }
 
@@ -133,8 +134,9 @@ public class Context {
         System.out.println("There are following categories and correspond difficulty");
         List<String> difficulty = getDifficulties();
         for(int  i = 0; i < categories.size(); i++) {
-            System.out.println(categories.get(i) + "with difficulty" + difficulty.get(i));
+            System.out.println(i + ": " + categories.get(i) + " with difficulty " + difficulty.get(i));
         }
+        System.out.println("Please select from one of them if your ID is " + getPlayerID());
         date.setCategories(categories);
     }
 
@@ -153,7 +155,7 @@ public class Context {
     }
 
     public void setSelectedIndex(int selectedIndex) {
-        System.out.println("selected category index is" + selectedIndex);
+        System.out.println("selected category index is " + selectedIndex);
         date.setSelectedIndex(selectedIndex);
     }
 
@@ -190,10 +192,52 @@ public class Context {
 
     public void setAnswer(String[] answer) {
         System.out.println("There are following answer can be selected");
+        for(int i = 0; i < answer.length; i++) {
+            System.out.println(i + ": " + answer[i]);
+        }
+        System.out.println("if you want answer the question please enter \"buzz\"");
+        System.out.println("if you want screw someone please enter \"screw x\", x represent the ID of player that you " +
+                "want to screw");
+
         date.setAnswer(answer);
     }
 
 
+    public boolean isDecision() {
+        return date.isDecision();
+    }
+
+    public void setDecision(boolean decision) {
+        date.setDecision(decision);
+    }
+
+    public int getScrewID() {
+        return date.getScrewID();
+    }
+
+    public void setScrewID(int ID) {
+        date.setScrewID(ID);
+    }
+
+
+    public int getAnsweringPlayerID() {
+        return date.getAnsweringPlayerID();
+    }
+
+    public void setAnsweringPlayerID(int answeringPlayerID) {
+        System.out.println("the answerer is the player with ID: " + answeringPlayerID);
+        System.out.println("please answer the question");
+        date.setAnsweringPlayerID(answeringPlayerID);
+    }
+
+    public int getScrewerPlayerID() {
+        return date.getScrewerPlayerID();
+    }
+
+    public void setScrewerPlayerID(int screwerPlayerID) {
+        System.out.println("the screwer ID is " + screwerPlayerID);
+        date.setScrewerPlayerID(screwerPlayerID);
+    }
 
     public void initState(IState state)
     {

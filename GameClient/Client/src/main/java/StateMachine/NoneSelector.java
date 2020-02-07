@@ -2,6 +2,8 @@ package StateMachine;
 
 
 import Message.Message;
+import Message.QuestionMessage;
+import MessageType.InGameMessageType;
 
 public class NoneSelector extends AbstractState {
 
@@ -12,37 +14,29 @@ public class NoneSelector extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        if (context.getCategories().isEmpty())
-        	
-        { 
-        	IState nextState= Context.RE_QUESTION;
-            
-        	return nextState;
-        }
-       
-        IState nextState = Context.SELECTOR;
-        return nextState; 
+        IState nextState = Context.NONE_SELECTOR;
+        return nextState;
 
     }
 
     @Override
     public IState receiveMessage(Context context) {
-    	Message message = context.getInputMessage();
+        Message message = context.getInputMessage();
         switch (message.getGroup().getValue()) {
-            case 0:{break;}
+            case 0: {
+                break;
+            }
 
-            case 1: { 
-            	switch(message.getType().getValue())
-            	
-            	{
-            	case 0:
-            	{ break;
+            case 1: {
+                if(message.getType() == InGameMessageType.QUESTION) {
+                    QuestionMessage questionMessage = (QuestionMessage)message;
+                    context.setDifficulty(questionMessage.getDifficulty());
+                    context.setCategory(questionMessage.getCategory());
+                    context.setQuestion(questionMessage.getQuestion());
+                    context.setAnswer(questionMessage.getAnswer());
+                    return Context.RE_QUESTION;
                 }
-            	case 1:
-            		
-            	{ break;
-                }
-
+            }
             case 2: {
                 IState nextState = Context.END_GAME;
                 return nextState;
@@ -52,8 +46,6 @@ public class NoneSelector extends AbstractState {
             }
 
         }
-      
+        return Context.NONE_SELECTOR;
     }
-}  return Context.NONE_SELECTOR;
-     
-    }}
+}

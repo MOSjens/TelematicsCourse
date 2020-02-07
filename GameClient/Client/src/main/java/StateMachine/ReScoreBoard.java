@@ -20,27 +20,21 @@ public class ReScoreBoard extends AbstractState {
 
     @Override
     public IState receiveMessage(Context context) {
-        Message message = context.getOutputMessage();
+        Message message = context.getInputMessage();
         switch(message.getGroup().getValue()) {
             case 0:{ break;}
 
             case 1:{
-            	 if(message.getType()== InGameMessageType.SCOREBOARD) {
-                     ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage)message;
-                     context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
-                     context.setPlayerIds(scoreBoardMessage.getPlayerIds());
-                     context.setPlayerScores(scoreBoardMessage.getPlayerScores());
+            	 if(message.getType()== InGameMessageType.CATEGORY_SELECTION_ANNOUNCEMENT) {
+                     CSAnnounceMessage csAnnounceMessage = (CSAnnounceMessage)message;
+                     context.setSelectedPlayerID(csAnnounceMessage.getSelectedplayerID());
+                     context.setTimeOut(csAnnounceMessage.getTimeOut());
+                     context.setDifficulties(csAnnounceMessage.getDifficulty());
+                     context.setCategories(csAnnounceMessage.getCategories());
                      return Context.CATEGORY_SELECTION_ANNOUNCEMENT;
-                     
-              /*  if(message.getType()== InGameMessageType.CATEGORY_SELECTION_ANNOUNCEMENT) {
-                    CSAnnounceMessage csAnnounceMessage = (CSAnnounceMessage)message;
-                    context.setSelectedPlayerID(csAnnounceMessage.getSelectedplayerID());
-                    context.setTimeOut(csAnnounceMessage.getTimeOut());
-                    context.setDifficulties(csAnnounceMessage.getDifficulty());
-                    context.setCategories(csAnnounceMessage.getCategories());
-                    return Context.CATEGORY_SELECTION_ANNOUNCEMENT;
-                }*/
-            }}
+
+                }
+            }
 
             case 2: {
                 IState nextState = Context.END_GAME;

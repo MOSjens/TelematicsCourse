@@ -13,18 +13,17 @@ public class Ready extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-    	context.setOutputMessage(new PlayerReadyMessage());
-        return Context.RE_SCORE_BOARD_STATE;
+        return Context.READY_STATE;
     }
 
     @Override
     public IState receiveMessage(Context context) {
-        Message message = context.getOutputMessage();
+        Message message = context.getInputMessage();
         switch(message.getGroup().getValue()) {
             case 0:{ break;}
 
             case 1:{
-                if(message.getType()== InGameMessageType.SCOREBOARD) {
+                if(message.getType() == InGameMessageType.SCOREBOARD) {
                     ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage)message;
                     context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
                     context.setPlayerIds(scoreBoardMessage.getPlayerIds());

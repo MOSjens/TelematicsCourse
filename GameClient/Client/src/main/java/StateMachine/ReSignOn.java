@@ -16,8 +16,8 @@ public class ReSignOn extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-       IState nextState = Context.RE_SIGN_ON_STATE;
-        //context.setOutputMessage(new PlayerReadyMessage());
+       IState nextState = Context.READY_STATE;
+       context.setOutputMessage(new PlayerReadyMessage());
        return nextState;
     }
 
@@ -25,15 +25,7 @@ public class ReSignOn extends AbstractState {
     public IState receiveMessage(Context context) {
         Message message = context.getInputMessage();
         switch (message.getGroup().getValue()) {
-            case 0:
-            {
-            	SignOnRespondMessage res=(SignOnRespondMessage)message;
-            	context.setPlayerID(res.getPlayerID());
-            	context.setPlayerAlias(res.getAlias());
-            	return Context.READY_STATE;
-            	
-       
-            }
+            case 0: { }
 
             case 1: { break;}
 

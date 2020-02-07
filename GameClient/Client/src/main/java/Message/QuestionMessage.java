@@ -30,7 +30,7 @@ public class QuestionMessage extends Message {
         difficulty = new String(getBytes(messageBody, difficultyOffset, categoryOffset));
         category = new String(getBytes(messageBody, categoryOffset, questionOffset));
         question = new String(getBytes(messageBody, questionOffset, answerIndex[0]));
-
+        answer = new String[numberOfAnswer];
         int k = 0;
         for (int i = 0; i < numberOfAnswer; i++) {
             answer[i] = new String(getBytes(messageBody, answerIndex[k], answerIndex[k + 1]));

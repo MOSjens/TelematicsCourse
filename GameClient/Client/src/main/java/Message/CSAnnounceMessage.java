@@ -32,14 +32,14 @@ public class CSAnnounceMessage extends Message {
         difficultyIndex.add(messageBody.length);
 
         for(int i = 0; i < numberOfCategories; i ++) {
-            byte[] diff = new byte[difficultyIndex.get(i) - categoriesIndex.get(i)];
+            byte[] diff = new byte[categoriesIndex.get(i) - difficultyIndex.get(i)];
             int k = 0;
             for(int j = difficultyIndex.get(i); j < categoriesIndex.get(i); j++) {
                 diff[k++] = messageBody[j];
             }
             difficulty.add(new String(diff));
 
-            byte[] cate = new byte[categoriesIndex.get(i) - difficultyIndex.get(i + 1)];
+            byte[] cate = new byte[difficultyIndex.get(i + 1) - categoriesIndex.get(i)];
             k = 0;
             for(int j = categoriesIndex.get(i); j < difficultyIndex.get(i + 1); j++) {
                 cate[k++] = messageBody[j];
