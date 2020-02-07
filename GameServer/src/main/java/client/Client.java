@@ -86,7 +86,7 @@ public class Client extends Thread{
                     out.flush();
                     System.out.println( "Send Message: " + outgoingMessage.getMessageType().toString());
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
