@@ -2,9 +2,11 @@ package dbconnection;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -88,12 +90,10 @@ public class QuestionDatabase {
 	public ArrayList<Question> getRandomQuestionsOffline()  {
 		ArrayList<Question> listOfQuestions;
 		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader("src/main/resources/Questions.txt"));
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		String propFileName = "Questions.txt";	 
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+		reader = new BufferedReader(new InputStreamReader(inputStream));
+		//reader = new BufferedReader(new FileReader(getFileFromResources("Questions.txt")));
 		String json = "";
 		try {
 		    StringBuilder sb = new StringBuilder();
@@ -165,4 +165,17 @@ public class QuestionDatabase {
 		return listOfQuestions;
 
 	}
+	
+    private File getFileFromResources(String fileName) {
+
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        URL resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file is not found!");
+        } else {
+            return new File(resource.getFile());
+        }
+
+    }
 }
