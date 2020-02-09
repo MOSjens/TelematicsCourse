@@ -41,7 +41,7 @@ public enum GamePhase {
                 	System.out.println("All players ready");
                     // Wait for 30 sec.
                     try {
-                        Thread.sleep(Server.getConfiguration().gameStartTimeout * 1000);
+                        Thread.sleep(Server.getConfiguration().gameStartTimeout);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
