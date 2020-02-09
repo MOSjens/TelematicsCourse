@@ -18,6 +18,9 @@ public class Message {
         this.type = type;
         this.messageBody = new byte[0];
     }
+    public Message(byte[]body) {
+    	this.messageBody=body;
+    }
 
     public byte getVersion() {
         return 1;

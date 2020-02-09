@@ -19,32 +19,31 @@ public class PlayerListMessage extends Message {
 		super ( GeneralMessageType.PLAYER_LIST,messageBody);
 		ByteBuffer buffer = ByteBuffer.wrap(messageBody);
 		buffer.order(ByteOrder.BIG_ENDIAN);
-		int lastOffset = buffer.getInt();
+		
+		
+		int firstOffSet = buffer.getInt();
 		ArrayList<Integer> offsets = new ArrayList<Integer> () ;
-		offsets.add(lastOffset);
-		int newOffset;
-		while ((newOffset = buffer.getInt()) <= lastOffset + 5) {
-		lastOffset = newOffset;
-		offsets.add(lastOffset);
-		offsets.add(getPayloadLength());
+		offsets.add(firstOffSet);
+		while (!(buffer.remaining() <=  messageBody.length - firstOffSet)) {
+			int lastOffset = buffer.getInt();
+			offsets.add(lastOffset);
 		}
+		offsets.add(messageBody.length);
+		this.playerIDS= new int [offsets.size()];
+	    this.readyStateS= new  int [offsets.size()];
+	   this.playerAliaseS= new  String [offsets.size()];
+	   
 		for (int playerNum = 0; playerNum < offsets.size() - 1; playerNum++) {
-			int playerID = buffer.getInt(offsets.get(playerNum));
-		     int readyState = buffer.get(offsets.get(playerNum) + 4);
-			int aliasOffset = offsets.get(playerNum + 5);
+			byte[] res = new byte[1024];
+			int playerID = buffer.getInt();
+		     int readyState = buffer.get();
+			int aliasOffset = offsets.get(playerNum) + 5;
 			int aliasLength = offsets.get(playerNum + 1) - aliasOffset;
 			String  playerAlias = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(messageBody, aliasOffset, aliasLength)).toString();
-		   
-			
-			this.playerIDS= new int [playerNum];
-		    this.readyStateS= new  int [playerNum];
-		   this.playerAliaseS= new  String [playerNum];
-		    
-			for (int i = 0; i < playerNum ; i++) {
-		    	  this.playerIDS[i]= playerID ;
-		    	 this.readyStateS[i]=readyState;
-		    	  this.playerAliaseS[i]=playerAlias;
-			}
+		    	buffer.get(res, 0, aliasLength);
+			this.playerIDS[playerNum]= playerID ;
+		    	 this.readyStateS[playerNum]=readyState;
+		    	  this.playerAliaseS[playerNum]=playerAlias;
 			}
 		
 	}
@@ -65,7 +64,14 @@ public class PlayerListMessage extends Message {
 		  return this.playerAliaseS[i];
 	  }
 	
-	
+	  @Override
+	public String toString() {
+		  String reslut = new String();
+		for(int i = 0; i < playerAliaseS.length; i++) {
+			reslut += ("ID of player: " + playerIDS[i] + " status of player: " + readyStateS[i] + " alias of player: " + playerAliaseS[i] +"\n");
+		}
+		return reslut;
+	}
 
 
 }

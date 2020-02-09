@@ -24,11 +24,11 @@ public class GTextMessage extends Message {
 	        this.Text = text;
 	    }
 	
-	
-	 @Override
+		 @Override
 	    public String toString() {
 	        return Integer.toString(getVersion()) + getGroup().name() + getType() + Integer.toString(getPayloadLength())
 	                 + Text;
-	    }
+	    
 
+}       
 }

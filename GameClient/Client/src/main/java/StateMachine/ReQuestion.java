@@ -4,7 +4,7 @@ import Message.Message;
 import Message.Screw;
 import Message.Buzz;
 
-public class ReQuestion extends AbstractState {
+public class ReQuestion extends AbstractState  {
 
     public ReQuestion (StateEnum stateEnum) {
         super(stateEnum);
@@ -41,4 +41,6 @@ public class ReQuestion extends AbstractState {
         return Context.RE_QUESTION;
         
     }
+    
+    
 }

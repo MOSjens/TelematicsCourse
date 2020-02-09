@@ -1,6 +1,7 @@
 package Message;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 import MessageType.PregamMessageType;
@@ -13,6 +14,7 @@ public class SignOnRespondMessage extends Message {
     public SignOnRespondMessage(byte[] messageBody) {
         super(PregamMessageType.SIGN_ON_RESPONSE, messageBody);
         ByteBuffer buffer = ByteBuffer.wrap(messageBody);
+        buffer.order(ByteOrder.BIG_ENDIAN);
         setPlayerID(buffer.getInt());
         setAlias(StandardCharsets.UTF_8.decode(buffer).toString());
     }
@@ -33,7 +35,7 @@ public class SignOnRespondMessage extends Message {
         this.alias = alias;
     }
 
-    @Override
+  @Override
     public String toString() {
         return Integer.toString(getVersion()) + getGroup().name() + getType() + Integer.toString(getPayloadLength())
                 + Integer.toString(playerID) + alias;

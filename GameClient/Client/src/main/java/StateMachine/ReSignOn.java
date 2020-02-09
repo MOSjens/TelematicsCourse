@@ -7,7 +7,7 @@ import Message.SignOnMessage;
 import Message.SignOnRespondMessage;
 
 
-public class ReSignOn extends AbstractState {
+public class ReSignOn extends AbstractState   {
 
     public ReSignOn(StateEnum stateEnum) {
         super(stateEnum);
@@ -41,4 +41,5 @@ public class ReSignOn extends AbstractState {
         return Context.RE_SIGN_ON_STATE;
 
     }
+   
 }

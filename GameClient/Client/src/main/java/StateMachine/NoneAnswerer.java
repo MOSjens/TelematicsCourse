@@ -7,6 +7,7 @@ import Message.QuestionMessage;
 import Message.ScoreBoardMessage;
 import MessageType.InGameMessageType;
 import Message.AnswerMessage;
+import Message.AnswerResultMessage;
 
 public class NoneAnswerer extends AbstractState {
     public NoneAnswerer(StateEnum stateEnum) {
@@ -15,7 +16,7 @@ public class NoneAnswerer extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        IState nextstate = Context.RE_SCORE_BOARD_STATE;
+        IState nextstate = Context.NONE_ANSWERER;
         return nextstate;
     }
     @Override
@@ -26,6 +27,13 @@ public class NoneAnswerer extends AbstractState {
             
 
             case 1:{ 
+            	
+            	if(message.getType() == InGameMessageType.ANSWER_RESULT) {
+            		AnswerResultMessage answerResult= (AnswerResultMessage) message;
+            		
+            		return Context.ANSWERER;
+            	}
+            	
             	if (message.getType()==InGameMessageType.SCOREBOARD) {
             	    ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage)message;
                     context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
@@ -47,4 +55,5 @@ public class NoneAnswerer extends AbstractState {
         }
         return Context.NONE_ANSWERER;
     }
+   
 }

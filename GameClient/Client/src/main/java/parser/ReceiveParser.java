@@ -2,8 +2,6 @@ package parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -17,17 +15,19 @@ import Message.ParseException;
 import Message.SRMessage;
 import Message.ScoreBoardMessage;
 import Message.SignOnRespondMessage;
-import Message.PlayerListingMessage;
+import Message.PlayerListMessage;
 import Message.QuestionMessage;
 import MessageType.GeneralMessageType;
 import MessageType.InGameMessageType;
 import MessageType.MessageType;
 import MessageType.PostGameMessageType;
 import MessageType.PregamMessageType;
-
+import StateMachine.Answerer;
 import client.Parser;
+import Message.AnswerResultMessage;
 
 public class ReceiveParser extends Parser {
+
 
     public ReceiveParser() {
     }
@@ -65,12 +65,11 @@ public class ReceiveParser extends Parser {
                     	return new CSAnnounceMessage(Messagebody);
                     case QUESTION:
                         return new QuestionMessage(Messagebody);
-                 
-                    	
+                    case ANSWER_RESULT:
+                    	return new AnswerResultMessage(Messagebody);
                     default:
                         break;
                 }
-                break;
             case POST_GAME:
             	switch((PostGameMessageType) type)
             	{
@@ -87,13 +86,11 @@ public class ReceiveParser extends Parser {
             	case GENERAL_TEXT:
             		return new GTextMessage(Messagebody);
             		case PLAYER_LIST:
-            		    return new PlayerListingMessage(Messagebody);
+            		    return new PlayerListMessage(Messagebody);
             		default:
                 break;
             	}
         }
         return null;
 
-
-    }
-}
+    }}

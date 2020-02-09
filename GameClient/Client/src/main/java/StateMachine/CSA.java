@@ -4,7 +4,7 @@ import Message.CSAnnounceMessage;
 import Message.CategorySelectionMessage;
 
 
-public class CSA extends AbstractState {
+public class CSA extends AbstractState   {
 
     public CSA (StateEnum stateEnum) {
         super(stateEnum);
@@ -41,4 +41,6 @@ public class CSA extends AbstractState {
         }
         return Context.CATEGORY_SELECTION_ANNOUNCEMENT;
     }
+    
+    
 }

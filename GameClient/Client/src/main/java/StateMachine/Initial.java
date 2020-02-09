@@ -3,7 +3,7 @@ package StateMachine;
 import Message.Message;
 import Message.SignOnMessage;
 
-public class Initial extends AbstractState {
+public class Initial extends AbstractState  {
 
     public Initial(StateEnum stateEnum) {
         super(stateEnum);
@@ -36,4 +36,5 @@ public class Initial extends AbstractState {
         }
         return Context.INITIAL_STATE;
     }
+   
 }

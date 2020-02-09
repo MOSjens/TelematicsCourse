@@ -6,6 +6,7 @@ import Message.SRMessage;
 import Message.ScoreBoardMessage;
 import MessageType.InGameMessageType;
 import Message.AnswerMessage;
+import Message.AnswerResultMessage;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -16,7 +17,7 @@ public class Answerer extends AbstractState {
 
     @Override
     public IState sendMessage(Context context) {
-        IState nextstate = Context.RE_SCORE_BOARD_STATE;
+        IState nextstate = Context.ANSWERER;
         return nextstate;
     }
 
@@ -27,6 +28,13 @@ public class Answerer extends AbstractState {
             case 0: {break;}
 
             case 1: {
+            	
+            	if(message.getType() == InGameMessageType.ANSWER_RESULT) {
+            		AnswerResultMessage answerResult= (AnswerResultMessage) message;
+            		System.out.println("here");
+            		return Context.ANSWERER;
+            	}
+            	
                 if (message.getType() == InGameMessageType.SCOREBOARD) {
                     ScoreBoardMessage scoreBoardMessage = (ScoreBoardMessage) message;
                     context.setRoundsLeft(scoreBoardMessage.getRoundsLeft());
@@ -49,4 +57,5 @@ public class Answerer extends AbstractState {
         return Context.ANSWERER;
 
 }
+    
 }
