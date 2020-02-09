@@ -42,6 +42,7 @@ public enum GamePhase {
                     // Wait for 30 sec.
                     try {
                         Thread.sleep(Server.getConfiguration().gameStartTimeout );
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -130,6 +131,7 @@ public enum GamePhase {
             // Check if screwing player has screws left.
             if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
                     (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
+            	incomingMessage.getSourceClient().decreaseScrewsLeft();
                 ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
             	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
             			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
