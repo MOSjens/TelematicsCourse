@@ -4,9 +4,6 @@ import client.Client;
 import dbconnection.Difficulty;
 import dbconnection.Question;
 import messages.*;
-
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -38,7 +35,14 @@ public enum GamePhase {
                 PlayerReadyMessage playerReady = (PlayerReadyMessage) incomingMessage.getMessage();
                 Client sourceClient = incomingMessage.getSourceClient();
                 sourceClient.setReadyState(ReadyState.READY);
-                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+ " from id: " + sourceClient.getPlayerID() );
+                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name() +
+                        " from id: " + sourceClient.getPlayerID() );
+
+                // Send Player List to everyone in the playerList.
+                for ( Client client: serverState.getPlayerList() ) {
+                    client.sendMessage(serverState.createPlayerlistMessage());
+                }
+                
                 if (Server.getServerState().everyPlayerReady()) {
                 	System.out.println("All players ready");
                     // Wait for 30 sec.
