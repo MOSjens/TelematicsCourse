@@ -136,7 +136,7 @@ public class Context {
         for(int  i = 0; i < categories.size(); i++) {
             System.out.println(i + ": " + categories.get(i) + " with difficulty " + difficulty.get(i));
         }
-        System.out.println("Please select from one of them if your ID is " + getPlayerID());
+        System.out.println("Please select from one of them if your ID is " + getSelectedPlayerID());
         date.setCategories(categories);
     }
 

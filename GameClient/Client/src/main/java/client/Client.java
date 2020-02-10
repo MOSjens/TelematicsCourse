@@ -39,8 +39,8 @@ public class Client {
 
 		IState initial = new Initial(StateEnum.INITIAL);
 		context = new Context(initial);
-		String serverName = "quiz.klaxa.eu";
-		int port = 4002;
+		String serverName = "10.0.0.2";
+		int port = 5002;
 		while (true) {
 			try {
 				System.out.println("Connecting to " + serverName + " on port " + port);
@@ -68,6 +68,7 @@ public class Client {
 						System.out.println("done with" + m.getType());
 						context.setInputMessage(m);
 						context.receiveMessage();
+						System.out.println(context.getState().toString());
 					}
 					/*
 					 * if (Initial.class == context.getState().getClass() ||
