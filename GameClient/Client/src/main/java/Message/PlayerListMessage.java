@@ -29,12 +29,12 @@ public class PlayerListMessage extends Message {
 			offsets.add(lastOffset);
 		}
 		offsets.add(messageBody.length);
-		this.playerIDS= new int [offsets.size()];
-	    this.readyStateS= new  int [offsets.size()];
-	   this.playerAliaseS= new  String [offsets.size()];
+		this.playerIDS= new int [offsets.size() - 1];
+	    this.readyStateS= new  int [offsets.size() - 1];
+	   this.playerAliaseS= new  String [offsets.size() - 1];
 	   
 		for (int playerNum = 0; playerNum < offsets.size() - 1; playerNum++) {
-			byte[] res = new byte[1024];
+			byte[] res = new byte[1000000000];
 			int playerID = buffer.getInt();
 		     int readyState = buffer.get();
 			int aliasOffset = offsets.get(playerNum) + 5;
