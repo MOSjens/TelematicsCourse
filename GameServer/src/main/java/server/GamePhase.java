@@ -5,7 +5,9 @@ import dbconnection.Difficulty;
 import dbconnection.Question;
 import messages.*;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public enum GamePhase {
@@ -18,7 +20,7 @@ public enum GamePhase {
 
             if (incomingMessage.getMessage().getMessageType() == MessageType.SIGN_ON) {
                 SignOnMessage signOn = (SignOnMessage) incomingMessage.getMessage();
-                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()
+                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()
                         + " Alias = " + signOn.getPlayerAlias());
                 Client sourceClient = incomingMessage.getSourceClient();
                 sourceClient.setAlias(signOn.getPlayerAlias());
@@ -36,7 +38,7 @@ public enum GamePhase {
                 PlayerReadyMessage playerReady = (PlayerReadyMessage) incomingMessage.getMessage();
                 Client sourceClient = incomingMessage.getSourceClient();
                 sourceClient.setReadyState(ReadyState.READY);
-                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ " from id: " + sourceClient.getPlayerID() );
+                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+ " from id: " + sourceClient.getPlayerID() );
                 if (Server.getServerState().everyPlayerReady()) {
                 	System.out.println("All players ready");
                     // Wait for 30 sec.
@@ -77,7 +79,7 @@ public enum GamePhase {
             for ( Client client: serverState.getPlayerList() ) {
                 client.sendMessage(CSAMessage);
             }
-            //Server.startTimeoutTimer( Server.getConfiguration().categoryTimeout );
+            Server.startTimeoutTimer( Server.getConfiguration().categoryTimeout, MessageType.CATEGORY_SELECTION );
             return CATEGORY_SELECTION_PHASE;
         }
     },
@@ -85,24 +87,50 @@ public enum GamePhase {
     CATEGORY_SELECTION_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            // TODO Timeout !
             ServerState serverState = Server.getServerState();
+
+            // Timeout
+            if (incomingMessage.getMessage().getMessageType() == MessageType.TIMEOUT) {
+                TimeoutMessage timeoutMessage = (TimeoutMessage) incomingMessage.getMessage();
+                // Check for correct timeout
+                if (timeoutMessage.getReplacingMassage() == MessageType.CATEGORY_SELECTION) {
+                    // Choose random category
+                    Random random = new Random();
+                    int randomCategory = random.nextInt( 4 );
+                    System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name() +
+                            "Index: " + randomCategory);
+                    Question question = serverState.getActualCategorySelection().get( randomCategory );
+                    QuestionMessage questionMessage = new QuestionMessage(
+                            Server.getConfiguration().questionTimeout,
+                            question);
+                    serverState.setActualQuestion(question);
+                    serverState.returnQuestions();
+                    for ( Client client: serverState.getPlayerList() ) {
+                        client.sendMessage(questionMessage);
+                    }
+                    Server.startTimeoutTimer( Server.getConfiguration().questionTimeout, MessageType.BUZZ );
+                    return PLAYER_SELECTION_PHASE;
+                }
+            }
+
             // Check if the right person responses.
             if ((incomingMessage.getMessage().getMessageType() == MessageType.CATEGORY_SELECTION) &&
                     (incomingMessage.getSourceClient().getPlayerID() == serverState.getCategorySelector())) {
+                Server.stopTimeoutTimer();
                 // Get selected question.
                 CategorySelectionMessage categorySelectionMessage = (CategorySelectionMessage) incomingMessage.getMessage();
-                System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name() +
-                		"Index:" + categorySelectionMessage.getCategoryIndex());
+                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name() +
+                		"Index: " + categorySelectionMessage.getCategoryIndex());
                 Question question = serverState.getActualCategorySelection().get(categorySelectionMessage.getCategoryIndex());
                 QuestionMessage questionMessage = new QuestionMessage(
-                        Server.getConfiguration().answerTimeout,
+                        Server.getConfiguration().questionTimeout,
                         question);
                 serverState.setActualQuestion(question);
                 serverState.returnQuestions();
                 for ( Client client: serverState.getPlayerList() ) {
                     client.sendMessage(questionMessage);
                 }
+                Server.startTimeoutTimer( Server.getConfiguration().questionTimeout, MessageType.BUZZ );
                 return PLAYER_SELECTION_PHASE;
             }
             return this;
@@ -112,10 +140,39 @@ public enum GamePhase {
     PLAYER_SELECTION_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
-            // TODO Timeout
             ServerState serverState = Server.getServerState();
-            if (incomingMessage.getMessage().getMessageType() == MessageType.BUZZ) { 
-            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+
+            // Timeout
+            if (incomingMessage.getMessage().getMessageType() == MessageType.TIMEOUT) {
+                TimeoutMessage timeoutMessage = (TimeoutMessage) incomingMessage.getMessage();
+                // Check for correct timeout
+                if (timeoutMessage.getReplacingMassage() == MessageType.BUZZ) {
+                    System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
+                            " while waiting on: " + timeoutMessage.getReplacingMassage() );
+
+                    serverState.decreaseRoundsLeft();
+                    AnswerResultMessage answerResultMessage = new AnswerResultMessage(
+                            serverState.getActualQuestion().getCorrectAnswerIndex(),
+                            -1 );
+
+                    for ( Client client: serverState.getPlayerList() ) {
+                        client.sendMessage(answerResultMessage);
+                    }
+                    // Divided in two loops to not send both messages at once.
+                    for ( Client client: serverState.getPlayerList() ) {
+                        client.sendMessage(serverState.createScoreboardMessage());
+                    }
+                    if (serverState.getRoundsLeft() > 0) {
+                        return GAME_PHASE.nextPhase(null);
+                    } else {
+                        return CLOSING_PHASE.nextPhase(null);
+                    }
+                }
+            }
+
+            if (incomingMessage.getMessage().getMessageType() == MessageType.BUZZ) {
+                Server.stopTimeoutTimer();
+            	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
             			" from id: " + incomingMessage.getSourceClient().getPlayerID() );
                 BuzzResultMessage BZMessage = new BuzzResultMessage(
                         incomingMessage.getSourceClient().getPlayerID(),
@@ -125,15 +182,17 @@ public enum GamePhase {
                 for ( Client client: serverState.getPlayerList() ) {
                     client.sendMessage(BZMessage);
                 }
+                Server.startTimeoutTimer( Server.getConfiguration().answerTimeout, MessageType.ANSWER );
                 return QUESTION_PLAY_PHASE;
             }
 
             // Check if screwing player has screws left.
             if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
                     (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
+                Server.stopTimeoutTimer();
             	incomingMessage.getSourceClient().decreaseScrewsLeft();
                 ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
-            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+            	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
             			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
             			" screwing id: " + screwMessage.getScrewedPlayerId());
                 ScrewResultMessage SRMessage = new ScrewResultMessage(
@@ -145,7 +204,8 @@ public enum GamePhase {
                 for ( Client client: serverState.getPlayerList() ) {
                     client.sendMessage(SRMessage);
                 }
-                    return QUESTION_PLAY_PHASE;
+                Server.startTimeoutTimer( Server.getConfiguration().answerTimeout, MessageType.ANSWER );
+                return QUESTION_PLAY_PHASE;
             }
             return this;
         }
@@ -155,18 +215,54 @@ public enum GamePhase {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
             ServerState serverState = Server.getServerState();
+
+            // Timeout
+            if (incomingMessage.getMessage().getMessageType() == MessageType.TIMEOUT) {
+                TimeoutMessage timeoutMessage = (TimeoutMessage) incomingMessage.getMessage();
+                // Check for correct timeout
+                if (timeoutMessage.getReplacingMassage() == MessageType.ANSWER) {
+                    System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
+                            " while waiting on: " + timeoutMessage.getReplacingMassage() );
+                    serverState.decreaseRoundsLeft();
+                    boolean answerCorrect = false;
+                    int points = getPoints(serverState.getActualQuestion().getDifficulty(), answerCorrect);
+                    // Change points of player who should answer
+                    serverState.getPlayerByID(serverState.getAnswerGiver()).changeScore(points);
+                    // Change points of screwing player
+                    if (serverState.getScrewer() != -1) {   // Screw
+                        serverState.getPlayerByID(serverState.getScrewer()).changeScore(points * -1);
+                    }
+                    AnswerResultMessage answerResultMessage = new AnswerResultMessage(
+                            serverState.getActualQuestion().getCorrectAnswerIndex(),
+                            -1 );
+                    for ( Client client: serverState.getPlayerList() ) {
+                        client.sendMessage(answerResultMessage);
+                    }
+                    // Divided in two loops to not send both messages at once.
+                    for ( Client client: serverState.getPlayerList() ) {
+                        client.sendMessage(serverState.createScoreboardMessage());
+                    }
+                    if (serverState.getRoundsLeft() > 0) {
+                        return GAME_PHASE.nextPhase(null);
+                    } else {
+                        return CLOSING_PHASE.nextPhase(null);
+                    }
+                }
+            }
+
             // Check if client is allowed to answer
             if ((incomingMessage.getMessage().getMessageType() == MessageType.ANSWER) &&
-                    (incomingMessage.getSourceClient().getPlayerID() == serverState.getAnswerGiver())) {
+                    (incomingMessage.getSourceClient().getPlayerID() == serverState.getAnswerGiver()) ||
+                    (incomingMessage.getMessage().getMessageType() == MessageType.TIMEOUT)) {
                 AnswerMessage answerMessage = (AnswerMessage) incomingMessage.getMessage();
-            	System.out.println("Recieved: " + incomingMessage.getMessage().getMessageType().name()+ 
+            	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
             			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
             			" with answer id: " + answerMessage.getAnswerId());
                 serverState.decreaseRoundsLeft();
 
                 boolean answerCorrect = (answerMessage.getAnswerId() == serverState.getActualQuestion().getCorrectAnswerIndex());
                 int points = getPoints(serverState.getActualQuestion().getDifficulty(), answerCorrect);
-                // change points to answering player
+                // change points of answering player
                 incomingMessage.getSourceClient().changeScore(points);
                 // Change points of screwing player
                 if (serverState.getScrewer() != -1) {   // Screw
@@ -189,21 +285,9 @@ public enum GamePhase {
                     return CLOSING_PHASE.nextPhase(null);
                 }
             }
-            // TODO Timeout
             return this;
         }
-        int getPoints(Difficulty difficulty, Boolean answerCorrect) {
-            switch(difficulty){
-                case EASY:
-                    return answerCorrect ? 1 : -1;
-                case MEDIUM:
-                    return answerCorrect ? 2 : -2;
-                case HARD:
-                    return answerCorrect ? 3 : -3;
-                default:
-                    return 0;
-            }
-        }
+
     },
 
     CLOSING_PHASE {
@@ -223,5 +307,18 @@ public enum GamePhase {
     }
 
     public abstract GamePhase nextPhase(IncomingMessage incomingMessage);
+
+    private static int getPoints(Difficulty difficulty, Boolean answerCorrect) {
+        switch(difficulty){
+            case EASY:
+                return answerCorrect ? 1 : -1;
+            case MEDIUM:
+                return answerCorrect ? 2 : -2;
+            case HARD:
+                return answerCorrect ? 3 : -3;
+            default:
+                return 0;
+        }
+    }
 
 }

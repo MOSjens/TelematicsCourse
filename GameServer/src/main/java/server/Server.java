@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import client.Client;
 import client.MessageEvent;
 import client.MessageListener;
+import messages.Message;
+import messages.MessageType;
 import messages.TimeoutMessage;
 
 public class Server {
@@ -111,14 +113,15 @@ public class Server {
 	}
 
 	// Sends a Timeout message to the state machine after given time in milliseconds.
-	public static void startTimeoutTimer(int milliseconds) {
+	public static void startTimeoutTimer(int milliseconds, MessageType replacingMessage) {
 		timer = new Thread() {
 			@Override
 			public void run() {
 				try {
 					this.sleep( milliseconds );
 					// After the time is up send a Timeout to the State machine
-					IncomingMessage timeoutMessage = new IncomingMessage(new TimeoutMessage(), null );
+					IncomingMessage timeoutMessage = new IncomingMessage(new TimeoutMessage(replacingMessage),
+							null );
 					Server.getInputMessages().put (timeoutMessage);
 				} catch (InterruptedException e) {
 					// If the timeout is not needed anymore, interrupt it
