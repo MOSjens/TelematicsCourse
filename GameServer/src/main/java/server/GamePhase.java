@@ -193,9 +193,14 @@ public enum GamePhase {
             // Check if screwing player has screws left.
             if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
                     (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
+                ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
+                // If a Client want to screw himself, ignore message
+                if (screwMessage.getScrewedPlayerId() == incomingMessage.getSourceClient().getPlayerID()) {
+                    return this;
+                }
+
                 Server.stopTimeoutTimer();
             	incomingMessage.getSourceClient().decreaseScrewsLeft();
-                ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
             	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
             			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
             			" screwing id: " + screwMessage.getScrewedPlayerId());
