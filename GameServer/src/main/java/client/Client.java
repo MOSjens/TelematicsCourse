@@ -35,6 +35,8 @@ public class Client extends Thread{
     private int screwsLeft;
     private String alias;
     private ReadyState readyState;
+    private Boolean readBytes;
+    private Boolean writeBytes;
 
     private EventListenerList messageListenerList;
 
@@ -50,6 +52,8 @@ public class Client extends Thread{
         this.score = 0; // Initial score is zero.
         this.screwsLeft = 1; //screws left for this player
         this.playerID = playerID;
+        this.readBytes = true;
+        this.writeBytes = true;
         try {
             out = new DataOutputStream( socket.getOutputStream());
             in = new DataInputStream( socket.getInputStream() );
@@ -64,7 +68,7 @@ public class Client extends Thread{
 		Thread readData = new Thread() {
 			@Override
 			public void run() {
-        while (true) {     	
+        while (readBytes) {
             // Only messages with a size of 1024 byte can be handled.
             byte[] temp = new byte[1024];
             byte[] incomingData;
@@ -73,7 +77,6 @@ public class Client extends Thread{
                 // Receive Message
                 if ((number = in.read( temp )) != -1 ) {
                     incomingData = Arrays.copyOf(temp, number);
-                    // TODO delete
                     System.out.println("Bytes Read: " + number);
 
                     Message message = recieveParser.parse(incomingData);
@@ -83,36 +86,36 @@ public class Client extends Thread{
                 // IO Exception indicates a disconnected player.
                 readyState = ReadyState.DISCONNECTED;
                 System.out.println( "Player with ID: " + playerID + " has disconnected!" );
+                readBytes = false;
+                writeBytes = false;
                 //e.printStackTrace();
             }
         }
-        // TODO disconnect handling
-        // TODO client logic
 		}
 		};
 		Thread writeData = new Thread() {
 			@Override
 			public void run() {
-        while (true) {
+        while (writeBytes) {
             byte[] outgoingData;
             try {
                 // Send Message
-                Message outgoingMessage = outgoingMessages.take();
+                Message outgoingMessage = outgoingMessages.poll();
                 if ( outgoingMessage != null ) {
                     outgoingData = sendParser.messageToByteArray(outgoingMessage);
                     out.write(outgoingData);
                     out.flush();
                     System.out.println( "Send Message: " + outgoingMessage.getMessageType().toString());
                 }
-            } catch (IOException  | InterruptedException e) {
+            } catch (IOException  e) {
                 // IO Exception indicates a disconnected player.
                 readyState = ReadyState.DISCONNECTED;
                 System.out.println( "Player with ID: " + playerID + " has disconnected!" );
+                readBytes = false;
+                writeBytes = false;
                 //e.printStackTrace();
             }
         }
-        // TODO disconnect handling
-        // TODO client logic
 		}
 		};
 		readData.start();

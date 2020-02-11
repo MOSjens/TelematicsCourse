@@ -24,10 +24,11 @@ public class Server {
 	private static AtomicBoolean stillConnectClients;
 	private static Configuration config;
 	private static Thread timer;
+	private static GamePhase gamePhase;
 
 
 	public static void main(String[] args) {
-		GamePhase gamePhase = GamePhase.STARTUP_PHASE;
+		gamePhase = GamePhase.STARTUP_PHASE;
 		inputMessages = new LinkedBlockingQueue<IncomingMessage>();
 
 		config = new Configuration();
@@ -61,7 +62,11 @@ public class Server {
 						client.addMessageListener(new HandleMessageLister());
 						client.start();
 					} catch (IOException e) {
-						e.printStackTrace();
+						if (gamePhase == GamePhase.CLOSING_PHASE) {
+							System.out.println( "Game end!" );
+						} else {
+							e.printStackTrace();
+						}
 					}
 					playerID++;
 					if (playerID >= config.maximumPlayers) break;

@@ -41,6 +41,7 @@ public enum GamePhase {
 
                 if (Server.getServerState().everyPlayerReady()) {
                 	System.out.println("All players ready");
+                    Server.setStillConnectClients( false );
                     // Wait for 30 sec.
                     try {
                         Thread.sleep(Server.getConfiguration().gameStartTimeout );
