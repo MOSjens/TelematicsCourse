@@ -31,7 +31,7 @@ public class NoneAnswerer extends AbstractState {
             	if(message.getType() == InGameMessageType.ANSWER_RESULT) {
             		AnswerResultMessage answerResult= (AnswerResultMessage) message;
             		
-            		return Context.ANSWERER;
+            		return Context.NONE_ANSWERER;
             	}
             	
             	if (message.getType()==InGameMessageType.SCOREBOARD) {
