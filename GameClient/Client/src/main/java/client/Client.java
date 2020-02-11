@@ -39,8 +39,8 @@ public class Client {
 
 		IState initial = new Initial(StateEnum.INITIAL);
 		context = new Context(initial);
-		String serverName = "10.0.0.2";
-		int port = 5002;
+		String serverName = "192.168.43.87";
+		int port = 6666;
 		while (true) {
 			try {
 				System.out.println("Connecting to " + serverName + " on port " + port);
@@ -54,28 +54,15 @@ public class Client {
 
 					if (inFromServer.available() != 0) {
 
-						/*
-						 * if (Initial.class == context.getState().getClass() ||
-						 * context.getState().getClass() == SignOn.class ||
-						 * context.getState().getClass() == Ready.class || context.getState().getClass()
-						 * == Selector.class || context.getState().getClass() == NoneSelector.class ||
-						 * context.getState().getClass() == Answerer.class ||
-						 * context.getState().getClass() == NoneAnswerer.class)
-						 */
-
 						Message m = (Message) ReceiveParser.ParsMessage(inFromServer);
-						if(m == null) {System.out.println("empty");}
+						if (m == null) {
+							System.out.println("empty");
+						}
 						System.out.println("done with" + m.getType());
 						context.setInputMessage(m);
 						context.receiveMessage();
 						System.out.println(context.getState().toString());
 					}
-					/*
-					 * if (Initial.class == context.getState().getClass() ||
-					 * context.getState().getClass() == ReSignOn.class ||
-					 * context.getState().getClass() == CSA.class || context.getState().getClass()
-					 * == ReQuestion.class || context.getState().getClass() == ReBuzzScrew.class)
-					 */
 
 					if (Initial.class == context.getState().getClass()) {
 
@@ -83,28 +70,21 @@ public class Client {
 						Scanner myObj = new Scanner(System.in);
 						String Userinput = myObj.nextLine();
 
-						// Message message = new Message(Userinput.getBytes());
 						context.setPlayerAlias(Userinput);
-						// context.setOutputMessage(message);
+
 						context.sendMessage();
 						outToServer.write(context.getOutputMessage().getEncodedMessage());
 						outToServer.flush();
-
-						// outToServer.write(context.getOutputMessage().getEncodedMessage());
-						// outToServer.flush();
 
 					}
 
 					if (context.getState().getClass() == ReSignOn.class) {
 
-						// what about the user
 						Scanner myObj = new Scanner(System.in);
 						String Userinput = myObj.nextLine();
-						// Message message = new Message(Userinput.getBytes());
+
 						if (Userinput.contains("ready")) {
 
-							// System.out.println("ready to enter" + context.getState().toString());
-							// context.setOutputMessage(message);
 							context.sendMessage();
 							outToServer.write(context.getOutputMessage().getEncodedMessage());
 							outToServer.flush();
@@ -133,11 +113,8 @@ public class Client {
 							context.sendMessage();
 							outToServer.write(context.getOutputMessage().getEncodedMessage());
 							outToServer.flush();
-						}
-						else if (Userinput.contains("screw")) {
-							// System.out.println("You have Screwed " + s.toString());
-							// String thescrewdId= Userinput.replaceFirst(".*?(\\d+).*", "$1");
-							// int screw = Integer.parseInt(thescrewdId);
+						} else if (Userinput.contains("screw")) {
+
 							String[] idScrew = Userinput.split(" ");
 							String Part2 = idScrew[1];
 							int y = Integer.parseInt(Part2);
@@ -148,7 +125,9 @@ public class Client {
 							outToServer.write(context.getOutputMessage().getEncodedMessage());
 							outToServer.flush();
 
-						} else {context.sendMessage();}
+						} else {
+							context.sendMessage();
+						}
 					}
 
 					if (context.getState().getClass() == ReBuzzScrew.class) {
@@ -156,16 +135,17 @@ public class Client {
 						Scanner myObj = new Scanner(System.in);
 						String Userinput = myObj.nextLine();
 
-						// System.out.println("You was the First one who Buzzed, Select an answer");
-						if(!Userinput.isBlank()){
-						
-						int y = Integer.parseInt(Userinput);
-						context.setSelectedAnswerIndex(y);
-						context.sendMessage();
-						outToServer.write(context.getOutputMessage().getEncodedMessage());
-						System.out.println("send success" + context.getState().toString());
-						outToServer.flush();
-						} else {context.sendMessage();}
+						if (!Userinput.isBlank()) {
+
+							int y = Integer.parseInt(Userinput);
+							context.setSelectedAnswerIndex(y);
+							context.sendMessage();
+							outToServer.write(context.getOutputMessage().getEncodedMessage());
+							System.out.println("send success" + context.getState().toString());
+							outToServer.flush();
+						} else {
+							context.sendMessage();
+						}
 
 					}
 				}
