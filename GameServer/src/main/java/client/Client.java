@@ -80,6 +80,9 @@ public class Client extends Thread{
                     notifyListeners( new MessageEvent(source, message ) );
                 }
             } catch (IOException e) {
+                // IO Exception indicates a disconnected player.
+                readyState = ReadyState.DISCONNECTED;
+                System.out.println( "Player with ID: " + playerID + " has disconnected!" );
                 //e.printStackTrace();
             }
         }
@@ -102,7 +105,10 @@ public class Client extends Thread{
                     System.out.println( "Send Message: " + outgoingMessage.getMessageType().toString());
                 }
             } catch (IOException  | InterruptedException e) {
-                e.printStackTrace();
+                // IO Exception indicates a disconnected player.
+                readyState = ReadyState.DISCONNECTED;
+                System.out.println( "Player with ID: " + playerID + " has disconnected!" );
+                //e.printStackTrace();
             }
         }
         // TODO disconnect handling

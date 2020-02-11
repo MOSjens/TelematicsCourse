@@ -27,9 +27,7 @@ public enum GamePhase {
                 sourceClient.sendMessage(serverState.createSignOnResponseMessage(sourceClient));
 
                 // Send Player List to everyone in the playerList.
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(serverState.createPlayerlistMessage());
-                }
+                serverState.broadcast( serverState.createPlayerlistMessage() );
             }
             if (incomingMessage.getMessage().getMessageType() == MessageType.PLAYER_READY) {
                 PlayerReadyMessage playerReady = (PlayerReadyMessage) incomingMessage.getMessage();
@@ -39,10 +37,8 @@ public enum GamePhase {
                         " from id: " + sourceClient.getPlayerID() );
 
                 // Send Player List to everyone in the playerList.
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(serverState.createPlayerlistMessage());
-                }
-                
+                serverState.broadcast( serverState.createPlayerlistMessage() );
+
                 if (Server.getServerState().everyPlayerReady()) {
                 	System.out.println("All players ready");
                     // Wait for 30 sec.
@@ -54,9 +50,7 @@ public enum GamePhase {
                     }
 
                     // Send scoreboard before game starts.
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(serverState.createScoreboardMessage());
-                    }
+                    serverState.broadcast( serverState.createScoreboardMessage() );
                     System.out.println("Start Game");
                     return GAME_PHASE.nextPhase(null);
                 }
@@ -70,6 +64,13 @@ public enum GamePhase {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
             ServerState serverState = Server.getServerState();
+            // Wait for 2 seconds to ensure there is enough time between two rounds
+            try {
+                Thread.sleep( 2000 );
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             // Every round an other Player is allowed to choose the category.
             serverState.setCategorySelector(serverState.getRoundsLeft() % serverState.getPlayerList().size());
             // Pick 4 questions with different Categories
@@ -80,9 +81,7 @@ public enum GamePhase {
                     Server.getConfiguration().categoryTimeout,
                     serverState.getCategorySelector(),
                     serverState.getActualCategorySelection());
-            for ( Client client: serverState.getPlayerList() ) {
-                client.sendMessage(CSAMessage);
-            }
+            serverState.broadcast( CSAMessage );
             Server.startTimeoutTimer( Server.getConfiguration().categoryTimeout, MessageType.CATEGORY_SELECTION );
             return CATEGORY_SELECTION_PHASE;
         }
@@ -109,9 +108,7 @@ public enum GamePhase {
                             question);
                     serverState.setActualQuestion(question);
                     serverState.returnQuestions();
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(questionMessage);
-                    }
+                    serverState.broadcast( questionMessage );
                     Server.startTimeoutTimer( Server.getConfiguration().questionTimeout, MessageType.BUZZ );
                     return PLAYER_SELECTION_PHASE;
                 }
@@ -131,9 +128,7 @@ public enum GamePhase {
                         question);
                 serverState.setActualQuestion(question);
                 serverState.returnQuestions();
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(questionMessage);
-                }
+                serverState.broadcast( questionMessage );
                 Server.startTimeoutTimer( Server.getConfiguration().questionTimeout, MessageType.BUZZ );
                 return PLAYER_SELECTION_PHASE;
             }
@@ -159,13 +154,9 @@ public enum GamePhase {
                             serverState.getActualQuestion().getCorrectAnswerIndex(),
                             -1 );
 
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(answerResultMessage);
-                    }
+                    serverState.broadcast( answerResultMessage );
                     // Divided in two loops to not send both messages at once.
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(serverState.createScoreboardMessage());
-                    }
+                    serverState.broadcast( serverState.createScoreboardMessage() );
                     if (serverState.getRoundsLeft() > 0) {
                         return GAME_PHASE.nextPhase(null);
                     } else {
@@ -183,9 +174,7 @@ public enum GamePhase {
                         Server.getConfiguration().answerTimeout);
                 serverState.setAnswerGiver(incomingMessage.getSourceClient().getPlayerID());
                 serverState.setScrewer(-1); // Because Buzz round, there is no screwer.
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(BZMessage);
-                }
+                serverState.broadcast( BZMessage );
                 Server.startTimeoutTimer( Server.getConfiguration().answerTimeout, MessageType.ANSWER );
                 return QUESTION_PLAY_PHASE;
             }
@@ -210,9 +199,7 @@ public enum GamePhase {
                         Server.getConfiguration().answerTimeout);
                 serverState.setAnswerGiver(screwMessage.getScrewedPlayerId());
                 serverState.setScrewer(incomingMessage.getSourceClient().getPlayerID());
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(SRMessage);
-                }
+                serverState.broadcast( SRMessage );
                 Server.startTimeoutTimer( Server.getConfiguration().answerTimeout, MessageType.ANSWER );
                 return QUESTION_PLAY_PHASE;
             }
@@ -244,13 +231,8 @@ public enum GamePhase {
                     AnswerResultMessage answerResultMessage = new AnswerResultMessage(
                             serverState.getActualQuestion().getCorrectAnswerIndex(),
                             -1 );
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(answerResultMessage);
-                    }
-                    // Divided in two loops to not send both messages at once.
-                    for ( Client client: serverState.getPlayerList() ) {
-                        client.sendMessage(serverState.createScoreboardMessage());
-                    }
+                    serverState.broadcast( answerResultMessage );
+                    serverState.broadcast( serverState.createScoreboardMessage() );
                     if (serverState.getRoundsLeft() > 0) {
                         return GAME_PHASE.nextPhase(null);
                     } else {
@@ -281,13 +263,8 @@ public enum GamePhase {
                         serverState.getActualQuestion().getCorrectAnswerIndex(),
                         answerMessage.getAnswerId());
 
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(answerResultMessage);
-                }
-                // Divided in two loops to not send both messages at once.
-                for ( Client client: serverState.getPlayerList() ) {
-                    client.sendMessage(serverState.createScoreboardMessage());
-                }
+                serverState.broadcast( answerResultMessage );
+                serverState.broadcast( serverState.createScoreboardMessage() );
                 if (serverState.getRoundsLeft() > 0) {
                     return GAME_PHASE.nextPhase(null);
                 } else {
@@ -302,10 +279,10 @@ public enum GamePhase {
     CLOSING_PHASE {
         @Override
         public GamePhase nextPhase(IncomingMessage incomingMessage) {
+            ServerState serverState = Server.getServerState();
             GameEndMessage gameEndMessage = new GameEndMessage();
-            for ( Client client: Server.getServerState().getPlayerList() ) {
-                client.sendMessage(gameEndMessage);
-            }
+
+            serverState.broadcast( gameEndMessage );
             return this;
         }
     };

@@ -201,4 +201,12 @@ public class ServerState {
     	return ready;
 	}
 
+	public void broadcast(Message message) {
+		for ( Client client: getPlayerList() ) {
+			if ( client.getReadyState() != ReadyState.DISCONNECTED ) {
+				client.sendMessage( message );
+			}
+		}
+	}
+
 }
