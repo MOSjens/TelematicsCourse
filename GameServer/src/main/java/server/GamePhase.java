@@ -5,6 +5,7 @@ import dbconnection.Difficulty;
 import dbconnection.Question;
 import messages.*;
 import java.util.Random;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public enum GamePhase {
@@ -123,7 +124,14 @@ public enum GamePhase {
                 CategorySelectionMessage categorySelectionMessage = (CategorySelectionMessage) incomingMessage.getMessage();
                 System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name() +
                 		"Index: " + categorySelectionMessage.getCategoryIndex());
-                Question question = serverState.getActualCategorySelection().get(categorySelectionMessage.getCategoryIndex());
+                int categoryIndex = categorySelectionMessage.getCategoryIndex();
+                if (categoryIndex < serverState.getActualCategorySelection().size() && categoryIndex > 0 ) {
+                    // OK
+                } else {
+                    Random random = new Random();
+                    categoryIndex = random.nextInt( 4 );
+                }
+                Question question = serverState.getActualCategorySelection().get(categoryIndex);
                 QuestionMessage questionMessage = new QuestionMessage(
                         Server.getConfiguration().questionTimeout,
                         question);
@@ -184,20 +192,36 @@ public enum GamePhase {
             if ((incomingMessage.getMessage().getMessageType() == MessageType.SCREW) &&
                     (incomingMessage.getSourceClient().getScrewsLeft() > 0)) {
                 ScrewMessage screwMessage = (ScrewMessage) incomingMessage.getMessage();
+
+                System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
+                        " from id: " + incomingMessage.getSourceClient().getPlayerID()+
+                        " screwing id: " + screwMessage.getScrewedPlayerId());
+
                 // If a Client want to screw himself, ignore message
                 if (screwMessage.getScrewedPlayerId() == incomingMessage.getSourceClient().getPlayerID()) {
+                    return this;
+                }
+                // Check if screw is valid
+                boolean screwValid = false;
+                for (Client client: serverState.getPlayerList()) {
+                    if ( client.getPlayerID() == screwMessage.getScrewedPlayerId() &&
+                            client.getReadyState() != ReadyState.DISCONNECTED){
+                        screwValid = true;
+                    }
+                }
+                System.out.println( "Screw valid: " + screwValid );
+                if (!screwValid) {
                     return this;
                 }
 
                 Server.stopTimeoutTimer();
             	incomingMessage.getSourceClient().decreaseScrewsLeft();
-            	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
-            			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
-            			" screwing id: " + screwMessage.getScrewedPlayerId());
+
                 ScrewResultMessage SRMessage = new ScrewResultMessage(
                         incomingMessage.getSourceClient().getPlayerID(),
                         screwMessage.getScrewedPlayerId(),
                         Server.getConfiguration().answerTimeout);
+
                 serverState.setAnswerGiver(screwMessage.getScrewedPlayerId());
                 serverState.setScrewer(incomingMessage.getSourceClient().getPlayerID());
                 serverState.broadcast( SRMessage );
@@ -246,6 +270,7 @@ public enum GamePhase {
             if ((incomingMessage.getMessage().getMessageType() == MessageType.ANSWER) &&
                     (incomingMessage.getSourceClient().getPlayerID() == serverState.getAnswerGiver()) ||
                     (incomingMessage.getMessage().getMessageType() == MessageType.TIMEOUT)) {
+                Server.stopTimeoutTimer();
                 AnswerMessage answerMessage = (AnswerMessage) incomingMessage.getMessage();
             	System.out.println("Received: " + incomingMessage.getMessage().getMessageType().name()+
             			" from id: " + incomingMessage.getSourceClient().getPlayerID()+
@@ -283,6 +308,11 @@ public enum GamePhase {
             ServerState serverState = Server.getServerState();
             GameEndMessage gameEndMessage = new GameEndMessage();
 
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             serverState.broadcast( gameEndMessage );
             return this;
         }

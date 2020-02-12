@@ -18,7 +18,7 @@ import messages.TimeoutMessage;
 public class Server {
 
 	private static ServerSocket serverSocket = null;
-	private static int port = 6666;
+	private static int port = 8000;
 	private static ServerState serverState;
 	private static BlockingQueue<IncomingMessage> inputMessages;
 	private static AtomicBoolean stillConnectClients;
